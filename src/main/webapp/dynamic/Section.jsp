@@ -13,14 +13,14 @@
 			<%-- Open Connection Code --%>
 				<%
 				DriverManager.registerDriver(new org.postgresql.Driver());
-				String GET_STUDENT_QUERY = "select * from Section";
+				String GET_Section_QUERY = "select * from Section";
 				// Make a connection to the driver
 				Connection connection = DriverManager.getConnection
 				("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
 				
 				Statement stmt = connection.createStatement();
 				
-				ResultSet rs = stmt.executeQuery(GET_STUDENT_QUERY);
+				ResultSet rs = stmt.executeQuery(GET_Section_QUERY);
 				while (rs.next()) {
 				%>
 			<span>s_sectionID is <%= rs.getInt(1) %></span><br/>
@@ -28,9 +28,6 @@
 			<br/><br/><br/>
 			
 			<% } %>
-
-
-<!-- create table student (st_id varchar(255) NOT NULL PRIMARY KEY, st_SSN varchar(255), st_enrollmentStatus varchar(255), st_residential varchar(255), st_firstName varchar(255), st_middleName varchar(255), st_lastName varchar(255)); -->
 
 </body>
 </html>

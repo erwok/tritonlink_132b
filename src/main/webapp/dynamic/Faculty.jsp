@@ -13,22 +13,19 @@
 			<%-- Open Connection Code --%>
 				<%
 				DriverManager.registerDriver(new org.postgresql.Driver());
-				String GET_STUDENT_QUERY = "select * from Faculty";
+				String GET_Faculty_QUERY = "select * from Faculty";
 				// Make a connection to the driver
 				Connection connection = DriverManager.getConnection
 				("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
 				
 				Statement stmt = connection.createStatement();
 				
-				ResultSet rs = stmt.executeQuery(GET_STUDENT_QUERY);
+				ResultSet rs = stmt.executeQuery(GET_Faculty_QUERY);
 				while (rs.next()) {
 				%>
 			<span>fc_name is <%= rs.getString(1) %></span><br/>
 			
 			<% } %>
-
-
-<!-- create table student (st_id varchar(255) NOT NULL PRIMARY KEY, st_SSN varchar(255), st_enrollmentStatus varchar(255), st_residential varchar(255), st_firstName varchar(255), st_middleName varchar(255), st_lastName varchar(255)); -->
 
 </body>
 </html>
