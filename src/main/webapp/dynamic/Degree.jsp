@@ -13,7 +13,7 @@
 			<%-- Open Connection Code --%>
 				<%
 				DriverManager.registerDriver(new org.postgresql.Driver());
-				String GET_STUDENT_QUERY = "select * from Student";
+				String GET_STUDENT_QUERY = "select * from Degree";
 				// Make a connection to the driver
 				Connection connection = DriverManager.getConnection
 				("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
@@ -23,13 +23,7 @@
 				ResultSet rs = stmt.executeQuery(GET_STUDENT_QUERY);
 				while (rs.next()) {
 				%>
-			<span>st_ID is <%= rs.getString(1) %></span><br/>
-			<span>st_SSN is <%= rs.getInt(2) %></span><br/>
-			<span>st_enrollmentStatus is <%= rs.getString(3) %></span><br/>
-			<span>st_residential us <%= rs.getString(4) %></span><br/>
-			<span>st_firstName us <%= rs.getString(5) %></span><br/>
-			<span>st_middleName us <%= rs.getString(6) %></span><br/>
-			<span>st_lastName us <%= rs.getString(7) %></span><br/>
+			<span>dg_majorCode is <%= rs.getInt(1) %></span><br/>
 			<br/><br/><br/>
 			
 			<% } %>
