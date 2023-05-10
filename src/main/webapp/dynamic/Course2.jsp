@@ -106,17 +106,11 @@
 						<th><input value="" name="cr_lab" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
-					<%-- <form action="Course.jsp" method="get">
-						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getInt("cr_courseNumber") %>" name="cr_courseNumber"></td>
-						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
-						<td><input type="submit" value="Update"></td>
-					</form>
 					<form action="Course.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getInt("cr_courseNumber") %>" name="cr_courseNumber">
 						<td><input type="submit" value="Delete"></td>
-					</form> --%>
+					</form>
 				</tr>
 					
 				<%
