@@ -39,7 +39,7 @@
 					    PreparedStatement pstmt = connection.prepareStatement(
 					    ("INSERT INTO Course VALUES (?, ?)"));
 					    
-					    pstmt.setInt(1, Integer.parseInt(request.getParameter("cr_courseNumber")));
+					    pstmt.setString(1, request.getParameter("cr_courseNumber"));
 					    pstmt.setString(2, request.getParameter("cr_lab"));
 					    
 					    pstmt.executeUpdate();
@@ -62,8 +62,9 @@
 				    PreparedStatement pstatement = connection.prepareStatement(
 				    "UPDATE Course SET cr_courseNumber = ?, cr_lab = ? WHERE cr_courseNumber = ?");
 				    
-				    pstatement.setInt(1, Integer.parseInt(request.getParameter("cr_courseNumber")));
+				    pstatement.setString(1, request.getParameter("cr_courseNumber"));
 				    pstatement.setString(2, request.getParameter("cr_lab"));
+				    pstatement.setString(3, request.getParameter("cr_courseNumber"));
 				    int rowCount = pstatement.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -83,7 +84,7 @@
 				    PreparedStatement pstmt = connection.prepareStatement(
 				    "DELETE FROM Course WHERE cr_courseNumber = ?");
 				    
-				    pstmt.setInt(1, Integer.parseInt(request.getParameter("cr_courseNumber")));
+				    pstmt.setString(1, request.getParameter("cr_courseNumber"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -106,29 +107,18 @@
 						<th><input value="" name="cr_lab" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
-					<%-- <form action="Course.jsp" method="get">
-						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getInt("cr_courseNumber") %>" name="cr_courseNumber"></td>
-						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
-						<td><input type="submit" value="Update"></td>
-					</form>
-					<form action="Course.jsp" method="get">
-						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getInt("cr_courseNumber") %>" name="cr_courseNumber">
-						<td><input type="submit" value="Delete"></td>
-					</form> --%>
 				</tr>
 					
 				<%
 					while (rs.next()) {    
 				%>
-				<tr>
+				<%-- <tr>
 					<!-- Get the course number -->
 					<td><%= rs.getInt("cr_courseNumber") %></td>
 					
 					<!-- Get the lab -->
 					<td><%= rs.getString("cr_lab") %></td>
-				</tr>
+				</tr> --%>
 				<%
 					}
 				%>
@@ -137,6 +127,35 @@
 				// Close the ResultSet
 				rs.close();
 				
+				%>
+				
+				
+				<!-- Iteration stuff? -->
+				<%
+				rs = stmt.executeQuery("SELECT * FROM course ORDER BY cr_courseNumber");
+				
+				while (rs.next()) {
+				%>
+				<tr>
+					<form action="Course.jsp" method="get">
+						<input type="hidden" value="update" name="action">
+						<td><input value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber"></td>
+						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
+						<td><input type="submit" value="Update"></td>
+					</form>
+					<form action="Course.jsp" method="get">
+						<input type="hidden" value="delete" name="action">
+						<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
+						<td><input type="submit" value="Delete"></td>
+					</form>
+				</tr>
+				<%
+				}
+				
+				rs.close();
+				%>
+				
+				<%				
 				// Close the Statement
 				stmt.close();
 				
@@ -156,7 +175,7 @@
 			/* experiment queries */
 			
 			/* 
-			create table Course (cr_courseNumber INT PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
+			create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
 			INSERT INTO course VALUES (123, 'yes');
 			INSERT INTO course VALUES (456, 'no');
 			INSERT INTO course VALUES (789, 'woohoo');
