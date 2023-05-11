@@ -4,17 +4,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Course home page</title>
+<title>Class home page</title>
 </head>
 <body>
-			<%-- Set the scripting language Java and --%>
+<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Home Page</b>
+			<b>Class Home Page</b>
 			
 			<table>
 				<tr>
-					<th>Course Number</th>
-					<th>Lab</th>
+					<th>Title</th>
+					<th>Year</th>
+					<th>Quarter</th>
 				</tr>
 				<%
 				try {
@@ -35,12 +36,13 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the course attrs INTO the Course table
+					    // INSERT the class attrs INTO the Class table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Course VALUES (?, ?)"));
+					    ("INSERT INTO Class VALUES (?, ?, ?)"));
 					    
-					    pstmt.setString(1, request.getParameter("cr_courseNumber"));
-					    pstmt.setString(2, request.getParameter("cr_lab"));
+					    pstmt.setString(1, request.getParameter("cl_title"));
+					    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+					    pstmt.setString(3, request.getParameter("cl_quarter"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -58,13 +60,16 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // UPDATE the student attributes in the Student table.
+				    // UPDATE the class attributes in the Class table.
 				    PreparedStatement pstatement = connection.prepareStatement(
-				    "UPDATE Course SET cr_courseNumber = ?, cr_lab = ? WHERE cr_courseNumber = ?");
+				    "UPDATE Class SET cl_title = ?, cl_year = ?, cl_quarter = ? WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?");
 				    
-				    pstatement.setString(1, request.getParameter("cr_courseNumber"));
-				    pstatement.setString(2, request.getParameter("cr_lab"));
-				    pstatement.setString(3, request.getParameter("cr_courseNumber"));
+				    pstatement.setString(1, request.getParameter("cl_title"));
+				    pstatement.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstatement.setString(3, request.getParameter("cl_quarter"));
+				    pstatement.setString(4, request.getParameter("cl_title"));
+				    pstatement.setInt(5, Integer.parseInt(request.getParameter("cl_year")));
+				    pstatement.setString(6, request.getParameter("cl_quarter"));
 				    int rowCount = pstatement.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -80,11 +85,13 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the course FROM the COURSE table.
+				    // DELETE the class FROM the CLASS table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    "DELETE FROM Course WHERE cr_courseNumber = ?");
+				    "DELETE FROM Class WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?");
 				    
-				    pstmt.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt.setString(1, request.getParameter("cl_title"));
+				    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstmt.setString(3, request.getParameter("cl_quarter"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -96,30 +103,23 @@
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Course_QUERY = "SELECT * FROM Course";
-					ResultSet rs = stmt.executeQuery(GET_Course_QUERY);
+					String GET_Class_QUERY = "SELECT * FROM Class";
+					ResultSet rs = stmt.executeQuery(GET_Class_QUERY);
 				%>
 				
 				<tr>
-					<form action="Course.jsp" method="get">
+					<form action="Class.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="cr_courseNumber" size="10"></th>
-						<th><input value="" name="cr_lab" size="10"></th>
+						<th><input value="" name="cl_title" size="10"></th>
+						<th><input value="" name="cl_year" size="10"></th>
+						<th><input value="" name="cl_quarter" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
 					
 				<%
 					while (rs.next()) {    
-				%>
-				<%-- <tr>
-					<!-- Get the course number -->
-					<td><%= rs.getInt("cr_courseNumber") %></td>
-					
-					<!-- Get the lab -->
-					<td><%= rs.getString("cr_lab") %></td>
-				</tr> --%>
-				<%
+
 					}
 				%>
 				
@@ -132,20 +132,23 @@
 				
 				<!-- Iteration stuff? -->
 				<%
-				rs = stmt.executeQuery("SELECT * FROM course ORDER BY cr_courseNumber");
+				rs = stmt.executeQuery("SELECT * FROM class ORDER BY cl_title, cl_year, cl_quarter");
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="Course.jsp" method="get">
+					<form action="Class.jsp" method="get">
 						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber"></td>
-						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
+						<td><input value="<%= rs.getString("cl_title") %>" name="cl_title"></td>
+						<td><input value="<%= rs.getInt("cl_year") %>" name="cl_year"></td>
+						<td><input value="<%= rs.getString("cl_quarter") %>" name="cl_quarter"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="Course.jsp" method="get">
+					<form action="Class.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
+						<input type="hidden" value="<%= rs.getString("cl_title") %>" name="cl_title">
+						<input type="hidden" value="<%= rs.getInt("cl_year") %>" name="cl_year">
+						<input type="hidden" value="<%= rs.getString("cl_quarter") %>" name="cl_quarter">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
@@ -175,16 +178,14 @@
 			/* experiment queries */
 			
 			/* 
-			create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
-			INSERT INTO course VALUES (123, 'yes');
-			INSERT INTO course VALUES (456, 'no');
-			INSERT INTO course VALUES (789, 'woohoo');
+			create table Class (cl_title VARCHAR(255), cl_year INT, cl_quarter VARCHAR(255), PRIMARY KEY (cl_title, cl_year, cl_quarter));
+			
 			*/
 			%>
 			
 			
 			<a href="./index.jsp">Back to Home Page</a>
-			
+
 </body>
 </html>
 
