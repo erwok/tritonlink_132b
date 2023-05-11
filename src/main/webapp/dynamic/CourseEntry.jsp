@@ -13,21 +13,19 @@
 			<%-- Open Connection Code --%>
 				<%
 				DriverManager.registerDriver(new org.postgresql.Driver());
-				String GET_Course_QUERY = "select * from Course";
+				String INSERT_Course_QUERY = 
+						"INSERT INTO Course\n"+
+						"(cr_courseNumber, cr_lab)"+
+						"VALUES\n"+
+						"('cse132b', 'Not mandatary')";
 				// Make a connection to the driver
 				Connection connection = DriverManager.getConnection
 				("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
 				
 				Statement stmt = connection.createStatement();
 				
-				ResultSet rs = stmt.executeQuery(GET_Course_QUERY);
-				while (rs.next()) {
+				ResultSet rs = stmt.executeQuery(INSERT_Course_QUERY);
 				%>
-			<span>cr_courseNumber is <%= rs.getInt(1) %></span><br/>
-			<span>cr_lab is <%= rs.getString(2) %></span><br/>
-			<br/><br/><br/>
-			
-			<% } %>
 
 </body>
 </html>
