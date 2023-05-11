@@ -4,18 +4,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Class home page</title>
+<title>Probation home page</title>
 </head>
 <body>
-<%-- Set the scripting language Java and --%>
+			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Class Home Page</b>
+			<b>Probation Home Page</b>
 			
 			<table>
 				<tr>
-					<th>Title</th>
-					<th>Year</th>
-					<th>Quarter</th>
+					<th>st_ID</th>
+					<th>st_startDate</th>
+					<th>st_endDate</th>
+					<th>st_reason</th>
 				</tr>
 				<%
 				try {
@@ -36,13 +37,14 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the class attrs INTO the Class table
+					    // INSERT the Probation attrs INTO the Probation table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Class VALUES (?, ?, ?)"));
-					    
-					    pstmt.setString(1, request.getParameter("cl_title"));
-					    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-					    pstmt.setString(3, request.getParameter("cl_quarter"));
+					    ("INSERT INTO Probation VALUES (?, ?, ?, ?)"));
+
+					    pstmt.setString(1, request.getParameter("st_ID"));
+					    pstmt.setString(2, request.getParameter("st_startDate"));
+					    pstmt.setString(3, request.getParameter("st_endDate"));
+					    pstmt.setString(4, request.getParameter("st_reason"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -60,16 +62,15 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // UPDATE the class attributes in the Class table.
+				    // UPDATE the student attributes in the Student table.
 				    PreparedStatement pstatement = connection.prepareStatement(
-				    "UPDATE Class SET cl_title = ?, cl_year = ?, cl_quarter = ? WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?");
-				    
-				    pstatement.setString(1, request.getParameter("cl_title"));
-				    pstatement.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-				    pstatement.setString(3, request.getParameter("cl_quarter"));
-				    pstatement.setString(4, request.getParameter("cl_title"));
-				    pstatement.setInt(5, Integer.parseInt(request.getParameter("cl_year")));
-				    pstatement.setString(6, request.getParameter("cl_quarter"));
+				    	"UPDATE Probation SET cr_ProbationNumber = ?, cr_lab = ? \n"+
+				    	"WHERE cr_ProbationNumber = ?"
+				    );
+
+				    pstatement.setString(1, request.getParameter("cr_ProbationNumber"));
+				    pstatement.setString(2, request.getParameter("cr_lab"));
+				    pstatement.setString(3, request.getParameter("cr_ProbationNumber"));
 				    int rowCount = pstatement.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -85,13 +86,13 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the class FROM the CLASS table.
+				    // DELETE the Probation FROM the Probation table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    "DELETE FROM Class WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?");
+				    	"DELETE FROM Probation \n"+
+					    "WHERE cr_ProbationNumber = ?"
+					);
 				    
-				    pstmt.setString(1, request.getParameter("cl_title"));
-				    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-				    pstmt.setString(3, request.getParameter("cl_quarter"));
+				    pstmt.setString(1, request.getParameter("cr_ProbationNumber"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -103,23 +104,30 @@
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Class_QUERY = "SELECT * FROM Class";
-					ResultSet rs = stmt.executeQuery(GET_Class_QUERY);
+					String GET_Probation_QUERY = "SELECT * FROM Probation";
+					ResultSet rs = stmt.executeQuery(GET_Probation_QUERY);
 				%>
 				
 				<tr>
-					<form action="Class.jsp" method="get">
+					<form action="ProbationEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="cl_title" size="10"></th>
-						<th><input value="" name="cl_year" size="10"></th>
-						<th><input value="" name="cl_quarter" size="10"></th>
+						<th><input value="" name="cr_ProbationNumber" size="10"></th>
+						<th><input value="" name="cr_lab" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
 					
 				<%
 					while (rs.next()) {    
-
+				%>
+				<%-- <tr>
+					<!-- Get the Probation number -->
+					<td><%= rs.getInt("cr_ProbationNumber") %></td>
+					
+					<!-- Get the lab -->
+					<td><%= rs.getString("cr_lab") %></td>
+				</tr> --%>
+				<%
 					}
 				%>
 				
@@ -132,23 +140,23 @@
 				
 				<!-- Iteration stuff? -->
 				<%
-				rs = stmt.executeQuery("SELECT * FROM class ORDER BY cl_title, cl_year, cl_quarter");
+				rs = stmt.executeQuery(
+					"SELECT * FROM Probation \n"+
+					"ORDER BY cr_ProbationNumber"
+				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="Class.jsp" method="get">
+					<form action="ProbationEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("cl_title") %>" name="cl_title"></td>
-						<td><input value="<%= rs.getInt("cl_year") %>" name="cl_year"></td>
-						<td><input value="<%= rs.getString("cl_quarter") %>" name="cl_quarter"></td>
+						<td><input value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber"></td>
+						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="Class.jsp" method="get">
+					<form action="ProbationEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("cl_title") %>" name="cl_title">
-						<input type="hidden" value="<%= rs.getInt("cl_year") %>" name="cl_year">
-						<input type="hidden" value="<%= rs.getString("cl_quarter") %>" name="cl_quarter">
+						<input type="hidden" value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
@@ -178,14 +186,15 @@
 			/* experiment queries */
 			
 			/* 
-			create table Class (cl_title VARCHAR(255), cl_year INT, cl_quarter VARCHAR(255), PRIMARY KEY (cl_title, cl_year, cl_quarter));
-			
+			create table Probation (cr_ProbationNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
+			INSERT INTO Probation VALUES (123, 'yes');
+			INSERT INTO Probation VALUES (456, 'no');
+			INSERT INTO Probation VALUES (789, 'woohoo');
 			*/
 			%>
 			
 			
 			<a href="./index.jsp">Back to Home Page</a>
-
+			
 </body>
 </html>
-

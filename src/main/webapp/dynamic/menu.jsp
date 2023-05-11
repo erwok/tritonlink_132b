@@ -11,13 +11,34 @@
 <b>Menu</b>
 <ul>
 	<li>
-		<a href="./Course.jsp">Courses</a>
+		<a href="./CourseEntry.jsp">Course Entry Form //prereq</a>
 	</li>
 	<li>
-		<a href="./Class.jsp">Classes</a>
+		<a href="./ClassEntry.jsp">Class Entry Form</a>
 	</li>
 	<li>
-		<a href="./Student.jsp">Students</a>
+		<a href="./StudentEntry.jsp">Student Entry Form</a>
+	</li>
+	<li>
+		<a href="./FacultyEntry.jsp">Faculty Entry Form</a>
+	</li>
+	<li>
+		<a href="./.jsp">Course Enrollment</a>
+	</li>
+	<li>
+		<a href="./.jsp">Classes taken in the Past</a>
+	</li>
+	<li>
+		<a href="./ThesisCommitteeEntry.jsp">Thesis Committee Submission</a>
+	</li>
+	<li>
+		<a href="./.jsp">Probation Info Submission</a>
+	</li>
+	<li>
+		<a href="./.jsp">Review Session Info Submission</a>
+	</li>
+	<li>
+		<a href="./.jsp">Degree Requirements’ Info Submission</a>
 	</li>
 </ul>
 

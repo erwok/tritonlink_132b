@@ -4,17 +4,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Course home page</title>
+<title>Faculty home page</title>
 </head>
 <body>
-			<%-- Set the scripting language Java and --%>
+<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Home Page</b>
+			<b>Faculty Home Page</b>
 			
 			<table>
 				<tr>
-					<th>Course Number</th>
-					<th>Lab</th>
+					<th>Name</th>
 				</tr>
 				<%
 				try {
@@ -35,12 +34,11 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the course attrs INTO the Course table
+					    // INSERT the Faculty attrs INTO the Faculty table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Course VALUES (?, ?)"));
+					    ("INSERT INTO Faculty VALUES (?)"));
 					    
-					    pstmt.setString(1, request.getParameter("cr_courseNumber"));
-					    pstmt.setString(2, request.getParameter("cr_lab"));
+					    pstmt.setString(1, request.getParameter("fc_name"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -58,13 +56,14 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // UPDATE the student attributes in the Student table.
+				    // UPDATE the Faculty attributes in the Faculty table.
 				    PreparedStatement pstatement = connection.prepareStatement(
-				    "UPDATE Course SET cr_courseNumber = ?, cr_lab = ? WHERE cr_courseNumber = ?");
-				    
-				    pstatement.setString(1, request.getParameter("cr_courseNumber"));
-				    pstatement.setString(2, request.getParameter("cr_lab"));
-				    pstatement.setString(3, request.getParameter("cr_courseNumber"));
+				    	"UPDATE Faculty SET fc_name = ? \n"+
+				    	"WHERE fc_name = ?"
+				    );
+
+				    pstatement.setString(1, request.getParameter("fc_name"));
+				    pstatement.setString(2, request.getParameter("fc_name"));
 				    int rowCount = pstatement.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -80,11 +79,13 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the course FROM the COURSE table.
+				    // DELETE the Faculty FROM the Faculty table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    "DELETE FROM Course WHERE cr_courseNumber = ?");
+				    	"DELETE FROM Faculty Faculty \n"+
+						"WHERE fc_name = ?"
+					);
 				    
-				    pstmt.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt.setString(1, request.getParameter("fc_name"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -96,30 +97,21 @@
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Course_QUERY = "SELECT * FROM Course";
-					ResultSet rs = stmt.executeQuery(GET_Course_QUERY);
+					String GET_Faculty_QUERY = "SELECT * FROM Faculty";
+					ResultSet rs = stmt.executeQuery(GET_Faculty_QUERY);
 				%>
 				
 				<tr>
-					<form action="Course.jsp" method="get">
+					<form action="FacultyEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="cr_courseNumber" size="10"></th>
-						<th><input value="" name="cr_lab" size="10"></th>
+						<th><input value="" name="fc_name" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
 					
 				<%
 					while (rs.next()) {    
-				%>
-				<%-- <tr>
-					<!-- Get the course number -->
-					<td><%= rs.getInt("cr_courseNumber") %></td>
-					
-					<!-- Get the lab -->
-					<td><%= rs.getString("cr_lab") %></td>
-				</tr> --%>
-				<%
+
 					}
 				%>
 				
@@ -132,20 +124,22 @@
 				
 				<!-- Iteration stuff? -->
 				<%
-				rs = stmt.executeQuery("SELECT * FROM course ORDER BY cr_courseNumber");
+				rs = stmt.executeQuery(
+					"SELECT * FROM Faculty \n"+
+					"ORDER BY fc_name"
+				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="Course.jsp" method="get">
+					<form action="FacultyEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber"></td>
-						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
+						<td><input value="<%= rs.getString("fc_name") %>" name="fc_name"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="Course.jsp" method="get">
+					<form action="FacultyEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
+						<input type="hidden" value="<%= rs.getString("fc_name") %>" name="fc_name">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
@@ -175,15 +169,14 @@
 			/* experiment queries */
 			
 			/* 
-			create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
-			INSERT INTO course VALUES (123, 'yes');
-			INSERT INTO course VALUES (456, 'no');
-			INSERT INTO course VALUES (789, 'woohoo');
+			CREATE TABLE Faculty ( fc_name VARCHAR(255) PRIMARY KEY);
+			
 			*/
 			%>
 			
 			
 			<a href="./index.jsp">Back to Home Page</a>
-			
+
 </body>
 </html>
+
