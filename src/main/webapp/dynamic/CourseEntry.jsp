@@ -15,6 +15,7 @@
 				<tr>
 					<th>Course Number</th>
 					<th>Lab</th>
+					<th>Prerequisites</th>
 				</tr>
 				<%
 				try {
@@ -45,7 +46,24 @@
 					    pstmt.executeUpdate();
 					    
 					    connection.commit();
-					    connection.setAutoCommit(true);
+						
+					    // Handle inserting prereqs into db
+						String[] prereqs = request.getParameterValues("prerequisites_id");
+                        if (prereqs != null) {
+                        	String cr_courseNumber = request.getParameter("cr_courseNumber");
+	                        pstmt = connection.prepareStatement(
+	                            "INSERT INTO Prerequisite VALUES (?, ?, ?)");
+	                        for(String p : prereqs) {
+	                            pstmt.setString(1, cr_courseNumber + p);
+		                        pstmt.setString(2, cr_courseNumber);
+		                        pstmt.setString(3, p);
+		                        pstmt.executeUpdate();
+	                        }
+	                        
+	                        connection.commit();
+                        }
+                        
+                        connection.setAutoCommit(true);
 					}
 				
 				%>
@@ -81,6 +99,13 @@
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM Prerequisite WHERE mainCourseNumber = ? OR prerequisiteCourseNumber = ?"
+				    );
+				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt2.setString(2, request.getParameter("cr_courseNumber"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
 				    PreparedStatement pstmt = connection.prepareStatement(
@@ -109,6 +134,16 @@
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="cr_courseNumber" size="10"></th>
 						<th><input value="" name="cr_lab" size="10"></th>
+						<td><select multiple name="prerequisites_id">
+                            <option disabled>Select course(s)</option>
+                            <%
+                            while (rs.next()) {
+                                String cr_courseNumber = rs.getString("cr_courseNumber");
+                                %>
+                                <option value="<%=rs.getString("cr_courseNumber")%>"><%= cr_courseNumber %></option>
+                                <%
+                            } %>
+                       	</select></td>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
@@ -155,6 +190,8 @@
 						<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+					<% String cn = rs.getString("cr_courseNumber"); %>
+					<td><button onclick="window.location.href='./PrerequisitesEntry.jsp?courseName=<%= cn %>'">Prereqs</button></td>
 				</tr>
 				<%
 				}
@@ -183,9 +220,8 @@
 			
 			/* 
 			create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
-			INSERT INTO course VALUES (123, 'yes');
-			INSERT INTO course VALUES (456, 'no');
-			INSERT INTO course VALUES (789, 'woohoo');
+			
+			create table Prerequisite (prerequisites_id VARCHAR(255) NOT NULL PRIMARY KEY, mainCourseNumber VARCHAR(255) NOT NULL, prerequisiteCourseNumber VARCHAR(255) NOT NULL, CONSTRAINT FK_PreCourse1 FOREIGN KEY (mainCourseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_PreCourse2 FOREIGN KEY (prerequisiteCourseNumber) REFERENCES Course(cr_courseNumber));
 			*/
 			%>
 			
