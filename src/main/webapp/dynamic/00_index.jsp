@@ -11,7 +11,7 @@
 	<table>
 		<tr>
 			<td>
-				<jsp:include page="menu.jsp" />
+				<jsp:include page="00_menu.jsp" />
 			</td>
 		</tr>
 

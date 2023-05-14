@@ -4,15 +4,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Class home page</title>
+<title>Course Enrollment Entry Page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Class Home Page</b>
+			<b>Course Enrollment Entry Page</b>
 			
 			<table>
 				<tr>
+					<th>Student ID</th>
 					<th>Title</th>
 					<th>Year</th>
 					<th>Quarter</th>
@@ -34,19 +35,39 @@
 					if (action != null && action.equals("insert")) {
 					    
 					    connection.setAutoCommit(false);
-					    
+
+					    // Handle inserting student into db
+						String[] students = request.getParameterValues("st_ID");
+                        if (students != null) {
+                        	String ** = request.getParameter("**");
+	                        pstmt = connection.prepareStatement(
+	                            "INSERT INTO ** VALUES (?, ?, ?)");
+	                        for(String s : students) {
+	                            pstmt.setString(1, ** + s);
+		                        pstmt.setString(2, **);
+		                        pstmt.setString(3, s);
+		                        pstmt.executeUpdate();
+	                        }s
+	                        
+	                        connection.commit();
+                        }
+
 					    // Create the prepared statement and use it to
 					    // INSERT the class attrs INTO the Class table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Class VALUES (?, ?, ?)"));
+					    ("INSERT INTO Class VALUES (?, ?, ?, ?)"));
 					    
-					    pstmt.setString(1, request.getParameter("cl_title"));
-					    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-					    pstmt.setString(3, request.getParameter("cl_quarter"));
+					    pstmt.setString(1, request.getParameter("st_ID"));
+					    pstmt.setString(2, request.getParameter("cl_title"));
+					    pstmt.setInt(3, Integer.parseInt(request.getParameter("cl_year")));
+					    pstmt.setString(4, request.getParameter("cl_quarter"));
 					    
 					    pstmt.executeUpdate();
 					    
 					    connection.commit();
+
+
+
 					    connection.setAutoCommit(true);
 					}
 				

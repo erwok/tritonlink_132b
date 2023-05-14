@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Student home page</title>
+<title>Student Entry Page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Student Home Page</b>
+			<b>Student Entry Page</b>
 			
 			<table>
 				<tr>
@@ -126,7 +126,7 @@
 				%>
 				
 				<tr>
-					<form action="StudentEntry.jsp" method="get">
+					<form action="03_StudentEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="st_ID" size="10"></th>
 						<th><input value="" name="st_SSN" size="10"></th>
@@ -162,7 +162,7 @@
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="StudentEntry.jsp" method="get">
+					<form action="03_StudentEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("st_ID") %>" name="st_ID"></td>
 						<td><input value="<%= rs.getString("st_SSN") %>" name="st_SSN"></td>
@@ -173,7 +173,7 @@
 						<td><input value="<%= rs.getString("st_lastName") %>" name="st_lastName"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="StudentEntry.jsp" method="get">
+					<form action="03_StudentEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<input type="hidden" value="<%= rs.getString("st_SSN") %>" name="st_SSN">
@@ -218,7 +218,7 @@
 			%>
 			
 			
-			<a href="./index.jsp">Back to Home Page</a>
+			<a href="./00_index.jsp">Back to Home Page</a>
 			
 
 </body>

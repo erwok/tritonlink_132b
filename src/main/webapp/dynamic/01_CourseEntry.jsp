@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Course home page</title>
+<title>Course Entry Page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Home Page</b>
+			<b>Course Entry Page</b>
 			
 			<table>
 				<tr>
@@ -130,7 +130,7 @@
 				%>
 				
 				<tr>
-					<form action="CourseEntry.jsp" method="get">
+					<form action="01_CourseEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="cr_courseNumber" size="10"></th>
 						<th><input value="" name="cr_lab" size="10"></th>
@@ -179,19 +179,19 @@
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="CourseEntry.jsp" method="get">
+					<form action="01_CourseEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber"></td>
 						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="CourseEntry.jsp" method="get">
+					<form action="01_CourseEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 					<% String cn = rs.getString("cr_courseNumber"); %>
-					<td><button onclick="window.location.href='./PrerequisitesEntry.jsp?courseName=<%= cn %>'">Prereqs</button></td>
+					<td><button onclick="window.location.href='./11_PrerequisitesEntry.jsp?courseName=<%= cn %>'">Prereqs</button></td>
 				</tr>
 				<%
 				}
@@ -226,7 +226,7 @@
 			%>
 			
 			
-			<a href="./index.jsp">Back to Home Page</a>
+			<a href="./00_index.jsp">Back to Home Page</a>
 			
 </body>
 </html>
