@@ -107,15 +107,21 @@
 				    pstmt1.setString(2, request.getParameter("cr_courseNumber"));
 				    pstmt1.executeUpdate();
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM Courseoffering WHERE cr_courseNumber = ?"
+				    );
+				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
-				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    PreparedStatement pstmt3 = connection.prepareStatement(
 				    	"DELETE FROM Course \n"+
 					    "WHERE cr_courseNumber = ?"
 					);
 				    
-				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
-				    int rowCount = pstmt2.executeUpdate();
+				    pstmt3.setString(1, request.getParameter("cr_courseNumber"));
+				    int rowCount = pstmt3.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);
@@ -193,6 +199,7 @@
 					</form>
 					<% String cn = rs.getString("cr_courseNumber"); %>
 					<td><button onclick="window.location.href='./11_PrerequisitesEntryForEachMainCourse.jsp?courseName=<%= cn %>'">Prereqs</button></td>
+					<td><button onclick="window.location.href='./02_ClassEntry.jsp?courseName=<%= cn %>'">Class Offerings</button></td>
 				</tr>
 				<%
 				}
@@ -223,6 +230,15 @@
 			create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
 			
 			create table Prerequisite (prerequisites_id VARCHAR(255) NOT NULL PRIMARY KEY, mainCourseNumber VARCHAR(255) NOT NULL, prerequisiteCourseNumber VARCHAR(255) NOT NULL, CONSTRAINT FK_PreCourse1 FOREIGN KEY (mainCourseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_PreCourse2 FOREIGN KEY (prerequisiteCourseNumber) REFERENCES Course(cr_courseNumber));
+			
+			create table CourseOffering (cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL,
+		        cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL,
+		        CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+		        CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+
+			  
+			// SAME 
+	        create table CourseOffering (cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
 			*/
 			%>
 			

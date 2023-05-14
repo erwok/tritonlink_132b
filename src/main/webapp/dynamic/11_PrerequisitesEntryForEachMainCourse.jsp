@@ -97,7 +97,7 @@ String mainCourseNumber = request.getParameter("courseName");
 				%>
 				
 				<tr>
-					<form action="11_PrerequisitesEntry.jsp" method="get">
+					<form action="11_PrerequisitesEntryForEachMainCourse.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<input type="hidden" value="<%= mainCourseNumber %>" name="mainCourseNumber">
 						<input type="hidden" name="courseName" value="<%= mainCourseNumber %>">
@@ -126,7 +126,7 @@ String mainCourseNumber = request.getParameter("courseName");
 				%>
 				<tr>
  					<td><%= rs.getString("prerequisiteCourseNumber") %></td>
-					<form action="11_PrerequisitesEntry.jsp" method="get">
+					<form action="11_PrerequisitesEntryForEachMainCourse.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= mainCourseNumber %>" name="mainCourseNumber">
 						<input type="hidden" value="<%= rs.getString("prerequisiteCourseNumber") %>" name="prerequisiteCourseNumber">
