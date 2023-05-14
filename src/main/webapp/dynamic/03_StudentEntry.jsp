@@ -212,7 +212,13 @@
 			
 			/* 
 			
-			CREATE TABLE Student ( st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL, st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL, st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255) , st_lastName VARCHAR(255) NOT NULL);
+			CREATE TABLE Student (st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL,
+			        st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL,
+			        st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
+			
+			
+			// same
+			CREATE TABLE Student (st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL, st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL, st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
 
 			*/
 			%>
