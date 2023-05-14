@@ -13,7 +13,7 @@ String mainCourseNumber = request.getParameter("courseName");
 
 <%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Home Page</b>
+			<b>Prerequisites Home Page</b>
 			
 			<table>
 				<tr>

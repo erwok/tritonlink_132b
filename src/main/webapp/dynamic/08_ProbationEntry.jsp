@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Probation home page</title>
+<title>Probation Entry page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Probation Home Page</b>
+			<b>Probation Entry Page</b>
 			
 			<table>
 				<tr>
@@ -109,7 +109,7 @@
 				%>
 				
 				<tr>
-					<form action="ProbationEntry.jsp" method="get">
+					<form action="08_ProbationEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="cr_ProbationNumber" size="10"></th>
 						<th><input value="" name="cr_lab" size="10"></th>
@@ -148,13 +148,13 @@
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="ProbationEntry.jsp" method="get">
+					<form action="08_ProbationEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber"></td>
 						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="ProbationEntry.jsp" method="get">
+					<form action="08_ProbationEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber">
 						<td><input type="submit" value="Delete"></td>
@@ -194,7 +194,7 @@
 			%>
 			
 			
-			<a href="./index.jsp">Back to Home Page</a>
+			<a href="./00_index.jsp">Back to Home Page</a>
 			
 </body>
 </html>

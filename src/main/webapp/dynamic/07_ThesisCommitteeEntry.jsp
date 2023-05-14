@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ThesisCommittee home page</title>
+<title>ThesisCommittee Entry page</title>
 </head>
 <body>
 <%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>ThesisCommittee Home Page</b>
+			<b>ThesisCommittee Entry Page</b>
 			
 			<table>
 				<tr>
@@ -102,7 +102,7 @@
 				%>
 				
 				<tr>
-					<form action="ThesisCommitteeEntry.jsp" method="get">
+					<form action="07_ThesisCommitteeEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="tc_ID" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
@@ -132,12 +132,12 @@
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="ThesisCommitteeEntry.jsp" method="get">
+					<form action="07_ThesisCommitteeEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("tc_ID") %>" name="tc_ID"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
-					<form action="ThesisCommitteeEntry.jsp" method="get">
+					<form action="07_ThesisCommitteeEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("tc_ID") %>" name="tc_ID">
 						<td><input type="submit" value="Delete"></td>
@@ -175,7 +175,7 @@
 			%>
 			
 			
-			<a href="./index.jsp">Back to Home Page</a>
+			<a href="./00_index.jsp">Back to Home Page</a>
 
 </body>
 </html>

@@ -192,7 +192,7 @@
 						<td><input type="submit" value="Delete"></td>
 					</form>
 					<% String cn = rs.getString("cr_courseNumber"); %>
-					<td><button onclick="window.location.href='./11_PrerequisitesEntry.jsp?courseName=<%= cn %>'">Prereqs</button></td>
+					<td><button onclick="window.location.href='./11_PrerequisitesEntryForEachMainCourse.jsp?courseName=<%= cn %>'">Prereqs</button></td>
 				</tr>
 				<%
 				}
