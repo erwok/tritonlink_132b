@@ -99,22 +99,23 @@
 				    
 				    connection.setAutoCommit(false);
 				    
-				    PreparedStatement pstmt2 = connection.prepareStatement(
-				    	"DELETE FROM Prerequisite WHERE mainCourseNumber = ? OR prerequisiteCourseNumber = ?"
+				    PreparedStatement pstmt1 = connection.prepareStatement(
+				    	"DELETE FROM Prerequisite \n"+
+						"WHERE mainCourseNumber = ? OR prerequisiteCourseNumber = ?"
 				    );
-				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
-				    pstmt2.setString(2, request.getParameter("cr_courseNumber"));
-				    pstmt2.executeUpdate();
+				    pstmt1.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt1.setString(2, request.getParameter("cr_courseNumber"));
+				    pstmt1.executeUpdate();
 				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
-				    PreparedStatement pstmt = connection.prepareStatement(
+				    PreparedStatement pstmt2 = connection.prepareStatement(
 				    	"DELETE FROM Course \n"+
 					    "WHERE cr_courseNumber = ?"
 					);
 				    
-				    pstmt.setString(1, request.getParameter("cr_courseNumber"));
-				    int rowCount = pstmt.executeUpdate();
+				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
+				    int rowCount = pstmt2.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);
