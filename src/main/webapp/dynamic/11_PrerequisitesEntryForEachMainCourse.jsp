@@ -13,11 +13,9 @@ String mainCourseNumber = request.getParameter("courseName");
 
 <%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Prerequisites Home Page</b>
-			
 			<table>
 				<tr>
-					<th>Prerequisites</th>
+					<th>Prerequisites Entry</th>
 				</tr>
 				<%
 				try {
@@ -116,7 +114,10 @@ String mainCourseNumber = request.getParameter("courseName");
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
-					
+				
+				
+				<tr><td><h3>Prerequisites for <%= mainCourseNumber %></h3></td></tr>
+				
 				<%
 					String GET_Prerequisites_Query = String.format("SELECT * FROM Prerequisite WHERE mainCourseNumber = '%s';", mainCourseNumber);
 					rs = stmt.executeQuery(GET_Prerequisites_Query);
