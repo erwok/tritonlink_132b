@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ThesisCommittee Entry page</title>
+<%
+String sID = request.getParameter("sID");
+%>
+<title>Thesis Committee Submission</title>
 </head>
 <body>
 <%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>ThesisCommittee Entry Page</b>
+			<b>Thesis Committee Submission for student <%= sID %></b>
 			
 			<table>
-				<tr>
-					<th>ThesisCommittee ID</th>
-				</tr>
 				<%
 				try {
 				    // Load driver
@@ -36,9 +36,10 @@
 					    // Create the prepared statement and use it to
 					    // INSERT the ThesisCommittee attrs INTO the ThesisCommittee table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO ThesisCommittee VALUES (?)"));
+					    ("INSERT INTO ThesisCommittee VALUES (?, ?)"));
 					    
 					    pstmt.setString(1, request.getParameter("tc_ID"));
+					    pstmt.setString(2, request.getParameter("st_ID"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -50,25 +51,7 @@
 				
 				<!-- Update stuff? -->
 				<%
-				// Check if an update is requested
-				if (action != null && action.equals("update")) {
-				    
-				    connection.setAutoCommit(false);
-				    
-				    // Create the prepared statement and use it to
-				    // UPDATE the ThesisCommittee attributes in the ThesisCommittee table.
-				    PreparedStatement pstatement = connection.prepareStatement(
-				    	"UPDATE ThesisCommittee SET tc_ID = ? \n"+
-				    	"WHERE tc_ID = ?"
-				    );
-
-				    pstatement.setString(1, request.getParameter("tc_ID"));
-				    pstatement.setString(2, request.getParameter("tc_ID"));
-				    int rowCount = pstatement.executeUpdate();
-				    
-				    connection.setAutoCommit(false);
-				    connection.setAutoCommit(true);
-				}
+				/* No updates */
 				%>
 				
 				<!-- Delete stuff? -->
@@ -81,8 +64,7 @@
 				    // Create the prepared statement and use it to
 				    // DELETE the ThesisCommittee FROM the ThesisCommittee table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM ThesisCommittee ThesisCommittee \n"+
-						"WHERE tc_ID = ?"
+				    	"DELETE FROM ThesisCommittee WHERE tc_ID = ?"
 					);
 				    
 				    pstmt.setString(1, request.getParameter("tc_ID"));
@@ -97,51 +79,39 @@
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_ThesisCommittee_QUERY = "SELECT * FROM ThesisCommittee";
-					ResultSet rs = stmt.executeQuery(GET_ThesisCommittee_QUERY);
+					ResultSet rs;
 				%>
 				
 				<tr>
 					<form action="07_ThesisCommitteeEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="tc_ID" size="10"></th>
+						<input type="hidden" name="st_ID" value="<%= sID %>">
+						<input type="hidden" value=<%= sID %> name="sID">
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
-					
-				<%
-					while (rs.next()) {    
-
-					}
-				%>
-				
-				<%
-				// Close the ResultSet
-				rs.close();
-				
-				%>
 				
 				
 				<!-- Iteration stuff? -->
 				<%
 				rs = stmt.executeQuery(
 					"SELECT * FROM ThesisCommittee \n"+
-					"ORDER BY tc_ID"
+					"ORDER BY tc_ID, st_ID"
 				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="07_ThesisCommitteeEntry.jsp" method="get">
-						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("tc_ID") %>" name="tc_ID"></td>
-						<td><input type="submit" value="Update"></td>
-					</form>
+					<td><%= rs.getString("tc_ID") %></td>
 					<form action="07_ThesisCommitteeEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("tc_ID") %>" name="tc_ID">
+						<input type="hidden" value=<%= sID %> name="st_ID">
+						<input type="hidden" value=<%= sID %> name="sID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+					<td><button onclick="window.location.href='./18_TCProfessors.jsp?sID=<%= sID %>&tcID=<%= rs.getString("tc_ID") %>'">Professors</button></td>
 				</tr>
 				<%
 				}
@@ -169,7 +139,14 @@
 			/* experiment queries */
 			
 			/* 
-			CREATE TABLE ThesisCommittee ( tc_ID VARCHAR(255) PRIMARY KEY);
+			CREATE TABLE ThesisCommittee (tc_ID VARCHAR(255) PRIMARY KEY, st_id VARCHAR(255) NOT NULL,
+		        CONSTRAINT fk_tc_cand FOREIGN KEY (st_id) REFERENCES Candidate(st_id));
+			
+			*/
+			
+			/* 
+			CREATE TABLE TCProfs (tc_ID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL,
+			        CONSTRAINT fk_tc_prof FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
 			
 			*/
 			%>
