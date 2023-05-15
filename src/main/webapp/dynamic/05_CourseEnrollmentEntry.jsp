@@ -13,10 +13,7 @@
 			
 			<table>
 				<tr>
-					<th>Student ID</th>
-					<th>Title</th>
-					<th>Year</th>
-					<th>Quarter</th>
+					<th>ID</th>
 				</tr>
 				<%
 				try {
@@ -37,14 +34,11 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the class attrs INTO the Class table
+					    // INSERT the taker attrs INTO the taker table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Class VALUES (?, ?, ?, ?)"));
+					    ("INSERT INTO taker VALUES (?)"));
 
 					    pstmt.setString(1, request.getParameter("st_ID"));
-					    pstmt.setString(2, request.getParameter("cl_title"));
-					    pstmt.setInt(3, Integer.parseInt(request.getParameter("cl_year")));
-					    pstmt.setString(4, request.getParameter("cl_quarter"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -56,27 +50,7 @@
 				
 				<!-- Update stuff? -->
 				<%
-				// Check if an update is requested
-				if (action != null && action.equals("update")) {
-				    
-				    connection.setAutoCommit(false);
-				    
-				    // Create the prepared statement and use it to
-				    // UPDATE the class attributes in the Class table.
-				    PreparedStatement pstatement = connection.prepareStatement(
-				    	"UPDATE Class SET cl_title = ?, cl_year = ?, cl_quarter = ? \n"+
-				    	"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?");
-					    
-				    pstatement.setString(1, request.getParameter("cl_title"));
-				    pstatement.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-				    pstatement.setString(3, request.getParameter("cl_quarter"));
-				    pstatement.setString(4, request.getParameter("cl_title"));
-				    pstatement.setInt(5, Integer.parseInt(request.getParameter("cl_year")));
-				    pstatement.setString(6, request.getParameter("cl_quarter"));
-			    
-				    connection.setAutoCommit(false);
-				    connection.setAutoCommit(true);
-				}
+                    // no update
 				%>
 				
 				<!-- Delete stuff? -->
@@ -87,15 +61,13 @@
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the class FROM the CLASS table.
+				    // DELETE the taker FROM the taker table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM Class \n"+
-						"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?"
-					);
+				    	"DELETE FROM taker \n"+
+				    	"WHERE st_ID = ?"
+				    );
 				    
-				    pstmt.setString(1, request.getParameter("cl_title"));
-				    pstmt.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-				    pstmt.setString(3, request.getParameter("cl_quarter"));
+				    pstmt.setString(1, request.getParameter("st_ID"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
@@ -107,16 +79,14 @@
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Class_QUERY = "SELECT * FROM Class";
-					ResultSet rs = stmt.executeQuery(GET_Class_QUERY);
+					String GET_taker_QUERY = "SELECT * FROM taker";
+					ResultSet rs = stmt.executeQuery(GET_taker_QUERY);
 				%>
 				
 				<tr>
 					<form action="05_CourseEnrollmentEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="cl_title" size="10"></th>
-						<th><input value="" name="cl_year" size="10"></th>
-						<th><input value="" name="cl_quarter" size="10"></th>
+						<th><input value="" name="st_ID" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
@@ -136,26 +106,20 @@
 				
 				<!-- Iteration stuff? -->
 				<%
+
+                
 				rs = stmt.executeQuery(
-					"SELECT * FROM class \n"+
-					"ORDER BY cl_title, cl_year, cl_quarter"
+					"SELECT * FROM taker \n"+
+					"ORDER BY st_ID"
 				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="05_CourseEnrollmentEntry.jsp" method="get">
-						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("cl_title") %>" name="cl_title"></td>
-						<td><input value="<%= rs.getInt("cl_year") %>" name="cl_year"></td>
-						<td><input value="<%= rs.getString("cl_quarter") %>" name="cl_quarter"></td>
-						<td><input type="submit" value="Update"></td>
-					</form>
+                    <td><%= rs.getString("st_ID") %></td>
 					<form action="05_CourseEnrollmentEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("cl_title") %>" name="cl_title">
-						<input type="hidden" value="<%= rs.getInt("cl_year") %>" name="cl_year">
-						<input type="hidden" value="<%= rs.getString("cl_quarter") %>" name="cl_quarter">
+						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
@@ -185,13 +149,37 @@
 			/* experiment queries */
 			
 			/* 
-			CREATE TABLE Class ( cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL CONSTRAINT pk_ReviewSession_group PRIMARY KEY(cl_title, cl_year, cl_quarter));
+			
+			CREATE TABLE Student (
+                st_ID VARCHAR(255) PRIMARY KEY, 
+                st_SSN VARCHAR(255) UNIQUE NOT NULL,
+			        st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL,
+			        st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
+			
+            create table taker (
+                st_ID VARCHAR(255) NOT NULL, 
+                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
+            );
+
+            create table take (
+                st_ID VARCHAR(255) NOT NULL, 
+                s_sectionID VARCHAR(255) NOT NULL,
+                take_enrollmentStatus INT NOT NULL, 
+                take_gradingOption VARCHAR(255) NOT NULL,
+                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
+                CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
+            );
+
+
+			// same
+			CREATE TABLE Student (st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL, st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL, st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
 
 			*/
 			%>
 			
 			
 			<a href="./00_index.jsp">Back to Home Page</a>
+			
 
 </body>
 </html>
