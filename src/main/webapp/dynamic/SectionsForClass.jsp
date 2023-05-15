@@ -85,6 +85,11 @@ String quarter = request.getParameter("classQuarter");
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt3 = connection.prepareStatement(
+			            "DELETE FROM WeeklyMeetings WHERE s_sectionID = ?"
+		            );
+				    pstmt3.setString(1, request.getParameter("s_sectionID"));
+				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
 				    	"DELETE FROM Booklist WHERE s_sectionID = ?"
 		            );
@@ -158,6 +163,8 @@ String quarter = request.getParameter("classQuarter");
 						<td><input type="submit" value="Delete"></td>
 					</form>
 					<td><button onclick="window.location.href='./FacultyForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Faculty</button></td> 
+					<td><button onclick="window.location.href='./SectionWeeklyMeetings.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Weekly Meetings</button></td>
+					<td><button onclick="window.location.href='./09_ReviewSessionInfoEntry.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Review Sessions</button></td>  
 					<td><button onclick="window.location.href='./BooksForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Booklist</button></td>    
 				</tr>
 				<%
@@ -215,6 +222,23 @@ String quarter = request.getParameter("classQuarter");
 			    CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
 				);
 			
+			CREATE TABLE WeeklyMeetings (
+        		location VARCHAR(255) NOT NULL,
+        		time VARCHAR(255) NOT NULL,
+        		meetingType VARCHAR(255) NOT NULL,
+        		daysOfWeek VARCHAR(255) NOT NULL,
+        		attendanceType VARCHAR(255) NOT NULL,
+        		s_sectionID VARCHAR(255) NOT NULL,
+        		CONSTRAINT fk_wkm_s FOREIGN KEY (s_sectionID) REFERENCES SECTION(s_sectionID)
+	        );
+			
+			CREATE TABLE ReviewSessions (
+	        	location VARCHAR(255) NOT NULL,
+	        	time VARCHAR(255) NOT NULL,
+	        	date VARCHAR(255) NOT NULL,
+	        	s_sectionID VARCHAR(255) NOT NULL,
+	        	CONSTRAINT fk_rvs_s FOREIGN KEY (s_sectionID) REFERENCES SECTION(s_sectionID)
+	        );
 			*/
 			%>
 			

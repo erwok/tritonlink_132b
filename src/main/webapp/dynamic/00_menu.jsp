@@ -34,9 +34,9 @@
 	<li>
 		<a href="./08_ProbationEntry.jsp">Probation Info Submission</a>
 	</li>
-	<li>
+	<!-- <li>
 		<a href="./09_ReviewSessionInfoEntry.jsp">Review Session Info Submission</a>
-	</li>
+	</li> -->
 	<li>
 		<a href="./10_DegreeRequirementsEntry.jsp">Degree Requirements’ Info Submission</a>
 	</li>
