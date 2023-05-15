@@ -5,7 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <%
-String studentID = request.getParameter("st_ID");
+String studentID = request.getParameter("studentID");
+String cn = request.getParameter("courseName");
+String title = request.getParameter("classTitle");
+String year = request.getParameter("classYear");
+String quarter = request.getParameter("classQuarter");
+String section = request.getParameter("sectionID")
 %>
 <title>Enrolling Courses for <%= studentID %></title>
 </head>
@@ -28,11 +33,7 @@ String studentID = request.getParameter("st_ID");
 				    Connection connection = DriverManager.getConnection
 					("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
 				%>
-				
-				<%
-				String mcn;
-				%>
-				
+					
 				<!-- Insertion stuff? -->
 				<%
 					// Check if an insertion is required
@@ -45,10 +46,10 @@ String studentID = request.getParameter("st_ID");
 							"INSERT INTO take VALUES (?, ?, ?, ?)"
 						);
 
-						pstmt.setString(1, request.getParameter("st_ID"));
+						pstmt.setString(1, request.getParameter("studentID"));
 						pstmt.setString(2, request.getParameter("s_sectionID"));
 						pstmt.setString(3, request.getParameter("take_enrollmentStatus"));
-						pstmt.setString(3, request.getParameter("take_gradingOption"));
+						pstmt.setString(4, request.getParameter("take_gradingOption"));
 						pstmt.executeUpdate();
 						
 						connection.commit();
@@ -59,7 +60,7 @@ String studentID = request.getParameter("st_ID");
 				
 				%>
 				
-				<!-- Delete stuff? 
+				<!-- Delete stuff? -->
 				<%
 				// Check if a delete is requested
 				if (action != null && action.equals("delete")) {
@@ -68,17 +69,15 @@ String studentID = request.getParameter("st_ID");
 				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
-				    mcn = request.getParameter("studentID");
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM take WHERE studentID = ? AND prerequisiteCourseNumber = ?"
+				    	"DELETE FROM take WHERE st_ID = ?"
 					);
 				    
 				    /* if (studentID == null) {
 				        out.println("studentID is null");
 				    } */
 				    
-				    pstmt.setString(1, mcn);
-				    pstmt.setString(2, request.getParameter("prerequisiteCourseNumber"));
+				    pstmt.setString(1, request.getParameter("studentID"));
 				    int rowCount = pstmt.executeUpdate();
 				    
 				    connection.commit();
@@ -86,22 +85,19 @@ String studentID = request.getParameter("st_ID");
 				    connection.setAutoCommit(true);
 				}
 				%>
-			-->
+			
 					
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Course_QUERY = "SELECT * FROM Section";
-					ResultSet rs = stmt.executeQuery(GET_Course_QUERY);
+					String GET_Section_QUERY = "SELECT * FROM Section where ";
+					rs = stmt.executeQuery(GET_Section_QUERY);
 				%>
 				
 				<tr>
 					<td><%= rs.getString("s_sectionID") %></td>
 					<form action="13_EnrollingCoursesForEachStudents.jsp" method="get">
-						<input type="hidden" value="insert" name="action">
-						<input type="hidden" value="<%= studentID %>" name="studentID">
-						<input type="hidden" name="st_ID" value="<%= studentID %>">
-						<td><select multiple name="prerequisites_id">
+						<td><select multiple name="s_sectionID">
                             <option disabled>Select course(s)</option>
                             <%
                             while (rs.next()) {
@@ -111,16 +107,18 @@ String studentID = request.getParameter("st_ID");
                                 <%
                             } %>
                        	</select></td>
+						<td><input value="<%= rs.getString("take_enrollmentStatus") %>" name="take_enrollmentStatus"></td>
+						<td><input value="<%= rs.getString("take_gradingOption") %>" name="take_gradingOption"></td>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
 				
 				
-				<tr><td><h3>Prerequisites for <%= studentID %></h3></td></tr>
+				<tr><td><h3>Enrollemt for <%= studentID %></h3></td></tr>
 				
 				<%
-					String GET_Prerequisites_Query = String.format("SELECT * FROM take WHERE studentID = '%s';", studentID);
-					rs = stmt.executeQuery(GET_Prerequisites_Query);
+					String GET_taker_Query = String.format("SELECT * FROM taker WHERE st_ID = '%s';", studentID);
+					rs = stmt.executeQuery(GET_taker_Query);
 				
 					while (rs.next()) {
 				%>

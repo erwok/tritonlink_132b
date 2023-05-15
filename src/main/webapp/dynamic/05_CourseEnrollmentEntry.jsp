@@ -4,6 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<%
+String studentID = request.getParameter("studentID");
+String cn = request.getParameter("courseName");
+String title = request.getParameter("classTitle");
+String year = request.getParameter("classYear");
+String quarter = request.getParameter("classQuarter");
+String section = request.getParameter("sectionID")
+%>
 <title>Course Enrollment Entry Page</title>
 </head>
 <body>
@@ -43,7 +51,7 @@
 					    pstmt.executeUpdate();
 					    
 					    connection.commit();
-					    connection.setAutoCommit(true);
+                        connection.setAutoCommit(true);
 					}
 				
 				%>
@@ -122,6 +130,8 @@
 						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+                    <% String studentID = rs.getString("st_ID"); %>
+					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudents.jsp?studentID=<%= studentID %>&courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID")%>'">Enrollment</button></td>
 				</tr>
 				<%
 				}
@@ -153,15 +163,19 @@
 			CREATE TABLE Student (
                 st_ID VARCHAR(255) PRIMARY KEY, 
                 st_SSN VARCHAR(255) UNIQUE NOT NULL,
-			        st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL,
-			        st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
+			    st_enrollmentStatus VARCHAR(255) NOT NULL,
+				st_residential VARCHAR(255) NOT NULL,
+			    st_firstName VARCHAR(255) NOT NULL, 
+				st_middleName VARCHAR(255), 
+				st_lastName VARCHAR(255) NOT NULL
+			);
 			
-            create table taker (
-                st_ID VARCHAR(255) NOT NULL, 
+            CREATE TABLE taker (
+                st_ID VARCHAR(255) PRIMARY KEY, 
                 CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
             );
 
-            create table take (
+            CREATE TABLE take (
                 st_ID VARCHAR(255) NOT NULL, 
                 s_sectionID VARCHAR(255) NOT NULL,
                 take_enrollmentStatus INT NOT NULL, 
@@ -169,11 +183,7 @@
                 CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
                 CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
             );
-
-
-			// same
-			CREATE TABLE Student (st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL, st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL, st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
-
+			
 			*/
 			%>
 			

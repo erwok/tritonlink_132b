@@ -1,0 +1,22 @@
+CREATE TABLE Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
+
+CREATE TABLE Prerequisite (prerequisites_id VARCHAR(255) NOT NULL PRIMARY KEY, mainCourseNumber VARCHAR(255) NOT NULL, prerequisiteCourseNumber VARCHAR(255) NOT NULL, CONSTRAINT FK_PreCourse1 FOREIGN KEY (mainCourseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_PreCourse2 FOREIGN KEY (prerequisiteCourseNumber) REFERENCES Course(cr_courseNumber);
+
+CREATE TABLE Class (cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, CONSTRAINT pk_Class PRIMARY KEY(cl_title, cl_year, cl_quarter));
+
+CREATE TABLE CourseOffering (cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+
+CREATE TABLE Faculty (fc_name VARCHAR(255) PRIMARY KEY);
+
+CREATE TABLE Student (st_ID VARCHAR(255) PRIMARY KEY, st_SSN VARCHAR(255) UNIQUE NOT NULL, st_enrollmentStatus VARCHAR(255) NOT NULL, st_residential VARCHAR(255) NOT NULL, st_firstName VARCHAR(255) NOT NULL, st_middleName VARCHAR(255), st_lastName VARCHAR(255) NOT NULL);
+			
+CREATE TABLE Section (s_sectionID VARCHAR(255) PRIMARY KEY, s_capacity INT NOT NULL, courseNumber VARCHAR(255) NOT NULL, classTitle VARCHAR(255) NOT NULL, classYear INT NOT NULL, classQuarter VARCHAR(255) NOT NULL, CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+
+CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL, CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID), CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
+
+CREATE TABLE Booklist (ISBN INT UNIQUE NOT NULL, title VARCHAR(255) NOT NULL, edition INT, publisher VARCHAR(255), author_fname VARCHAR(255),  author_lname VARCHAR(255), s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+
+CREATE TABLE taker (st_ID VARCHAR(255) PRIMARY KEY, CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID));
+
+CREATE TABLE take (st_ID VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, take_enrollmentStatus INT NOT NULL, take_gradingOption VARCHAR(255) NOT NULL,CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+

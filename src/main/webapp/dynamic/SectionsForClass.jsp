@@ -186,26 +186,35 @@ String quarter = request.getParameter("classQuarter");
 			/* experiment queries */
 			
 			/*
-			CREATE TABLE Section (s_sectionID VARCHAR(255) PRIMARY KEY, s_capacity INT NOT NULL,
-			        courseNumber VARCHAR(255) NOT NULL, classTitle VARCHAR(255) NOT NULL, classYear INT NOT NULL, classQuarter VARCHAR(255) NOT NULL,
-			        CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber),
-			        CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
-			// Same
-			CREATE TABLE Section (s_sectionID VARCHAR(255) PRIMARY KEY, s_capacity INT NOT NULL, courseNumber VARCHAR(255) NOT NULL, classTitle VARCHAR(255) NOT NULL, classYear INT NOT NULL, classQuarter VARCHAR(255) NOT NULL, CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+			CREATE TABLE Section (
+				s_sectionID VARCHAR(255) PRIMARY KEY, 
+				s_capacity INT NOT NULL,
+			    courseNumber VARCHAR(255) NOT NULL, 
+				classTitle VARCHAR(255) NOT NULL, 
+				classYear INT NOT NULL, 
+				classQuarter VARCHAR(255) NOT NULL,
+			    CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber),
+			    CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter)
+			);
 			
-			CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL,
-			        CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID),
-			        CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
+			CREATE TABLE Teaches (
+				s_sectionID VARCHAR(255) NOT NULL, 
+				fc_name VARCHAR(255) NOT NULL,
+			    CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID),
+			    CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name)
+			);
 			
-			CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL, CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID), CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
+			CREATE TABLE Booklist (
+				ISBN INT UNIQUE NOT NULL, 
+				title VARCHAR(255) NOT NULL,
+			    edition INT, 
+				publisher VARCHAR(255), 
+				author_fname VARCHAR(255), 
+			    author_lname VARCHAR(255), 
+				s_sectionID VARCHAR(255) NOT NULL,
+			    CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
+				);
 			
-			CREATE TABLE Booklist (ISBN INT UNIQUE NOT NULL, title VARCHAR(255) NOT NULL,
-			        edition INT, publisher VARCHAR(255), author_fname VARCHAR(255), 
-			        author_lname VARCHAR(255), s_sectionID VARCHAR(255) NOT NULL,
-			        CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
-			
-			// Same
-			CREATE TABLE Booklist (ISBN INT UNIQUE NOT NULL, title VARCHAR(255) NOT NULL, edition INT, publisher VARCHAR(255), author_fname VARCHAR(255),  author_lname VARCHAR(255), s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
 			*/
 			%>
 			
