@@ -131,6 +131,12 @@
 				    pstmt3.setString(1, request.getParameter("cr_courseNumber"));
 				    pstmt3.executeUpdate();
 				    
+				    PreparedStatement pstmt5 = connection.prepareStatement(
+		            	"DELETE FROM PastCourseNums WHERE cr_courseNumber = ?"
+		            );
+				    pstmt5.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt5.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
 				    PreparedStatement pstmt4 = connection.prepareStatement(
@@ -247,6 +253,7 @@
 						<td><input type="submit" value="Delete"></td>
 					</form>
 					<% String cn = rs.getString("cr_courseNumber"); %>
+					<td><button onclick="window.location.href='./PastCourseNumbersForCourse.jsp?courseName=<%= cn %>'">Past Nums</button></td>
 					<td><button onclick="window.location.href='./11_PrerequisitesEntryForEachMainCourse.jsp?courseName=<%= cn %>'">Prereqs</button></td>
 					<td><button onclick="window.location.href='./02_ClassEntry.jsp?courseName=<%= cn %>'">Class Offerings</button></td>
 				</tr>
@@ -289,10 +296,12 @@
 		        cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL,
 		        CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
 		        CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
-
-			  
+			
 			// SAME 
 	        create table CourseOffering (cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+			
+			create table PastCourseNums (cr_courseNumber VARCHAR(255) NOT NULL, oldCourseNumber VARCHAR(255),
+				CONSTRAINT FK_pcn FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber));
 			*/
 			%>
 			
