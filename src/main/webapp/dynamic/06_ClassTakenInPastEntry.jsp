@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Pass Course Enrollment Entry Page</title>
+<title>Past Course Enrollment Entry Page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
