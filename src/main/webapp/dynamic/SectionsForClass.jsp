@@ -85,6 +85,12 @@ String quarter = request.getParameter("classQuarter");
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM Booklist WHERE s_sectionID = ?"
+		            );
+				    pstmt2.setString(1, request.getParameter("s_sectionID"));
+				    
+				    
 				    PreparedStatement pstmt = connection.prepareStatement(
 				        "DELETE FROM Section WHERE s_sectionID = ?"
 				    );
@@ -151,7 +157,8 @@ String quarter = request.getParameter("classQuarter");
 						<input type="hidden" name="classQuarter" value="<%= quarter %>">
 						<td><input type="submit" value="Delete"></td>
 					</form>
-					<td><button onclick="window.location.href='./FacultyForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Faculty</button></td>    
+					<td><button onclick="window.location.href='./FacultyForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Faculty</button></td> 
+					<td><button onclick="window.location.href='./BooksForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Booklist</button></td>    
 				</tr>
 				<%
 				}
@@ -191,6 +198,14 @@ String quarter = request.getParameter("classQuarter");
 			        CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
 			
 			CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL, CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID), CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
+			
+			CREATE TABLE Booklist (ISBN INT UNIQUE NOT NULL, title VARCHAR(255) NOT NULL,
+			        edition INT, publisher VARCHAR(255), author_fname VARCHAR(255), 
+			        author_lname VARCHAR(255), s_sectionID VARCHAR(255) NOT NULL,
+			        CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+			
+			// Same
+			CREATE TABLE Booklist (ISBN INT UNIQUE NOT NULL, title VARCHAR(255) NOT NULL, edition INT, publisher VARCHAR(255), author_fname VARCHAR(255),  author_lname VARCHAR(255), s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT fk_s_b FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
 			*/
 			%>
 			
