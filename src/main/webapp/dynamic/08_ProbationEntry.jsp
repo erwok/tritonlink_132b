@@ -4,6 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<%
+String studentID = request.getParameter("studentID");
+%>
 <title>Probation Entry page</title>
 </head>
 <body>
@@ -13,10 +16,7 @@
 			
 			<table>
 				<tr>
-					<th>st_ID</th>
-					<th>st_startDate</th>
-					<th>st_endDate</th>
-					<th>st_reason</th>
+					<th>Student ID</th>
 				</tr>
 				<%
 				try {
@@ -37,14 +37,11 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the Probation attrs INTO the Probation table
+					    // INSERT the Probator attrs INTO the Probator table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO Probation VALUES (?, ?, ?, ?)"));
+					    ("INSERT INTO Probator VALUES (?)"));
 
 					    pstmt.setString(1, request.getParameter("st_ID"));
-					    pstmt.setString(2, request.getParameter("st_startDate"));
-					    pstmt.setString(3, request.getParameter("st_endDate"));
-					    pstmt.setString(4, request.getParameter("st_reason"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -56,78 +53,54 @@
 				
 				<!-- Update stuff? -->
 				<%
-				// Check if an update is requested
-				if (action != null && action.equals("update")) {
-				    
-				    connection.setAutoCommit(false);
-				    
-				    // Create the prepared statement and use it to
-				    // UPDATE the student attributes in the Student table.
-				    PreparedStatement pstatement = connection.prepareStatement(
-				    	"UPDATE Probation SET cr_ProbationNumber = ?, cr_lab = ? \n"+
-				    	"WHERE cr_ProbationNumber = ?"
-				    );
-
-				    pstatement.setString(1, request.getParameter("cr_ProbationNumber"));
-				    pstatement.setString(2, request.getParameter("cr_lab"));
-				    pstatement.setString(3, request.getParameter("cr_ProbationNumber"));
-				    int rowCount = pstatement.executeUpdate();
-				    
-				    connection.setAutoCommit(false);
-				    connection.setAutoCommit(true);
-				}
+                    // no update
 				%>
 				
 				<!-- Delete stuff? -->
 				<%
 				// Check if a delete is requested
 				if (action != null && action.equals("delete")) {
-				    
-				    connection.setAutoCommit(false);
-				    
-				    // Create the prepared statement and use it to
-				    // DELETE the Probation FROM the Probation table.
-				    PreparedStatement pstmt = connection.prepareStatement(
+
+					connection.setAutoCommit(false);
+ 
+				    PreparedStatement pstmt1 = connection.prepareStatement(
 				    	"DELETE FROM Probation \n"+
-					    "WHERE cr_ProbationNumber = ?"
+					    "WHERE st_ID = ?"
+					);
+				    pstmt1.setString(1, request.getParameter("st_ID"));
+				    pstmt1.executeUpdate();
+
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM Probator \n"+
+					    "WHERE st_ID = ?"
 					);
 				    
-				    pstmt.setString(1, request.getParameter("cr_ProbationNumber"));
-				    int rowCount = pstmt.executeUpdate();
+				    pstmt2.setString(1, request.getParameter("st_ID"));
+				    pstmt2.executeUpdate();
 				    
-				    connection.setAutoCommit(false);
+					connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);
 				}
 				%>
 				
-					
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_Probation_QUERY = "SELECT * FROM Probation";
-					ResultSet rs = stmt.executeQuery(GET_Probation_QUERY);
+					String GET_Probator_QUERY = "SELECT * FROM Probator";
+					ResultSet rs = stmt.executeQuery(GET_Probator_QUERY);
 				%>
-				
+
 				<tr>
 					<form action="08_ProbationEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="cr_ProbationNumber" size="10"></th>
-						<th><input value="" name="cr_lab" size="10"></th>
+						<th><input value="" name="st_ID" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
-					
+													
 				<%
 					while (rs.next()) {    
-				%>
-				<%-- <tr>
-					<!-- Get the Probation number -->
-					<td><%= rs.getInt("cr_ProbationNumber") %></td>
-					
-					<!-- Get the lab -->
-					<td><%= rs.getString("cr_lab") %></td>
-				</tr> --%>
-				<%
+
 					}
 				%>
 				
@@ -137,28 +110,25 @@
 				
 				%>
 				
-				
 				<!-- Iteration stuff? -->
+				
 				<%
 				rs = stmt.executeQuery(
-					"SELECT * FROM Probation \n"+
-					"ORDER BY cr_ProbationNumber"
+					"SELECT * FROM Probator \n"+
+					"ORDER BY st_ID"
 				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-					<form action="08_ProbationEntry.jsp" method="get">
-						<input type="hidden" value="update" name="action">
-						<td><input value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber"></td>
-						<td><input value="<%= rs.getString("cr_lab") %>" name="cr_lab"></td>
-						<td><input type="submit" value="Update"></td>
-					</form>
+                    <td><%= rs.getString("st_ID") %></td>
 					<form action="08_ProbationEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("cr_ProbationNumber") %>" name="cr_ProbationNumber">
+						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+                    <% String sID = rs.getString("st_ID"); %>
+					<td><button onclick="window.location.href='./ProbationForEachStudent.jsp?studentID=<%= sID %>'">Enrollment</button></td>
 				</tr>
 				<%
 				}
@@ -186,10 +156,18 @@
 			/* experiment queries */
 			
 			/* 
-			create table Probation (cr_ProbationNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
-			INSERT INTO Probation VALUES (123, 'yes');
-			INSERT INTO Probation VALUES (456, 'no');
-			INSERT INTO Probation VALUES (789, 'woohoo');
+			CREATE TABLE probator (
+                st_ID VARCHAR(255) PRIMARY KEY, 
+                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
+            );
+
+			CREATE TABLE Probation (
+                st_ID VARCHAR(255) NOT NULL, 
+                st_startDate VARCHAR(255) NOT NULL,
+                st_endDate VARCHAR(255) NOT NULL, 
+                st_reason VARCHAR(255) NOT NULL,
+                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES probator(st_ID)
+			);
 			*/
 			%>
 			

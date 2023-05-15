@@ -5,23 +5,21 @@
 <head>
 <meta charset="UTF-8">
 <%
-String studentID = request.getParameter("studentID");
-String cn = request.getParameter("courseName");
-String title = request.getParameter("classTitle");
-String year = request.getParameter("classYear");
-String quarter = request.getParameter("classQuarter");
-String section = request.getParameter("sectionID")
+String sID = request.getParameter("studentID");
 %>
-<title>Course Enrollment Entry Page</title>
+<title>Probation for <%= sID %></title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Enrollment Entry Page</b>
+			<b>Probation for <%= sID %></b>
 			
 			<table>
 				<tr>
-					<th>ID</th>
+					<th>Student ID</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Reason</th>
 				</tr>
 				<%
 				try {
@@ -42,24 +40,25 @@ String section = request.getParameter("sectionID")
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the taker attrs INTO the taker table
+					    // INSERT the Probation attrs INTO the Probation table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO taker VALUES (?)"));
+					    ("INSERT INTO Probation VALUES (?, ?, ?, ?)"));
 
 					    pstmt.setString(1, request.getParameter("st_ID"));
+					    pstmt.setString(2, request.getParameter("st_startDate"));
+					    pstmt.setString(3, request.getParameter("st_endDate"));
+					    pstmt.setString(4, request.getParameter("st_reason"));
 					    
 					    pstmt.executeUpdate();
 					    
 					    connection.commit();
-                        connection.setAutoCommit(true);
+					    connection.setAutoCommit(true);
 					}
 				
 				%>
 				
 				<!-- Update stuff? -->
-				<%
-                    // no update
-				%>
+				
 				
 				<!-- Delete stuff? -->
 				<%
@@ -69,14 +68,17 @@ String section = request.getParameter("sectionID")
 				    connection.setAutoCommit(false);
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the taker FROM the taker table.
+				    // DELETE the Probation FROM the Probation table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM taker \n"+
-				    	"WHERE st_ID = ?"
-				    );
+				    	"DELETE FROM Probation \n"+
+					    "WHERE st_ID = ? AND st_startDate = ? AND st_endDate = ? AND st_reason = ?"
+					);
 				    
 				    pstmt.setString(1, request.getParameter("st_ID"));
-				    int rowCount = pstmt.executeUpdate();
+					pstmt.setString(2, request.getParameter("st_startDate"));
+					pstmt.setString(3, request.getParameter("st_endDate"));
+					pstmt.setString(4, request.getParameter("st_reason"));
+				    pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);
@@ -87,14 +89,17 @@ String section = request.getParameter("sectionID")
 				<%
 					Statement stmt = connection.createStatement();
 				
-					String GET_taker_QUERY = "SELECT * FROM taker";
-					ResultSet rs = stmt.executeQuery(GET_taker_QUERY);
+					String GET_Probation_QUERY = "SELECT * FROM Probation";
+					ResultSet rs = stmt.executeQuery(GET_Probation_QUERY);
 				%>
 				
 				<tr>
-					<form action="05_CourseEnrollmentEntry.jsp" method="get">
+					<form action="ProbationForEachStudent.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="st_ID" size="10"></th>
+						<th><input value="" name="st_startDate" size="10"></th>
+						<th><input value="" name="st_endDate" size="10"></th>
+						<th><input value="" name="st_reason" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
@@ -115,21 +120,20 @@ String section = request.getParameter("sectionID")
 				<!-- Iteration stuff? -->
 				<%
 				rs = stmt.executeQuery(
-					"SELECT * FROM taker \n"+
+					"SELECT * FROM Probation \n"+
 					"ORDER BY st_ID"
 				);
 				
 				while (rs.next()) {
 				%>
 				<tr>
-                    <td><%= rs.getString("st_ID") %></td>
-					<form action="05_CourseEnrollmentEntry.jsp" method="get">
-						<input type="hidden" value="delete" name="action">
-						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
+					<th><%= rs.getString("st_ID") %></th>
+					<th><%= rs.getString("st_startDate") %></th>
+					<th><%= rs.getString("st_endDate") %></th>
+					<th><%= rs.getString("st_reason") %></th>
+					<form action="ProbationForEachStudent.jsp" method="get">
 						<td><input type="submit" value="Delete"></td>
 					</form>
-                    <% String studentID = rs.getString("st_ID"); %>
-					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudents.jsp?studentID=<%= studentID %>&courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID")%>'">Enrollment</button></td>
 				</tr>
 				<%
 				}
@@ -157,38 +161,24 @@ String section = request.getParameter("sectionID")
 			/* experiment queries */
 			
 			/* 
-			
-			CREATE TABLE Student (
-                st_ID VARCHAR(255) PRIMARY KEY, 
-                st_SSN VARCHAR(255) UNIQUE NOT NULL,
-			    st_enrollmentStatus VARCHAR(255) NOT NULL,
-				st_residential VARCHAR(255) NOT NULL,
-			    st_firstName VARCHAR(255) NOT NULL, 
-				st_middleName VARCHAR(255), 
-				st_lastName VARCHAR(255) NOT NULL
-			);
-			
-            CREATE TABLE taker (
+			CREATE TABLE probator (
                 st_ID VARCHAR(255) PRIMARY KEY, 
                 CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
             );
 
-            CREATE TABLE take (
+			CREATE TABLE probation (
                 st_ID VARCHAR(255) NOT NULL, 
-                s_sectionID VARCHAR(255) NOT NULL,
-                take_enrollmentStatus INT NOT NULL, 
-                take_gradingOption VARCHAR(255) NOT NULL,
-                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
-                CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
-            );
-			
+                st_startDate VARCHAR(255) NOT NULL,
+                st_endDate VARCHAR(255) NOT NULL, 
+                st_reason VARCHAR(255) NOT NULL,
+				CONSTRAINT PK_take PRIMARY KEY(st_ID, st_startDate, st_endDate, st_reason),
+                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES probator(st_ID)
+			);
 			*/
 			%>
 			
 			
 			<a href="./00_index.jsp">Back to Home Page</a>
 			
-
 </body>
 </html>
-
