@@ -113,15 +113,21 @@
 				    pstmt2.setString(1, request.getParameter("cr_courseNumber"));
 				    pstmt2.executeUpdate();
 				    
+				    PreparedStatement pstmt3 = connection.prepareStatement(
+				    	"DELETE FROM Section WHERE courseNumber = ?"
+				   	);
+				    pstmt3.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt3.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the course FROM the COURSE table.
-				    PreparedStatement pstmt3 = connection.prepareStatement(
+				    PreparedStatement pstmt4 = connection.prepareStatement(
 				    	"DELETE FROM Course \n"+
 					    "WHERE cr_courseNumber = ?"
 					);
 				    
-				    pstmt3.setString(1, request.getParameter("cr_courseNumber"));
-				    int rowCount = pstmt3.executeUpdate();
+				    pstmt4.setString(1, request.getParameter("cr_courseNumber"));
+				    int rowCount = pstmt4.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);

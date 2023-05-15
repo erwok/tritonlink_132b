@@ -119,17 +119,26 @@ String cn = request.getParameter("courseName");
 				    pstmt1.setString(3, request.getParameter("cl_quarter"));
 				    pstmt1.executeUpdate();
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+			            "DELETE FROM Section \n"+
+				    	"WHERE classTitle = ? AND classYear = ? AND classQuarter = ?"
+				    );
+				    pstmt2.setString(1, request.getParameter("cl_title"));
+				    pstmt2.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstmt2.setString(3, request.getParameter("cl_quarter"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the class FROM the CLASS table.
-				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    PreparedStatement pstmt3 = connection.prepareStatement(
 				    	"DELETE FROM Class \n"+
 						"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?"
 					);
 				    
-				    pstmt2.setString(1, request.getParameter("cl_title"));
-				    pstmt2.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
-				    pstmt2.setString(3, request.getParameter("cl_quarter"));
-				    int rowCount = pstmt2.executeUpdate();
+				    pstmt3.setString(1, request.getParameter("cl_title"));
+				    pstmt3.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstmt3.setString(3, request.getParameter("cl_quarter"));
+				    int rowCount = pstmt3.executeUpdate();
 				    
 				    
 				    connection.setAutoCommit(false);
@@ -190,7 +199,7 @@ String cn = request.getParameter("courseName");
 						<td><input type="submit" value="Update"></td>
 					</form> --%>
 					<td><%= rs.getString("cl_title") %></td>
-					<td><%= rs.getString("cl_year") %></td>
+					<td><%= rs.getInt("cl_year") %></td>
 					<td><%= rs.getString("cl_quarter") %></td>
 					<form action="02_ClassEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
@@ -200,6 +209,7 @@ String cn = request.getParameter("courseName");
 						<input type="hidden" name="courseName" value="<%= cn %>">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+					<td><button onclick="window.location.href='./SectionsForClass.jsp?courseName=<%= cn %>&classTitle=<%= rs.getString("cl_title") %>&classYear=<%= rs.getInt("cl_year") %>&classQuarter=<%= rs.getString("cl_quarter") %>'">Sections</button></td>
 				</tr>
 				<%
 				}
