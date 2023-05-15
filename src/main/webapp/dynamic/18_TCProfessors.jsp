@@ -100,7 +100,7 @@ String tcID1 = request.getParameter("tcID");
                             } %>
                        	</select></td>
                        	<input type="hidden" name="sID" value="<%= sID1 %>">
-						<input type="hidden" name="tcID" value="<%= tcID1 %>">>
+						<input type="hidden" name="tcID" value="<%= tcID1 %>">
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
