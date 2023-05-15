@@ -10,7 +10,7 @@ String cn = request.getParameter("courseName");
 String title = request.getParameter("classTitle");
 String year = request.getParameter("classYear");
 String quarter = request.getParameter("classQuarter");
-String section = request.getParameter("sectionID")
+String section = request.getParameter("sectionID");
 %>
 <title>Course Enrollment Entry Page</title>
 </head>
@@ -128,8 +128,8 @@ String section = request.getParameter("sectionID")
 						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
-                    <% String studentID = rs.getString("st_ID"); %>
-					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudents.jsp?studentID=<%= studentID %>&courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID")%>'">Enrollment</button></td>
+                    <% String sID = rs.getString("st_ID"); %>
+					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudents.jsp?studentID=<%= sID %>&courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID")%>'">Enrollment</button></td>
 				</tr>
 				<%
 				}
