@@ -91,8 +91,8 @@ String studentID = request.getParameter("studentID");
 				%>
 				
 				<%
-				String getCurrentCourses = "SELECT * FROM take WHERE st_ID = '" + studentID + "' AND cl_year = 2023 AND cl_quarter = 'SP';";
-				rs = stmt.executeQuery(getCurrentCourses);
+				//String getCurrentCourses = "SELECT * FROM take WHERE st_ID = '" + studentID + "' AND cl_year = 2023 AND cl_quarter = 'SP';";
+				// rs = stmt.executeQuery(getCurrentCourses);
 				%>
 				
 				<tr>
@@ -120,7 +120,7 @@ String studentID = request.getParameter("studentID");
 					</form>
 				</tr>
 				
-				<%
+				<%-- <%
 				while (rs.next()) {
 				%>
 				    <tr>
@@ -131,22 +131,11 @@ String studentID = request.getParameter("studentID");
 				    	<td><%= rs.getString("s_sectionID") %></td>
 				    	<td><%= rs.getString("take_enrollmentStatus") %></td>
 				    	<td><%= rs.getString("take_gradingOption") %></td>
-						<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
-						    <input type="hidden" value="delete" name="action">
-						    <input type="hidden" name="st_ID" value="<%= studentID %>">
-						    <input type="hidden" name="studentID" value="<%= studentID %>">
-						    <input type="hidden" name="cr_courseNumber" value="<%= rs.getString("courseNumber") %>">
-						    <input type="hidden" name="cl_title" value="<%= rs.getString("cl_title") %>">
-						    <input type="hidden" name="cl_year" value="<%= rs.getInt("cl_year") %>">
-						    <input type="hidden" name="cl_quarter" value="<%= rs.getString("cl_quarter") %>">
-						    <input type="hidden" name="s_sectionID" value="<%= rs.getString("s_sectionID") %>">
-						    <td><input type="submit" value="Delete"></td>
-						</form>
 				    </tr>
 				 
 				<%
 				}
-				%>
+				%> --%>
 				
 				<%
 				String getStudentCourses = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
@@ -162,6 +151,17 @@ String studentID = request.getParameter("studentID");
 				    	<td><%= rs.getString("s_sectionID") %></td>
 				    	<td><%= rs.getString("take_enrollmentStatus") %></td>
 				    	<td><%= rs.getString("take_gradingOption") %></td>
+				    	<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
+						    <input type="hidden" value="delete" name="action">
+						    <input type="hidden" name="st_ID" value="<%= studentID %>">
+						    <input type="hidden" name="studentID" value="<%= studentID %>">
+						    <input type="hidden" name="cr_courseNumber" value="<%= rs.getString("courseNumber") %>">
+						    <input type="hidden" name="cl_title" value="<%= rs.getString("cl_title") %>">
+						    <input type="hidden" name="cl_year" value="<%= rs.getInt("cl_year") %>">
+						    <input type="hidden" name="cl_quarter" value="<%= rs.getString("cl_quarter") %>">
+						    <input type="hidden" name="s_sectionID" value="<%= rs.getString("s_sectionID") %>">
+						    <td><input type="submit" value="Delete"></td>
+						</form>
 				    </tr>
 				<%
 				}
