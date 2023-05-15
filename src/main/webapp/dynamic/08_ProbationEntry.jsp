@@ -128,7 +128,7 @@ String studentID = request.getParameter("studentID");
 						<td><input type="submit" value="Delete"></td>
 					</form>
                     <% String sID = rs.getString("st_ID"); %>
-					<td><button onclick="window.location.href='./ProbationForEachStudent.jsp?studentID=<%= sID %>'">Enrollment</button></td>
+					<td><button onclick="window.location.href='./ProbationForEachStudent.jsp?studentID=<%= sID %>'">Probation Periods</button></td>
 				</tr>
 				<%
 				}

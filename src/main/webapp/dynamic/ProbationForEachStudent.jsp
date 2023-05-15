@@ -7,16 +7,15 @@
 <%
 String sID = request.getParameter("studentID");
 %>
-<title>Probation for <%= sID %></title>
+<title>Probation for student with id: <%= sID %></title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Probation for <%= sID %></b>
+			<b>Probation for student with id: <%= sID %></b>
 			
 			<table>
 				<tr>
-					<th>Student ID</th>
 					<th>Start Date</th>
 					<th>End Date</th>
 					<th>Reason</th>
@@ -58,6 +57,25 @@ String sID = request.getParameter("studentID");
 				%>
 				
 				<!-- Update stuff? -->
+				<%
+				// Check if an update is requested
+				if (action != null && action.equals("update")) {
+				    
+				    connection.setAutoCommit(false);
+
+				    PreparedStatement pstatement = connection.prepareStatement(
+				        "UPDATE Probation SET st_reason = ? WHERE st_ID = ? AND st_startDate = ? AND st_endDate = ?");
+				    
+				    pstatement.setString(1, request.getParameter("st_reason"));
+				    pstatement.setString(2, request.getParameter("st_ID"));
+				    pstatement.setString(3, request.getParameter("st_startDate"));
+				    pstatement.setString(4, request.getParameter("st_endDate"));
+				    int rowCount = pstatement.executeUpdate();
+			    
+				    connection.setAutoCommit(false);
+				    connection.setAutoCommit(true);
+				}
+				%>
 				
 				
 				<!-- Delete stuff? -->
@@ -96,11 +114,12 @@ String sID = request.getParameter("studentID");
 				<tr>
 					<form action="ProbationForEachStudent.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
-						<th><input value="" name="st_ID" size="10"></th>
-						<th><input value="" name="st_startDate" size="10"></th>
-						<th><input value="" name="st_endDate" size="10"></th>
-						<th><input value="" name="st_reason" size="10"></th>
-						<th><input type="submit" value="Insert"></th>
+						<input type="hidden" value="<%= sID %>" name="st_ID">
+						<td><input value="" name="st_startDate" size="10"></td>
+						<td><input value="" name="st_endDate" size="10"></td>
+						<td><input value="" name="st_reason" size="10"></td>
+						<input type="hidden" name="studentID" value="<%= sID %>">
+						<td><input type="submit" value="Insert"></td>
 					</form>
 				</tr>
 					
@@ -127,11 +146,22 @@ String sID = request.getParameter("studentID");
 				while (rs.next()) {
 				%>
 				<tr>
-					<th><%= rs.getString("st_ID") %></th>
-					<th><%= rs.getString("st_startDate") %></th>
-					<th><%= rs.getString("st_endDate") %></th>
-					<th><%= rs.getString("st_reason") %></th>
 					<form action="ProbationForEachStudent.jsp" method="get">
+						<input type="hidden" value="update" name="action">
+						<input type="hidden" value="<%= sID %>" name="st_ID">
+						<td><input value="<%= rs.getString("st_startDate") %>" name="st_startDate"></td>
+						<td><input value="<%= rs.getString("st_endDate") %>" name="st_endDate"></td>
+						<td><input value="<%= rs.getString("st_reason") %>" name="st_reason"></td>
+						<input type="hidden" name="studentID" value="<%= sID %>">
+						<td><input type="submit" value="Update"></td>
+					</form>
+					<form action="ProbationForEachStudent.jsp" method="get">
+						<input type="hidden" value="delete" name="action">
+						<input type="hidden" name="st_ID" value="<%= sID %>">
+						<input type="hidden" name="st_startDate" value="<%= rs.getString("st_startDate") %>">
+						<input type="hidden" name="st_endDate" value="<%= rs.getString("st_endDate") %>">
+						<input type="hidden" name="st_reason" value="<%= rs.getString("st_reason") %>">
+						<input type="hidden" name="studentID" value="<%= sID %>">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
