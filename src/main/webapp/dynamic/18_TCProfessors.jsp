@@ -86,7 +86,7 @@ String tcID1 = request.getParameter("tcID");
 					rs = stmt.executeQuery(GET_Faculty_QUERY);
 				%>
 				<tr>
-					<form action="FacultyForSection.jsp" method="get">
+					<form action="18_TCProfessors.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<input type="hidden" value="<%= tcID1 %>" name="tc_ID">
 						<td><select multiple name="faculties">
@@ -116,11 +116,12 @@ String tcID1 = request.getParameter("tcID");
 				%>
 				<tr>
 					<td><%= rs.getString("fc_name") %></td>
-					<form action="FacultyForSection.jsp" method="get">
+					<form action="18_TCProfessors.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("fc_name") %>" name="fc_name">
 						<input type="hidden" name="sID" value="<%= sID1 %>">
 						<input type="hidden" name="tcID" value="<%= tcID1 %>">
+						<input type="hidden" value="<%= tcID1 %>" name="tc_ID">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
