@@ -78,6 +78,10 @@
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt3 = connection.prepareStatement("DELETE FROM TCProfs WHERE fc_name = ?");
+				    pstmt3.setString(1, request.getParameter("fc_name"));
+				    pstmt3.executeUpdate();
+				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
 				    	"DELETE FROM Teaches WHERE fc_name = ?"
 	    	        );
