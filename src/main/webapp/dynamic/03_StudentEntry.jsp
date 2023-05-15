@@ -96,6 +96,18 @@
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt3 = connection.prepareStatement(
+	            		"DELETE FROM Taker WHERE st_id = ?"
+		            );
+				    pstmt3.setString(1, request.getParameter("st_ID"));
+				    pstmt3.executeUpdate();
+				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+	            		"DELETE FROM Take WHERE st_id = ?"
+		            );
+				    pstmt2.setString(1, request.getParameter("st_ID"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the Student FROM the Student table.
 				    PreparedStatement pstmt = connection.prepareStatement(

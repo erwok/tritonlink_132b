@@ -111,6 +111,20 @@
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt7 = connection.prepareStatement(
+			            "DELETE FROM take \n"+
+				    	"WHERE cr_courseNumber = ?"
+					);
+				    pstmt7.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt7.executeUpdate();
+				    
+				    PreparedStatement pstmt6 = connection.prepareStatement(
+			            "DELETE FROM CurrentCourses \n"+
+				    	"WHERE cr_courseNumber = ?"
+					);
+				    pstmt6.setString(1, request.getParameter("cr_courseNumber"));
+				    pstmt6.executeUpdate();
+				    
 				    PreparedStatement pstmt1 = connection.prepareStatement(
 				    	"DELETE FROM Prerequisite \n"+
 						"WHERE mainCourseNumber = ? OR prerequisiteCourseNumber = ?"

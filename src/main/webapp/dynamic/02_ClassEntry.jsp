@@ -109,6 +109,24 @@ String cn = request.getParameter("courseName");
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt5 = connection.prepareStatement(
+				    	"DELETE FROM Take \n"+
+						"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?"
+					);
+				    pstmt5.setString(1, request.getParameter("cl_title"));
+				    pstmt5.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstmt5.setString(3, request.getParameter("cl_quarter"));
+				    pstmt5.executeUpdate();
+				    
+				    PreparedStatement pstmt4 = connection.prepareStatement(
+				    	"DELETE FROM CurrentCourses \n"+
+						"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?"
+					);
+				    pstmt4.setString(1, request.getParameter("cl_title"));
+				    pstmt4.setInt(2, Integer.parseInt(request.getParameter("cl_year")));
+				    pstmt4.setString(3, request.getParameter("cl_quarter"));
+				    pstmt4.executeUpdate();
+				    
 				    PreparedStatement pstmt1 = connection.prepareStatement(
 				    	"DELETE FROM CourseOffering \n"+
 						"WHERE cl_title = ? AND cl_year = ? AND cl_quarter = ?"

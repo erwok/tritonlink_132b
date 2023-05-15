@@ -4,24 +4,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<%
-String studentID = request.getParameter("studentID");
-String cn = request.getParameter("courseName");
-String title = request.getParameter("classTitle");
-String year = request.getParameter("classYear");
-String quarter = request.getParameter("classQuarter");
-String section = request.getParameter("sectionID");
-%>
 <title>Course Enrollment Entry Page</title>
 </head>
 <body>
 			<%-- Set the scripting language Java and --%>
 			<%@ page language="java" import="java.sql.*" %>
-			<b>Course Enrollment Entry Page</b>
+			<b>Prepare Student for Course Enrollment Page</b>
 			
 			<table>
 				<tr>
-					<th>ID</th>
+					<th>Student ID</th>
 				</tr>
 				<%
 				try {
@@ -44,7 +36,7 @@ String section = request.getParameter("sectionID");
 					    // Create the prepared statement and use it to
 					    // INSERT the taker attrs INTO the taker table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    ("INSERT INTO taker VALUES (?)"));
+					    "INSERT INTO taker VALUES (?)");
 
 					    pstmt.setString(1, request.getParameter("st_ID"));
 					    
@@ -68,6 +60,12 @@ String section = request.getParameter("sectionID");
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM take WHERE st_ID = ?"
+		            );
+				    pstmt2.setString(1, request.getParameter("st_ID"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the taker FROM the taker table.
 				    PreparedStatement pstmt = connection.prepareStatement(
@@ -86,9 +84,7 @@ String section = request.getParameter("sectionID");
 					
 				<%
 					Statement stmt = connection.createStatement();
-				
-					String GET_taker_QUERY = "SELECT * FROM taker";
-					ResultSet rs = stmt.executeQuery(GET_taker_QUERY);
+					ResultSet rs;
 				%>
 				
 				<tr>
@@ -98,20 +94,7 @@ String section = request.getParameter("sectionID");
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
-					
-				<%
-					while (rs.next()) {    
-
-					}
-				%>
-				
-				<%
-				// Close the ResultSet
-				rs.close();
-				
-				%>
-				
-				
+		
 				<!-- Iteration stuff? -->
 				<%
 				rs = stmt.executeQuery(
@@ -129,7 +112,13 @@ String section = request.getParameter("sectionID");
 						<td><input type="submit" value="Delete"></td>
 					</form>
                     <% String sID = rs.getString("st_ID"); %>
-					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudents.jsp?studentID=<%= sID %>&courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID")%>'">Enrollment</button></td>
+                    
+                    <%-- <% 
+                    String quarter = "SP";
+                    int year = 2023;
+                    %> --%>
+                    
+					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudent.jsp?studentID=<%= sID %>'">Enrollment</button></td>
 				</tr>
 				<%
 				}
@@ -175,10 +164,16 @@ String section = request.getParameter("sectionID");
 
             CREATE TABLE take (
                 st_ID VARCHAR(255) NOT NULL, 
-                s_sectionID VARCHAR(255) NOT NULL,
-                take_enrollmentStatus INT NOT NULL, 
+                cr_courseNumber VARCHAR(255) NOT NULL,
+                cl_title VARCHAR(255) NOT NULL,
+    			cl_year INT NOT NULL,
+    			cl_quarter VARCHAR(255) NOT NULL,
+    			s_sectionID VARCHAR(255) NOT NULL,
+                take_enrollmentStatus VARCHAR(255) NOT NULL, 
                 take_gradingOption VARCHAR(255) NOT NULL,
                 CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
+                CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+    			CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
                 CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
             );
 			

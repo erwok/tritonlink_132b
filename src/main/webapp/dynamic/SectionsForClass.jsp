@@ -52,6 +52,21 @@ String quarter = request.getParameter("classQuarter");
 					    
 					    pstmt.executeUpdate();
 					    
+					    
+					    /* if (Integer.parseInt(request.getParameter("year")) == 2023 &&
+				            request.getParameter("quarter").equals("SP")) {
+					        PreparedStatement pstmt2 = connection.prepareStatement(
+				                "INSERT INTO CurrentCourses VALUES (?, ?, ?, ?, ?)"
+			                );
+					        pstmt2.setString(1, request.getParameter("cr_courseNumber"));
+					        pstmt2.setString(2, request.getParameter("cl_title"));
+					        pstmt2.setInt(3, Integer.parseInt(request.getParameter("cl_year")));
+					        pstmt2.setString(4, request.getParameter("cl_quarter"));
+					        pstmt2.setString(5, request.getParameter("s_sectionID"));
+					        
+					        pstmt2.executeUpdate();
+					    } */
+					    
 					    connection.commit();
 					    connection.setAutoCommit(true);
 					}
@@ -85,21 +100,41 @@ String quarter = request.getParameter("classQuarter");
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt6 = connection.prepareStatement(
+		            	"DELETE FROM Take WHERE s_sectionID = ?"
+		            );
+				    pstmt6.setString(1, request.getParameter("s_sectionID"));
+				    pstmt6.executeUpdate();
+				    
+				    PreparedStatement pstmt5 = connection.prepareStatement(
+		            	"DELETE FROM CurrentCourses WHERE s_sectionID = ?"
+		            );
+				    pstmt5.setString(1, request.getParameter("s_sectionID"));
+				    pstmt5.executeUpdate();
+				    
+				    PreparedStatement pstmt4 = connection.prepareStatement(
+		            	"DELETE FROM ReviewSessions WHERE s_sectionID = ?"
+		            );
+				    pstmt4.setString(1, request.getParameter("s_sectionID"));
+				    pstmt4.executeUpdate();
+				    
+				    
 				    PreparedStatement pstmt3 = connection.prepareStatement(
 			            "DELETE FROM WeeklyMeetings WHERE s_sectionID = ?"
 		            );
 				    pstmt3.setString(1, request.getParameter("s_sectionID"));
+				    pstmt3.executeUpdate();
 				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
 				    	"DELETE FROM Booklist WHERE s_sectionID = ?"
 		            );
 				    pstmt2.setString(1, request.getParameter("s_sectionID"));
+				    pstmt2.executeUpdate();
 				    
 				    
 				    PreparedStatement pstmt = connection.prepareStatement(
 				        "DELETE FROM Section WHERE s_sectionID = ?"
 				    );
-				    
 				    pstmt.setString(1, request.getParameter("s_sectionID"));
 				    int rowCount = pstmt.executeUpdate();
 				    
@@ -238,6 +273,16 @@ String quarter = request.getParameter("classQuarter");
 	        	date VARCHAR(255) NOT NULL,
 	        	s_sectionID VARCHAR(255) NOT NULL,
 	        	CONSTRAINT fk_rvs_s FOREIGN KEY (s_sectionID) REFERENCES SECTION(s_sectionID)
+	        );
+			
+			CREATE TABLE CurrentCourses (
+				cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL,
+				cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL,
+				s_sectionID VARCHAR(255) NOT NULL,
+				CONSTRAINT fk_cc_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+				CONSTRAINT fk_cc_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
+				CONSTRAINT fk_cc_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+				
 	        );
 			*/
 			%>
