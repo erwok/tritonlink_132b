@@ -220,7 +220,7 @@
 				st_middleName VARCHAR(255), 
 				st_lastName VARCHAR(255) NOT NULL
 			);
-			
+			*/
 			%>
 			
 			
