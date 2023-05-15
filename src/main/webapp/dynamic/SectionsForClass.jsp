@@ -10,12 +10,12 @@ String title = request.getParameter("classTitle");
 String year = request.getParameter("classYear");
 String quarter = request.getParameter("classQuarter");
 %>
-<title>Sections for <%= cn + title + year + ", " + quarter %></title>
+<title>Sections for <%= cn + " " + title + " " + quarter + year %></title>
 </head>
 <body>
 		<%-- Set the scripting language Java and --%>
 		<%@ page language="java" import="java.sql.*" %>
-		<h3>Sections for <u><%= cn + " " + title + " " + year + ", " + quarter %></u></h3>
+		<h3>Sections for <u><%= cn + " " + title + " " + quarter + year %></u></h3>
 		<table>
 				<tr>
 					<th>SectionID</th>
@@ -108,10 +108,14 @@ String quarter = request.getParameter("classQuarter");
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="s_sectionID" size="10"></th>
 						<th><input value="" name="s_capacity" size="10"></th>
-						<th><input type="hidden" name="cnum" value="<%= cn %>"></th>
-						<th><input type="hidden" name="title" value="<%= title %>"></th>
-						<th><input type="hidden" name="year" value="<%= year %>"></th>
-						<th><input type="hidden" name="quarter" value="<%= quarter %>"></th>
+						<input type="hidden" name="cnum" value="<%= cn %>">
+						<input type="hidden" name="title" value="<%= title %>">
+						<input type="hidden" name="year" value="<%= year %>">
+						<input type="hidden" name="quarter" value="<%= quarter %>">
+						<input type="hidden" name="courseName" value="<%= cn %>">
+						<input type="hidden" name="classTitle" value="<%= title %>">
+						<input type="hidden" name="classYear" value="<%= year %>">
+						<input type="hidden" name="classQuarter" value="<%= quarter %>">
 						<th><input type="submit" value="Insert"></th>
 					</form>
 				</tr>
@@ -147,6 +151,7 @@ String quarter = request.getParameter("classQuarter");
 						<input type="hidden" name="classQuarter" value="<%= quarter %>">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+					<td><button onclick="window.location.href='./FacultyForSection.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>&sectionID=<%= rs.getString("s_sectionID") %>'">Faculty</button></td>    
 				</tr>
 				<%
 				}
@@ -178,11 +183,14 @@ String quarter = request.getParameter("classQuarter");
 			        courseNumber VARCHAR(255) NOT NULL, classTitle VARCHAR(255) NOT NULL, classYear INT NOT NULL, classQuarter VARCHAR(255) NOT NULL,
 			        CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber),
 			        CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
-
-			
-			
 			// Same
 			CREATE TABLE Section (s_sectionID VARCHAR(255) PRIMARY KEY, s_capacity INT NOT NULL, courseNumber VARCHAR(255) NOT NULL, classTitle VARCHAR(255) NOT NULL, classYear INT NOT NULL, classQuarter VARCHAR(255) NOT NULL, CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+			
+			CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL,
+			        CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID),
+			        CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
+			
+			CREATE TABLE Teaches (s_sectionID VARCHAR(255) NOT NULL, fc_name VARCHAR(255) NOT NULL, CONSTRAINT fk_s FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID), CONSTRAINT fk_fc FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name));
 			*/
 			%>
 			

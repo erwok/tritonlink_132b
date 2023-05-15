@@ -78,13 +78,18 @@
 				    
 				    connection.setAutoCommit(false);
 				    
+				    PreparedStatement pstmt2 = connection.prepareStatement(
+				    	"DELETE FROM Teaches WHERE fc_name = ?"
+	    	        );
+				    pstmt2.setString(1, request.getParameter("fc_name"));
+				    pstmt2.executeUpdate();
+				    
 				    // Create the prepared statement and use it to
 				    // DELETE the Faculty FROM the Faculty table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM Faculty Faculty \n"+
+				    	"DELETE FROM Faculty \n"+
 						"WHERE fc_name = ?"
 					);
-				    
 				    pstmt.setString(1, request.getParameter("fc_name"));
 				    int rowCount = pstmt.executeUpdate();
 				    
@@ -169,7 +174,7 @@
 			/* experiment queries */
 			
 			/* 
-			CREATE TABLE Faculty ( fc_name VARCHAR(255) PRIMARY KEY);
+			CREATE TABLE Faculty (fc_name VARCHAR(255) PRIMARY KEY);
 			
 			*/
 			%>
