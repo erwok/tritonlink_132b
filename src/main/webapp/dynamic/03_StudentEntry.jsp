@@ -95,7 +95,18 @@
 				if (action != null && action.equals("delete")) {
 				    
 				    connection.setAutoCommit(false);
+				    PreparedStatement pstmt9 = connection.prepareStatement(
+	            		"DELETE FROM Taker WHERE st_id = ?"
+		            );
+				    pstmt9.setString(1, request.getParameter("st_ID"));
+				    pstmt9.executeUpdate();
 				    
+				    PreparedStatement pstmt8 = connection.prepareStatement(
+	            		"DELETE FROM pastTaker WHERE st_id = ?"
+		            );
+				    pstmt8.setString(1, request.getParameter("st_ID"));
+				    pstmt8.executeUpdate();
+
 			    	PreparedStatement pstmt7 = connection.prepareStatement(
 		    	        "DELETE FROM Probation WHERE st_id = ?"
 	            	);

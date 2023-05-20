@@ -159,7 +159,7 @@
 			
             CREATE TABLE taker (
                 st_ID VARCHAR(255) PRIMARY KEY, 
-                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
+                CONSTRAINT FK_taker_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
             );
 
             CREATE TABLE take (
@@ -171,9 +171,9 @@
     			s_sectionID VARCHAR(255) NOT NULL,
                 take_enrollmentStatus VARCHAR(255) NOT NULL, 
                 take_gradingOption VARCHAR(255) NOT NULL,
-                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
-                CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
-    			CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
+                CONSTRAINT FK_take_from_taker FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
+                CONSTRAINT FK_take_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+    			CONSTRAINT FK_take_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
                 CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
             );
 			
