@@ -1,0 +1,4 @@
+CREATE TABLE STUDENT_ENROLLMENT (st_id VARCHAR(255) NOT NULL, quarter VARCHAR(255) NOT NULL, year INT NOT NULL, enrollment_status VARCHAR(255) NOT NULL, CONSTRAINT fk_sten_st FOREIGN KEY (st_id) REFERENCES Student(st_id));
+
+CREATE TABLE STUDENT_SECTION (st_id VARCHAR(255) NOT NULL, cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, enrollment_status VARCHAR(255) NOT NULL, CONSTRAINT fk_ss_s FOREIGN KEY (st_id) REFERENCES Student(st_id), CONSTRAINT fk_ss_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT fk_ss_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter));
+

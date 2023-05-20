@@ -52,6 +52,9 @@
 	<li>
 		<a href="./10_DegreeRequirementsEntry.jsp">Degree Requirements’ Info Submission</a>
 	</li>
+	<li>
+		<a href="./ms3_00_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
+	</li>
 </ul>
 
 

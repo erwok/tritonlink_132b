@@ -96,17 +96,41 @@
 				    
 				    connection.setAutoCommit(false);
 				    
-				    PreparedStatement pstmt3 = connection.prepareStatement(
-	            		"DELETE FROM Taker WHERE st_id = ?"
+			    	PreparedStatement pstmt7 = connection.prepareStatement(
+		    	        "DELETE FROM Probation WHERE st_id = ?"
+	            	);
+			    	pstmt7.setString(1, request.getParameter("st_ID"));
+				    pstmt7.executeUpdate();
+				    
+				    PreparedStatement pstmt6 = connection.prepareStatement(
+		    	        "DELETE FROM Probator WHERE st_id = ?"
+	            	);
+			    	pstmt6.setString(1, request.getParameter("st_ID"));
+				    pstmt6.executeUpdate();
+				    
+				    PreparedStatement pstmt5 = connection.prepareStatement(
+		            	"DELETE FROM Student_section WHERE st_id = ?"
 		            );
-				    pstmt3.setString(1, request.getParameter("st_ID"));
-				    pstmt3.executeUpdate();
+				    pstmt5.setString(1, request.getParameter("st_ID"));
+				    pstmt5.executeUpdate();
+				    
+				    PreparedStatement pstmt4 = connection.prepareStatement(
+			            "DELETE FROM Student_enrollment WHERE st_id = ?"
+		            );
+				    pstmt4.setString(1, request.getParameter("st_ID"));
+				    pstmt4.executeUpdate();
 				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
 	            		"DELETE FROM Take WHERE st_id = ?"
 		            );
 				    pstmt2.setString(1, request.getParameter("st_ID"));
 				    pstmt2.executeUpdate();
+				    
+				    PreparedStatement pstmt3 = connection.prepareStatement(
+	            		"DELETE FROM Taker WHERE st_id = ?"
+		            );
+				    pstmt3.setString(1, request.getParameter("st_ID"));
+				    pstmt3.executeUpdate();
 				    
 				    // Create the prepared statement and use it to
 				    // DELETE the Student FROM the Student table.
