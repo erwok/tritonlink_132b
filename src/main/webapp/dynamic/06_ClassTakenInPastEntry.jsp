@@ -34,9 +34,9 @@
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the taker attrs INTO the taker table
+					    // INSERT the pastTaker attrs INTO the pastTaker table
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    "INSERT INTO taker VALUES (?)");
+					    "INSERT INTO pastTaker VALUES (?)");
 
 					    pstmt.setString(1, request.getParameter("st_ID"));
 					    
@@ -61,15 +61,15 @@
 				    connection.setAutoCommit(false);
 				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
-				    	"DELETE FROM take WHERE st_ID = ?"
+				    	"DELETE FROM pastTaker WHERE st_ID = ?"
 		            );
 				    pstmt2.setString(1, request.getParameter("st_ID"));
 				    pstmt2.executeUpdate();
 				    
 				    // Create the prepared statement and use it to
-				    // DELETE the taker FROM the taker table.
+				    // DELETE the pastTaker FROM the pastTaker table.
 				    PreparedStatement pstmt = connection.prepareStatement(
-				    	"DELETE FROM taker \n"+
+				    	"DELETE FROM pastTaker \n"+
 				    	"WHERE st_ID = ?"
 				    );
 				    
@@ -88,7 +88,7 @@
 				%>
 				
 				<tr>
-					<form action="05_CourseEnrollmentEntry.jsp" method="get">
+					<form action="06_ClassTakenInPastEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<th><input value="" name="st_ID" size="10"></th>
 						<th><input type="submit" value="Insert"></th>
@@ -98,7 +98,7 @@
 				<!-- Iteration stuff? -->
 				<%
 				rs = stmt.executeQuery(
-					"SELECT * FROM taker \n"+
+					"SELECT * FROM pastTaker\n"+
 					"ORDER BY st_ID"
 				);
 				
@@ -106,7 +106,7 @@
 				%>
 				<tr>
                     <td><%= rs.getString("st_ID") %></td>
-					<form action="05_CourseEnrollmentEntry.jsp" method="get">
+					<form action="06_ClassTakenInPastEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("st_ID") %>" name="st_ID">
 						<td><input type="submit" value="Delete"></td>
@@ -118,7 +118,7 @@
                     int year = 2023;
                     %> --%>
                     
-					<td><button onclick="window.location.href='./13_EnrollingCoursesForEachStudent.jsp?studentID=<%= sID %>'">Enrollment</button></td>
+					<td><button onclick="window.location.href='./ReportingCoursesForEachStudent.jsp?studentID=<%= sID %>'">Report past classes</button></td>
 				</tr>
 				<%
 				}
@@ -157,25 +157,23 @@
 				st_lastName VARCHAR(255) NOT NULL
 			);
 			
-            CREATE TABLE taker (
-                st_ID VARCHAR(255) PRIMARY KEY, 
-                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
-            );
-
-            CREATE TABLE take (
-                st_ID VARCHAR(255) NOT NULL, 
-                cr_courseNumber VARCHAR(255) NOT NULL,
-                cl_title VARCHAR(255) NOT NULL,
-    			cl_year INT NOT NULL,
-    			cl_quarter VARCHAR(255) NOT NULL,
-    			s_sectionID VARCHAR(255) NOT NULL,
-                take_enrollmentStatus VARCHAR(255) NOT NULL, 
-                take_gradingOption VARCHAR(255) NOT NULL,
-                CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
-                CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
-    			CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
-                CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
-            );
+            CREATE TABLE pastTaker (
+				st_ID VARCHAR(255) PRIMARY KEY, 
+				CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID)
+			);	
+				
+			CREATE TABLE pastTake (
+				st_ID VARCHAR(255) NOT NULL, 
+				cr_courseNumber VARCHAR(255) NOT NULL,
+				cl_title VARCHAR(255) NOT NULL,
+				cl_year INT NOT NULL,cl_quarter VARCHAR(255) NOT NULL,
+				s_sectionID VARCHAR(255) NOT NULL,
+				pastTake_grade VARCHAR(255) NOT NULL,
+				CONSTRAINT FK_past_take_from_Student FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID),
+				CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+				CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
+				CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
+			);
 			
 			*/
 			%>
