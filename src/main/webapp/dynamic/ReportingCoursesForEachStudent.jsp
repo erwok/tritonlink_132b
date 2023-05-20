@@ -40,13 +40,13 @@ String studentID = request.getParameter("studentID");
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the pastTaker attrs INTO the pastTaker table
+					    // INSERT the pastTake attrs INTO the pastTake table
 					    /* PreparedStatement pstmt = connection.prepareStatement(
-					    ("UPDATE pastTaker SET pastTake_grade = ? \n"+ 
+					    ("UPDATE pastTake SET pastTake_grade = ? \n"+ 
 					    "WHERE cr_courseNumber = ? AND cl_title = ? AND cl_year = ? AND cl_quarter = ? \n"+
 					    "AND s_sectionID = ? AND st_id = ?")); */
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    "INSERT INTO pastTaker VALUES(?, ?, ?, ?, ?, ?, ?)");
+					    "INSERT INTO pastTake VALUES(?, ?, ?, ?, ?, ?, ?)");
 					    
 					    pstmt.setString(1, request.getParameter("st_ID"));
 					    pstmt.setString(2, request.getParameter("cr_courseNumber"));
@@ -72,7 +72,7 @@ String studentID = request.getParameter("studentID");
 				    connection.setAutoCommit(false);
 				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
-				    	"DELETE FROM pastTaker WHERE st_ID = ? AND cr_courseNumber = ? AND cl_title = ? \n"+
+				    	"DELETE FROM pastTake WHERE st_ID = ? AND cr_courseNumber = ? AND cl_title = ? \n"+
 				    	"AND cl_year = ? AND cl_quarter = ? AND s_sectionID = ?"
 		            );
 				    pstmt2.setString(1, request.getParameter("st_ID"));
@@ -129,7 +129,7 @@ String studentID = request.getParameter("studentID");
 				%> --%>
 				
 				<%
-				String getStudentCourses = "SELECT * FROM pastTaker WHERE st_id = '" + studentID + "';";
+				String getStudentCourses = "SELECT * FROM pastTake WHERE st_id = '" + studentID + "';";
 				rs = stmt.executeQuery(getStudentCourses);
 				
 				while (rs.next()) {
