@@ -16,6 +16,15 @@ String studentID = request.getParameter("studentID");
 			<b>Enroll in the following classes</b>
 			
 			<table>
+				<tr>
+					<th>Course Number</th>
+					<th>Class Title</th>
+					<th>Class Year</th>
+					<th>Class Quarter</th>
+					<th>Section ID</th>
+					<th>Enrollment Status</th>
+					<th>Grading Option</th>
+				</tr>
 				<%
 				try {
 				    // Load driver
@@ -24,11 +33,6 @@ String studentID = request.getParameter("studentID");
 				    // Make a connection to the Oracle datasource
 				    Connection connection = DriverManager.getConnection
 					("jdbc:postgresql:tritonlink?user=postgres&password=helloworld");
-				%>
-				
-				<%
-				Statement stmt = connection.createStatement();
-				ResultSet rs;
 				%>
 				
 				<!-- Insert stuff? -->
@@ -40,11 +44,12 @@ String studentID = request.getParameter("studentID");
 					    connection.setAutoCommit(false);
 					    
 					    // Create the prepared statement and use it to
-					    // INSERT the taker attrs INTO the taker table
+					    // INSERT the take attrs INTO the take table
 					    /* PreparedStatement pstmt = connection.prepareStatement(
 					    ("UPDATE take SET take_enrollmentStatus = ?, take_gradingOption = ? \n"+ 
 					    "WHERE cr_courseNumber = ? AND cl_title = ? AND cl_year = ? AND cl_quarter = ? \n"+
 					    "AND s_sectionID = ? AND st_id = ?")); */
+
 					    PreparedStatement pstmt = connection.prepareStatement(
 					    "INSERT INTO take VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 					    
@@ -79,7 +84,7 @@ String studentID = request.getParameter("studentID");
 				    pstmt2.setString(1, request.getParameter("st_ID"));
 				    pstmt2.setString(2, request.getParameter("cr_courseNumber"));
 				    pstmt2.setString(3, request.getParameter("cl_title"));
-				    pstmt2.setString(4, request.getParameter("cl_year"));
+				    pstmt2.setInt(4, Integer.parseInt(request.getParameter("cl_year")));
 				    pstmt2.setString(5, request.getParameter("cl_quarter"));
 				    pstmt2.setString(6, request.getParameter("s_sectionID"));
 				    pstmt2.executeUpdate();
@@ -91,19 +96,12 @@ String studentID = request.getParameter("studentID");
 				%>
 				
 				<%
-				//String getCurrentCourses = "SELECT * FROM take WHERE st_ID = '" + studentID + "' AND cl_year = 2018 AND cl_quarter = 'SPRING';";
-				// rs = stmt.executeQuery(getCurrentCourses);
+					Statement stmt = connection.createStatement();
+				
+					String GET_take_QUERY = "SELECT * FROM take";
+					ResultSet rs = stmt.executeQuery(GET_take_QUERY);
 				%>
 				
-				<tr>
-					<th>Course Number</th>
-					<th>Class Title</th>
-					<th>Class Year</th>
-					<th>Class Quarter</th>
-					<th>Section ID</th>
-					<th>Enrollment Status</th>
-					<th>Grading Option</th>
-				</tr>
 				<tr>
 					<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
@@ -120,26 +118,22 @@ String studentID = request.getParameter("studentID");
 					</form>
 				</tr>
 				
-				<%-- <%
-				while (rs.next()) {
-				%>
-				    <tr>
-					    <td><%= rs.getString("cr_courseNumber") %></td>
-				    	<td><%= rs.getString("cl_title") %></td>
-				    	<td><%= rs.getInt("cl_year") %></td>
-				    	<td><%= rs.getString("cl_quarter") %></td>
-				    	<td><%= rs.getString("s_sectionID") %></td>
-				    	<td><%= rs.getString("take_enrollmentStatus") %></td>
-				    	<td><%= rs.getString("take_gradingOption") %></td>
-				    </tr>
-				 
 				<%
-				}
-				%> --%>
+					while (rs.next()) {    
+
+					}
+				%>
 				
 				<%
-				String getStudentCourses = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
-				rs = stmt.executeQuery(getStudentCourses);
+				// Close the ResultSet
+				rs.close();
+				
+				%>
+				
+				<!-- Iteration stuff? -->
+				<%
+				String getTake = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
+				rs = stmt.executeQuery(getTake);
 				
 				while (rs.next()) {
 				%>
@@ -151,16 +145,16 @@ String studentID = request.getParameter("studentID");
 				    	<td><%= rs.getString("s_sectionID") %></td>
 				    	<td><%= rs.getString("take_enrollmentStatus") %></td>
 				    	<td><%= rs.getString("take_gradingOption") %></td>
-				    	<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
-						    <input type="hidden" value="delete" name="action">
-						    <input type="hidden" name="st_ID" value="<%= studentID %>">
-						    <input type="hidden" name="studentID" value="<%= studentID %>">
-						    <input type="hidden" name="cr_courseNumber" value="<%= rs.getString("courseNumber") %>">
-						    <input type="hidden" name="cl_title" value="<%= rs.getString("cl_title") %>">
-						    <input type="hidden" name="cl_year" value="<%= rs.getInt("cl_year") %>">
-						    <input type="hidden" name="cl_quarter" value="<%= rs.getString("cl_quarter") %>">
-						    <input type="hidden" name="s_sectionID" value="<%= rs.getString("s_sectionID") %>">
-						    <td><input type="submit" value="Delete"></td>
+						<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
+							<input type="hidden" value="delete" name="action">
+							<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
+							<input type="hidden" value="<%= rs.getString("cl_title") %>" name="cl_title">
+							<input type="hidden" value="<%= rs.getString("cl_year") %>" name="cl_year">
+							<input type="hidden" value="<%= rs.getString("cl_quarter") %>" name="cl_quarter">
+							<input type="hidden" value="<%= rs.getString("s_sectionID") %>" name="s_sectionID">
+							<input type="hidden" value="<%= rs.getString("take_enrollmentStatus") %>" name="take_enrollmentStatus">
+							<input type="hidden" value="<%= rs.getString("take_gradingOption") %>" name="take_gradingOption">
+							<td><input type="submit" value="Delete"></td>
 						</form>
 				    </tr>
 				<%
@@ -189,11 +183,6 @@ String studentID = request.getParameter("studentID");
 				%>
 			</table>
 		
-
-
-
-
-			<p></p>
 			<br>
 			<a href="./05_CourseEnrollmentEntry.jsp">Back to student selection page</a>
 			<br>

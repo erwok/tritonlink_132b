@@ -61,7 +61,7 @@
 				    connection.setAutoCommit(false);
 				    
 				    PreparedStatement pstmt2 = connection.prepareStatement(
-				    	"DELETE FROM take WHERE st_ID = ?"
+				    	"DELETE FROM pastTake WHERE st_ID = ?"
 		            );
 				    pstmt2.setString(1, request.getParameter("st_ID"));
 				    pstmt2.executeUpdate();

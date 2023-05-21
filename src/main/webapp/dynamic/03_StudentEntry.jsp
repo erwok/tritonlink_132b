@@ -94,9 +94,9 @@
 				// Check if a delete is requested
 				if (action != null && action.equals("delete")) {
 				    
-				    connection.setAutoCommit(false);
+				    connection.setAutoCommit(false);					
 				    PreparedStatement pstmt9 = connection.prepareStatement(
-	            		"DELETE FROM Taker WHERE st_id = ?"
+	            		"DELETE FROM pastTake WHERE st_id = ?"
 		            );
 				    pstmt9.setString(1, request.getParameter("st_ID"));
 				    pstmt9.executeUpdate();
