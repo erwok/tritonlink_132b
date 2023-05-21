@@ -27,7 +27,7 @@
 	<h4>Enter Student ID</h4>
 	<table>
 		<tr>
-			<form action="ms3_00_StudentCurrentClasses.jsp" method="get">
+			<form action="ms3_01a_StudentCurrentClasses.jsp" method="get">
 				<input type="hidden" value="enter" name="action">
 				<td><input value="" name="st_ID" size="10"></td>
 				<td><input type="submit" value="Enter"></td>

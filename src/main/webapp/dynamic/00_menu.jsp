@@ -10,6 +10,7 @@
 
 <b>Menu</b>
 <ul>
+	milestone 2
 	<li>
 		<a href="./01_CourseEntry.jsp">Course Entry Form + Prereqs per Course + Course Offerings (Class Entry)</a>
 	</li>
@@ -52,8 +53,30 @@
 	<li>
 		<a href="./10_DegreeRequirementsEntry.jsp">Degree Requirements’ Info Submission</a>
 	</li>
+	milestone 3
 	<li>
-		<a href="./ms3_00_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
+		<a href="./ms3_01a_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
+	</li>
+	<li>
+		<a href="./ms3_01b_RosterOfClasses.jsp">Roster of Classes</a>
+	</li>
+	<li>
+		<a href="./ms3_01c_GradeReportForEachStudent.jsp">Report Student's Grades</a>
+	</li>
+	<li>
+		<a href="./ms3_01d_DegreeRequirementForUndergraduate.jsp">Assist Undergraduate Student's Degree</a>
+	</li>
+	<li>
+		<a href="./ms3_01e_DegreeRequirementForMS.jsp">Assist Master Student's Degree</a>
+	</li>
+	<li>
+		<a href="./ms3_02a_AssistStudentSchedule.jsp">Assist Student's Class Schedule</a>
+	</li>
+	<li>
+		<a href="./ms3_02b_AssistProfessorSchedule.jsp">Assist Professor's Review Schedule</a>
+	</li>
+	<li>
+		<a href="./ms3_03a_DecisionSupport.jsp">Decision Supportor</a>
 	</li>
 </ul>
 
