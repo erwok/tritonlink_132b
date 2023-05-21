@@ -1,4 +1,4 @@
-CREATE TABLE Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_lab VARCHAR(255) NOT NULL);
+create table Course (cr_courseNumber VARCHAR(255) PRIMARY KEY, cr_minUnits INT NOT NULL, cr_maxUnits INT NOT NULL, cr_gradeOption VARCHAR(255) NOT NULL, cr_lab VARCHAR(255), cr_consent VARCHAR(255));
 
 CREATE TABLE Prerequisite (prerequisites_id VARCHAR(255) NOT NULL PRIMARY KEY, mainCourseNumber VARCHAR(255) NOT NULL, prerequisiteCourseNumber VARCHAR(255) NOT NULL, CONSTRAINT FK_PreCourse1 FOREIGN KEY (mainCourseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_PreCourse2 FOREIGN KEY (prerequisiteCourseNumber) REFERENCES Course(cr_courseNumber);
 
