@@ -144,6 +144,7 @@ String studentID = request.getParameter("studentID");
 						<td><%= rs.getString("pastTake_grade") %></td>
 						<form action="ReportingCoursesForEachStudent.jsp" method="get">
 							<input type="hidden" value="delete" name="action">
+							<input type="hidden" value="<%= studentID %>" name="st_ID">
 							<input type="hidden" value="<%= rs.getString("cr_courseNumber") %>" name="cr_courseNumber">
 							<input type="hidden" value="<%= rs.getString("cl_title") %>" name="cl_title">
 							<input type="hidden" value="<%= rs.getString("cl_year") %>" name="cl_year">
