@@ -46,8 +46,7 @@ CREATE TABLE CurrentCourses (cr_courseNumber VARCHAR(255) NOT NULL, cl_title VAR
 	
 CREATE TABLE pastTaker (st_ID VARCHAR(255) PRIMARY KEY, CONSTRAINT FK_pastTaker_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID));	
 				
-CREATE TABLE pastTake (st_ID VARCHAR(255) NOT NULL, cr_courseNumber VARCHAR(255) NOT NULL, cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, take_enrollmentStatus VARCHAR(255) NOT NULL, take_gradingOption VARCHAR(255) NOT NULL, CONSTRAINT FK_pastTake_from_pastTaker FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID), CONSTRAINT FK_pastTake_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber), CONSTRAINT FK_pastTake_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter), CONSTRAINT FK_pastTake_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
-				
+CREATE TABLE pastTake (st_ID VARCHAR(255) NOT NULL, cr_courseNumber VARCHAR(255) NOT NULL,cl_title VARCHAR(255) NOT NULL,cl_year INT NOT NULL,cl_quarter VARCHAR(255) NOT NULL,s_sectionID VARCHAR(255) NOT NULL,pastTake_gradingOption VARCHAR(255) NOT NULL,pastTake_units VARCHAR(255) NOT NULL,pastTake_grade VARCHAR(255) NOT NULL,CONSTRAINT FK_pastTake_from_pastTaker FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID),CONSTRAINT FK_pastTake_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),CONSTRAINT FK_pastTake_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),CONSTRAINT FK_pastTake_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));				
 
 				
 				

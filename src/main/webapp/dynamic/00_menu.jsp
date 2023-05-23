@@ -58,7 +58,7 @@
 		<a href="./ms3_01a_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
 	</li>
 	<li>
-		<a href="./ms3_01b_RosterOfClasses.jsp">Roster of Classes</a>
+		<a href="./ms3_01b_ClassSelectionForRoster.jsp">Get Class Section's Roster</a>
 	</li>
 	<li>
 		<a href="./ms3_01c_GradeReportForEachStudent.jsp">Report Student's Grades</a>
