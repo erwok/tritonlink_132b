@@ -171,6 +171,7 @@
     			s_sectionID VARCHAR(255) NOT NULL,
                 take_enrollmentStatus VARCHAR(255) NOT NULL, 
                 take_gradingOption VARCHAR(255) NOT NULL,
+                take_units VARCHAR(255) NOT NULL,
                 CONSTRAINT FK_take_from_taker FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
                 CONSTRAINT FK_take_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
     			CONSTRAINT FK_take_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),

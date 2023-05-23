@@ -24,6 +24,7 @@ String studentID = request.getParameter("studentID");
 					<th>Section ID</th>
 					<th>Enrollment Status</th>
 					<th>Grading Option</th>
+					<th>Units</th>
 				</tr>
 				<%
 				try {
@@ -51,7 +52,7 @@ String studentID = request.getParameter("studentID");
 					    "AND s_sectionID = ? AND st_id = ?")); */
 
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    "INSERT INTO take VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+					    "INSERT INTO take VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					    
 					    pstmt.setString(1, request.getParameter("st_ID"));
 					    pstmt.setString(2, request.getParameter("cr_courseNumber"));
@@ -61,6 +62,7 @@ String studentID = request.getParameter("studentID");
 					    pstmt.setString(6, request.getParameter("s_sectionID"));
 					    pstmt.setString(7, request.getParameter("take_enrollmentStatus"));
 					    pstmt.setString(8, request.getParameter("take_gradingOption"));
+					    pstmt.setString(9, request.getParameter("take_units"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -112,6 +114,7 @@ String studentID = request.getParameter("studentID");
 						<td><input value="" name="s_sectionID" size="10"></td>
 						<td><input value="" name="take_enrollmentStatus" size="10"></td>
 						<td><input value="" name="take_gradingOption" size="10"></td>
+						<td><input value="" name="take_units" size="10"></td>
 						<input type="hidden" name="st_ID" value="<%= studentID %>">
 						<input type="hidden" name="studentID" value="<%= studentID %>">
 						<td><input type="submit" value="Insert"></td>
@@ -145,6 +148,7 @@ String studentID = request.getParameter("studentID");
 				    	<td><%= rs.getString("s_sectionID") %></td>
 				    	<td><%= rs.getString("take_enrollmentStatus") %></td>
 				    	<td><%= rs.getString("take_gradingOption") %></td>
+				    	<td><%= rs.getString("take_units") %></td>
 						<form action="13_EnrollingCoursesForEachStudent.jsp" method="get">
 							<input type="hidden" value="delete" name="action">
 							<input type="hidden" value="<%= studentID %>" name="st_ID">
@@ -155,6 +159,7 @@ String studentID = request.getParameter("studentID");
 							<input type="hidden" value="<%= rs.getString("s_sectionID") %>" name="s_sectionID">
 							<input type="hidden" value="<%= rs.getString("take_enrollmentStatus") %>" name="take_enrollmentStatus">
 							<input type="hidden" value="<%= rs.getString("take_gradingOption") %>" name="take_gradingOption">
+							<input type="hidden" value="<%= rs.getString("take_units") %>" name="take_units">
 							<td><input type="submit" value="Delete"></td>
 						</form>
 				    </tr>
@@ -215,6 +220,7 @@ String studentID = request.getParameter("studentID");
   			s_sectionID VARCHAR(255) NOT NULL,
           	take_enrollmentStatus VARCHAR(255) NOT NULL, 
             take_gradingOption VARCHAR(255) NOT NULL,
+            take_units VARCHAR(255) NOT NULL,
             CONSTRAINT FK_take_from_Student FOREIGN KEY (st_ID) REFERENCES taker(st_ID),
             CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
   			CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),

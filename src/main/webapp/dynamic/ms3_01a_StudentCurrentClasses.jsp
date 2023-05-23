@@ -5,13 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <%
-String studentID = request.getParameter("st_ID");
+String studentID = request.getParameter("st_id").split(",")[0];
+String fullName = request.getParameter("st_id").split(",")[1];
 %>
-<title>Get Student <%= studentID %>'s Current Classes</title>
+<title>Student <%= studentID %>'s Current Classes</title>
 </head>
 <body>
 <%-- Set the scripting language Java and --%>
 <%@ page language="java" import="java.sql.*" %>
+
+<h2><%= fullName %>'s Current Classes</h2>
+
 
 	<%
 	try {
@@ -32,28 +36,69 @@ String studentID = request.getParameter("st_ID");
 		ResultSet rs = stmt.executeQuery(GET_current_classes_QUERY);
 	%>
 	
-	
-	
-	<table>
+	<%-- <table>
 		<tr>
-			<th></th>
+			<th>Course Number</th>
+			<th>Title</th>
+			<th>Quarter</th>
+			<th>Year</th>
+			<th>Section</th>
+			<th>Grading Option</th>
+			<th>Units Option</th>
 		</tr>
-	<%
-		while (rs.next()) {    
-	%>
-		<tr>
-			
-		</tr>
-
-	<%
+		<%
+		String getTake = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
+		rs = stmt.executeQuery(getTake);
+		
+		while (rs.next()) {
+		%>
+		    <tr>
+		    	<td><%= rs.getString("cr_courseNumber") %></td>
+		    	<td><%= rs.getString("cl_title") %></td>
+		    	<td><%= rs.getString("cl_quarter") %></td>
+		    	<td><%= rs.getInt("cl_year") %></td>
+		    	<td><%= rs.getString("s_sectionID") %></td>
+		    	<td><%= rs.getString("take_gradingOption") %></td>
+		    	<td><%= rs.getString("take_units") %></td>
+		    </tr>
+		<%
 		}
-	%>
+		%>
+	</table> --%>
+	
+	<table style="border-collapse: collapse;">
+	    <tr style="border-bottom: 1px solid black;">
+	        <th style="border: 1px solid black; padding: 5px;">Course Number</th>
+	        <th style="border: 1px solid black; padding: 5px;">Title</th>
+	        <th style="border: 1px solid black; padding: 5px;">Quarter</th>
+	        <th style="border: 1px solid black; padding: 5px;">Year</th>
+	        <th style="border: 1px solid black; padding: 5px;">Section</th>
+	        <th style="border: 1px solid black; padding: 5px;">Grading Option</th>
+	        <th style="border: 1px solid black; padding: 5px;">Units Option</th>
+	    </tr>
+	    <% 
+	    String getTake = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
+		rs = stmt.executeQuery(getTake);
+	    
+	    while (rs.next()) { 
+	    %>
+	        <tr style="border-bottom: 1px solid black;">
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cr_courseNumber") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cl_title") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cl_quarter") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getInt("cl_year") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("s_sectionID") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("take_gradingOption") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("take_units") %></td>
+	        </tr>
+	    <% } %>
 	</table>
 	
-	<%
-	// Close the ResultSet
-	rs.close();
 	
+	
+	
+	<%
+	rs.close();
 	%>
 
 	<%				
@@ -69,6 +114,12 @@ String studentID = request.getParameter("st_ID");
 	    out.println(e.getMessage());
 	}
 	%>
+	
+	
+	<br>
+	<a href="./ms3_01a_StudentSelectionForCurrentClasses.jsp">Back to student selection page</a>
+	<br>
+	<a href="./00_index.jsp">Back to Home Page</a>
 
 </body>
 </html>
