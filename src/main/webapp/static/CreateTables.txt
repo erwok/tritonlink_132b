@@ -51,5 +51,132 @@ CREATE TABLE pastTake (st_ID VARCHAR(255) NOT NULL, cr_courseNumber VARCHAR(255)
 				
 				
 				
+-- Adding ON DELETE CASCADE to existing foreign key constraints
+ALTER TABLE Prerequisite
+DROP CONSTRAINT FK_PreCourse1;
+
+ALTER TABLE Prerequisite
+DROP CONSTRAINT FK_PreCourse2;
+
+ALTER TABLE Prerequisite
+ADD CONSTRAINT FK_PreCourse1
+FOREIGN KEY (mainCourseNumber)
+REFERENCES Course(cr_courseNumber)
+ON DELETE CASCADE;
+
+ALTER TABLE Prerequisite
+ADD CONSTRAINT FK_PreCourse2
+FOREIGN KEY (prerequisiteCourseNumber)
+REFERENCES Course(cr_courseNumber)
+ON DELETE CASCADE;
+
+ALTER TABLE CourseOffering
+DROP CONSTRAINT FK_CourseOffering_from_Class;
+
+ALTER TABLE CourseOffering
+DROP CONSTRAINT FK_CourseOffering_from_Course;
+
+ALTER TABLE CourseOffering
+ADD CONSTRAINT FK_CourseOffering_from_Class
+FOREIGN KEY (cl_title, cl_year, cl_quarter)
+REFERENCES Class(cl_title, cl_year, cl_quarter)
+ON DELETE CASCADE;
+
+ALTER TABLE CourseOffering
+ADD CONSTRAINT FK_CourseOffering_from_Course
+FOREIGN KEY (cr_courseNumber)
+REFERENCES Course(cr_courseNumber)
+ON DELETE CASCADE;
+
+ALTER TABLE Section
+DROP CONSTRAINT FK_Section_from_Class;
+
+ALTER TABLE Section
+DROP CONSTRAINT FK_Section_from_Course;
+
+ALTER TABLE Section
+ADD CONSTRAINT FK_Section_from_Class
+FOREIGN KEY (classTitle, classYear, classQuarter)
+REFERENCES Class(cl_title, cl_year, cl_quarter)
+ON DELETE CASCADE;
+
+ALTER TABLE Section
+ADD CONSTRAINT FK_Section_from_Course
+FOREIGN KEY (courseNumber)
+REFERENCES Course(cr_courseNumber)
+ON DELETE CASCADE;
+
+ALTER TABLE Teaches
+DROP CONSTRAINT FK_Teaches_from_Faculty;
+
+ALTER TABLE Teaches
+DROP CONSTRAINT FK_Teaches_from_Section;
+
+ALTER TABLE Teaches
+ADD CONSTRAINT FK_Teaches_from_Faculty
+FOREIGN KEY (fc_name)
+REFERENCES Faculty(fc_name)
+ON DELETE CASCADE;
+
+ALTER TABLE Teaches
+ADD CONSTRAINT FK_Teaches_from_Section
+FOREIGN KEY (s_sectionID)
+REFERENCES Section(s_sectionID)
+ON DELETE CASCADE;
+
+ALTER TABLE Booklist
+DROP CONSTRAINT FK_Booklist_from_Section;
+
+ALTER TABLE Booklist
+ADD CONSTRAINT FK_Booklist_from_Section
+FOREIGN KEY (s_sectionID)
+REFERENCES Section(s_sectionID)
+ON DELETE CASCADE;
+
+ALTER TABLE take
+DROP CONSTRAINT FK_take_from_taker;
+
+ALTER TABLE take
+DROP CONSTRAINT FK_take_from_Class;
+
+ALTER TABLE take
+DROP CONSTRAINT FK_take_from_Course;
+
+ALTER TABLE take
+DROP CONSTRAINT FK_take_from_Section;
+
+ALTER TABLE take
+ADD CONSTRAINT FK_take_from_taker
+FOREIGN KEY (st_ID)
+REFERENCES taker(st_ID)
+ON DELETE CASCADE;
+
+ALTER TABLE take
+ADD CONSTRAINT FK_take_from_Class
+FOREIGN KEY (cl_title, cl_year, cl_quarter)
+REFERENCES Class(cl_title, cl_year, cl_quarter)
+ON DELETE CASCADE;
+
+ALTER TABLE take
+ADD CONSTRAINT FK_take_from_Course
+FOREIGN KEY (cr_courseNumber)
+REFERENCES Course(cr_courseNumber)
+ON DELETE CASCADE;
+
+ALTER TABLE take
+ADD CONSTRAINT FK_take_from_Section
+FOREIGN KEY (s_sectionID)
+REFERENCES Section(s_sectionID)
+ON DELETE CASCADE;
+
+ALTER TABLE probation
+DROP CONSTRAINT FK_probation_from_probator;
+
+ALTER TABLE probation
+ADD CONSTRAINT FK_probation_from_probator
+FOREIGN KEY (st_ID)
+REFERENCES probator(st_ID)
+ON DELETE CASCADE;
+
 				
 				

@@ -42,12 +42,12 @@ String section = request.getParameter("sectionID");
 						);
                         pstmt.setString(1, request.getParameter("location"));
                         pstmt.setString(2, request.getParameter("time"));
-                        pstmt.setString(7, request.getParameter("startTime"));
-                        pstmt.setString(8, request.getParameter("endTime"));
-                        pstmt.setString(3, request.getParameter("meetingType"));
-                        pstmt.setString(4, request.getParameter("daysOfWeek"));
-                        pstmt.setString(5, request.getParameter("attendanceType"));
-                        pstmt.setString(6, request.getParameter("s_sectionID"));
+                        pstmt.setString(3, request.getParameter("startTime"));
+                        pstmt.setString(4, request.getParameter("endTime"));
+                        pstmt.setString(5, request.getParameter("meetingType"));
+                        pstmt.setString(6, request.getParameter("daysOfWeek"));
+                        pstmt.setString(7, request.getParameter("attendanceType"));
+                        pstmt.setString(8, request.getParameter("s_sectionID"));
                         pstmt.executeUpdate();
                         
                         connection.setAutoCommit(true);

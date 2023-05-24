@@ -111,12 +111,12 @@
 				    
 				    connection.setAutoCommit(false);
 				    
-				    PreparedStatement pstmt8 = connection.prepareStatement(
+				    /* PreparedStatement pstmt8 = connection.prepareStatement(
 			            "DELETE FROM Student_section WHERE cr_courseNumber = ?"
 		            );
 				    pstmt8.setString(1, request.getParameter("cr_courseNumber"));
 				    pstmt8.executeUpdate();
-				    
+				     */
 				    
 				    PreparedStatement pstmt7 = connection.prepareStatement(
 			            "DELETE FROM take \n"+

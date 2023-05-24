@@ -173,6 +173,9 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	        </td>
 	    </tr>
 	<%
+	}
+	%>
+	<%
 	if (currentlyEnrolled) {
 	%>
 		<tr>
@@ -180,10 +183,6 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	        <td style="border: 1px solid black;">2018</td>
 	        <td style="border: 1px solid black;">N/A</td>
 		</tr>
-	<%
-	}
-	%>
-	    
 	<%
 	}
 	%>

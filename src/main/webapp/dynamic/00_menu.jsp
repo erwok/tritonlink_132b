@@ -41,9 +41,9 @@
 	<li>
 		<a href="./06_ClassTakenInPastEntry.jsp">Classes taken in the Past</a>
 	</li>
-	<li>
+	<!-- <li>
 		<a href="./07_ThesisCommitteeEntry.jsp">Thesis Committee Submission</a>
-	</li>
+	</li> -->
 	<li>
 		<a href="./08_ProbationEntry.jsp">Probation Info Submission</a>
 	</li>
