@@ -24,9 +24,9 @@ CREATE TABLE probator (st_ID VARCHAR(255) PRIMARY KEY, CONSTRAINT FK_probator_fr
 
 CREATE TABLE probation (st_ID VARCHAR(255) NOT NULL, st_startDate VARCHAR(255) NOT NULL, st_endDate VARCHAR(255) NOT NULL, st_reason VARCHAR(255) NOT NULL, CONSTRAINT PK_probation_group PRIMARY KEY(st_ID, st_startDate, st_endDate, st_reason), CONSTRAINT FK_probation_from_probator FOREIGN KEY (st_ID) REFERENCES probator(st_ID));
 
-CREATE TABLE WeeklyMeetings (location VARCHAR(255) NOT NULL, time VARCHAR(255) NOT NULL, meetingType VARCHAR(255) NOT NULL, daysOfWeek VARCHAR(255) NOT NULL, attendanceType VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT FK_WeeklyMeetings_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+CREATE TABLE WeeklyMeetings (location VARCHAR(255) NOT NULL, time VARCHAR(255) NOT NULL, startTime VARCHAR(255), endTime VARCHAR(255), meetingType VARCHAR(255) NOT NULL, daysOfWeek VARCHAR(255) NOT NULL, attendanceType VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT FK_WeeklyMeetings_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
 
-CREATE TABLE ReviewSessions (location VARCHAR(255) NOT NULL, time VARCHAR(255) NOT NULL, date VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT FK_ReviewSessions_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
+CREATE TABLE ReviewSessions (location VARCHAR(255) NOT NULL, time VARCHAR(255) NOT NULL, startTime VARCHAR(255), endTime VARCHAR(255), date VARCHAR(255) NOT NULL, s_sectionID VARCHAR(255) NOT NULL, CONSTRAINT FK_ReviewSessions_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID));
 
 CREATE TABLE Degree (majorCode VARCHAR(255) PRIMARY KEY, requiredTotalUnits INT NOT NULL, requiredLowerDivUnits INT, requiredUpperDivUnits INT);
 

@@ -38,12 +38,14 @@ String section = request.getParameter("sectionID");
 					    connection.setAutoCommit(false);
 					   
                         PreparedStatement pstmt = connection.prepareStatement(
-                        	"INSERT INTO ReviewSessions VALUES (?, ?, ?, ?)"
+                        	"INSERT INTO ReviewSessions VALUES (?, ?, ?, ?, ?, ?)"
 						);
                         pstmt.setString(1, request.getParameter("location"));
                         pstmt.setString(2, request.getParameter("time"));
                         pstmt.setString(3, request.getParameter("date"));
                         pstmt.setString(4, request.getParameter("s_sectionID"));
+                        pstmt.setString(5, request.getParameter("endTime"));
+                        pstmt.setString(6, request.getParameter("startTime"));
                         pstmt.executeUpdate();
                         
                         connection.setAutoCommit(true);
@@ -86,6 +88,8 @@ String section = request.getParameter("sectionID");
 					<th>Location</th>
 					<th>Time</th>
 					<th>Date</th>
+					<th>Start Time</th>
+					<th>End Time</th>
 				</tr>
 				<tr>
 					<form action="09_ReviewSessionInfoEntry.jsp" method="get">
@@ -94,6 +98,8 @@ String section = request.getParameter("sectionID");
 						<td><input value="" name="location"></td>
 						<td><input value="" name="time"></td>
 						<td><input value="" name="date"></td>
+						<td><input value="" name="startTime"></td>
+						<td><input value="" name="endTime"></td>
                        	<input type="hidden" name="courseName" value="<%= cn %>">
 						<input type="hidden" name="classTitle" value="<%= title %>">
 						<input type="hidden" name="classYear" value="<%= year %>">
@@ -116,11 +122,15 @@ String section = request.getParameter("sectionID");
 					<td><input value="<%= rs.getString("location") %>" name="location"></td>
 					<td><input value="<%= rs.getString("time") %>" name="time"></td>
 					<td><input value="<%= rs.getString("date") %>" name="date"></td>
+					<td><input value="<%= rs.getString("startTime") %>" name="startTime"></td>
+					<td><input value="<%= rs.getString("endTime") %>" name="endTime"></td>
 					<form action="09_ReviewSessionInfoEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= section %>" name="s_sectionID">
 						<input type="hidden" value="<%= rs.getString("location") %>" name="location">
 						<input type="hidden" value="<%= rs.getString("time") %>" name="time">
+						<input type="hidden" value="<%= rs.getString("startTime") %>" name="startTime">
+						<input type="hidden" value="<%= rs.getString("endTime") %>" name="endTime">
 						<input type="hidden" value="<%= rs.getString("date") %>" name="date">
 						<input type="hidden" name="courseName" value="<%= cn %>">
 						<input type="hidden" name="classTitle" value="<%= title %>">

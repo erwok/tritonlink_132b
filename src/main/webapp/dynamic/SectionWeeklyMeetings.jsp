@@ -38,10 +38,12 @@ String section = request.getParameter("sectionID");
 					    connection.setAutoCommit(false);
 					   
                         PreparedStatement pstmt = connection.prepareStatement(
-                        	"INSERT INTO WeeklyMeetings VALUES (?, ?, ?, ?, ?, ?)"
+                        	"INSERT INTO WeeklyMeetings VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 						);
                         pstmt.setString(1, request.getParameter("location"));
                         pstmt.setString(2, request.getParameter("time"));
+                        pstmt.setString(7, request.getParameter("startTime"));
+                        pstmt.setString(8, request.getParameter("endTime"));
                         pstmt.setString(3, request.getParameter("meetingType"));
                         pstmt.setString(4, request.getParameter("daysOfWeek"));
                         pstmt.setString(5, request.getParameter("attendanceType"));
@@ -61,14 +63,16 @@ String section = request.getParameter("sectionID");
 
 				    PreparedStatement pstatement = connection.prepareStatement(
 				        "UPDATE WeeklyMeetings SET attendanceType = ?, meetingType = ?\n" +
-		                "WHERE location = ? AND time = ? AND daysOfWeek = ? AND s_sectionID = ?");
+		                "WHERE location = ? AND time = ? AND startTime = ? AND endTime = ? AND daysOfWeek = ? AND s_sectionID = ?");
 				    
 				    pstatement.setString(1, request.getParameter("attendanceType"));
 				    pstatement.setString(2, request.getParameter("meetingType"));
 				    pstatement.setString(3, request.getParameter("location"));
 				    pstatement.setString(4, request.getParameter("time"));
-				    pstatement.setString(5, request.getParameter("daysOfWeek"));
-				    pstatement.setString(6, request.getParameter("s_sectionID"));
+				    pstatement.setString(5, request.getParameter("startTime"));
+				    pstatement.setString(6, request.getParameter("endTime"));
+				    pstatement.setString(7, request.getParameter("daysOfWeek"));
+				    pstatement.setString(8, request.getParameter("s_sectionID"));
 				    int rowCount = pstatement.executeUpdate();
 			    
 				    connection.setAutoCommit(false);
@@ -106,6 +110,8 @@ String section = request.getParameter("sectionID");
 				<tr>
 					<th>Location</th>
 					<th>Time</th>
+					<th>Start Time</th>
+					<th>End Time</th>
 					<th>Days Of Week</th>
 					<th>Meeting Type</th>
 					<th>Attendance Type</th>
@@ -116,6 +122,8 @@ String section = request.getParameter("sectionID");
 						<input type="hidden" value="<%= section %>" name="s_sectionID">
 						<td><input value="" name="location"></td>
 						<td><input value="" name="time"></td>
+						<td><input value="" name="startTime"></td>
+						<td><input value="" name="endTime"></td>
 						<td><input value="" name="daysOfWeek"></td>
 						<td><input value="" name="meetingType"></td>
 						<td><input value="" name="attendanceType"></td>
@@ -142,6 +150,8 @@ String section = request.getParameter("sectionID");
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("location") %>" name="location"></td>
 						<td><input value="<%= rs.getString("time") %>" name="time"></td>
+						<td><input value="<%= rs.getString("startTime") %>" name="startTime"></td>
+						<td><input value="<%= rs.getString("endTime") %>" name="endTime"></td>
 						<td><input value="<%= rs.getString("daysOfWeek") %>" name="daysOfWeek"></td>
 						<td><input value="<%= rs.getString("meetingType") %>" name="meetingType"></td>
 						<td><input value="<%= rs.getString("attendanceType") %>" name="attendanceType"></td>
