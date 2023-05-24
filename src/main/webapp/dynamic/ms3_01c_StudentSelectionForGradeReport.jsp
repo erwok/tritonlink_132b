@@ -9,7 +9,7 @@
 <body>
 <%-- Set the scripting language Java and --%>
 <%@ page language="java" import="java.sql.*" %>
-	<h2>Get Student's Current Classes Report</h2>
+	<h2>Get Student's Grade Report</h2>
 	<%
 	try {
 	    // Load driver
@@ -25,17 +25,20 @@
 	%>
 	
 	<%
-	String GET_Currently_enrolled_students_QUERY = 
-	"SELECT s.st_id, s.st_ssn, s.st_firstname, s.st_middlename, \n" +
-	"s.st_lastname FROM Student s, Taker t WHERE s.st_ID = t.st_ID";
-	ResultSet rs = stmt.executeQuery(GET_Currently_enrolled_students_QUERY);
+	String GET_students_who_have_been_enrolled_QUERY = 
+    "SELECT s.st_id, s.st_ssn, s.st_firstname, s.st_middlename, s.st_lastname FROM Student s, take t \n" + 
+	"WHERE s.st_id = t.st_id \n" + 
+    "UNION \n" + 
+    "SELECT s.st_id, s.st_ssn, s.st_firstname, s.st_middlename, s.st_lastname FROM Student s, pasttake p \n" + 
+	"WHERE s.st_id = p.st_id";
+	ResultSet rs = stmt.executeQuery(GET_students_who_have_been_enrolled_QUERY);
 	%>
 	
 	
 	<h4>Select Student Based on SSN</h4>
 	<table>
 		<tr>
-			<form action="ms3_01a_StudentCurrentClasses.jsp" method="get">
+			<form action="ms3_01c_StudentGradeReport.jsp" method="get">
 			    <input type="hidden" value="select" name="action">
 			    <td>
 			        <select name="st_id">

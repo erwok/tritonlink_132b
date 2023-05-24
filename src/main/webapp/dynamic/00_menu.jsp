@@ -10,7 +10,7 @@
 
 <b>Menu</b>
 <ul>
-	milestone 2
+	<p>milestone 2</p>
 	<li>
 		<a href="./01_CourseEntry.jsp">Course Entry Form + Prereqs per Course + Course Offerings (Class Entry)</a>
 	</li>
@@ -47,13 +47,12 @@
 	<li>
 		<a href="./08_ProbationEntry.jsp">Probation Info Submission</a>
 	</li>
-	<!-- <li>
-		<a href="./09_ReviewSessionInfoEntry.jsp">Review Session Info Submission</a>
-	</li> -->
 	<li>
 		<a href="./10_DegreeRequirementsEntry.jsp">Degree Requirements’ Info Submission</a>
 	</li>
-	milestone 3
+	
+	<p>milestone 3</p>
+	
 	<li>
 		<a href="./ms3_01a_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
 	</li>
@@ -61,7 +60,7 @@
 		<a href="./ms3_01b_ClassSelectionForRoster.jsp">Get Class Section's Roster</a>
 	</li>
 	<li>
-		<a href="./ms3_01c_GradeReportForEachStudent.jsp">Report Student's Grades</a>
+		<a href="./ms3_01c_StudentSelectionForGradeReport.jsp">Get Stuent's Grade Report</a>
 	</li>
 	<li>
 		<a href="./ms3_01d_DegreeRequirementForUndergraduate.jsp">Assist Undergraduate Student's Degree</a>
