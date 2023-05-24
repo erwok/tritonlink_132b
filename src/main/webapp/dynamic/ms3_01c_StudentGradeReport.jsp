@@ -13,6 +13,7 @@ String fullName = request.getParameter("st_id").split(",")[1];
 <body>
 <%-- Set the scripting language Java and --%>
 <%@ page language="java" import="java.sql.*" %>
+<%@ page import="java.util.Map, java.util.HashMap" %>
 
 <h2><%= fullName %>'s Grade Report</h2>
 
@@ -111,10 +112,215 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	        </tr>
 	    <% } %>
 	</table>
+
+	<%-- <%
+	String GET_GPA_QUERY = 
+	    "SELECT subquery.cl_year, subquery.cl_quarter, \n" +
+	    "       CASE \n" +
+	    "           WHEN subquery.grade = 'IN' THEN NULL \n" +
+	    "           ELSE g.number_grade \n" +
+	    "       END AS number_grade, \n" +
+	    "       subquery.units \n" +
+	    "FROM (\n" +
+	    "    SELECT p.cl_year, p.cl_quarter, p.pasttake_grade AS grade, p.pasttake_units AS units \n" +
+	    "    FROM pasttake p \n" +
+	    "    WHERE p.st_id = '" + studentID + "' \n" +
+	    "    UNION \n" +
+	    "    SELECT t.cl_year, t.cl_quarter, 'IN' AS grade, t.take_units AS units \n" +
+	    "    FROM take t \n" +
+	    "    WHERE t.st_id = '" + studentID + "' \n" +
+	    ") AS subquery \n" +
+	    "LEFT JOIN grade_conversion g ON subquery.grade = g.letter_grade";
+	
+	rs = stmt.executeQuery(GET_GPA_QUERY);
+	
+	Map<String, Double> quarterGPA = new HashMap<>();  // Map to store quarter GPA
+	double cumulativeGPA = 0.0;
+	double totalCredits = 0.0;
+	
+	while (rs.next()) {
+	    String year = rs.getString("cl_year");
+	    String quarter = rs.getString("cl_quarter");
+	    Double numberGrade = rs.getDouble("number_grade");
+	    Double credits = rs.getDouble("units");
+	
+	    if (!rs.wasNull()) {
+	        // Calculate quarter GPA
+	        double quarterGradePoints = 0.0;
+	        
+	        if (numberGrade >= 0) {
+	            quarterGradePoints = numberGrade * credits;
+	            totalCredits += credits;
+	        }
+	        
+	        if (year.equals("2018") && quarter.equals("SPRING")) {
+	            quarterGPA.put(year + "_" + quarter, null);
+	            continue;
+	        }
+	        
+	        double currentQuarterGPA = quarterGradePoints / totalCredits;
+	
+	        // Update cumulative GPA
+	        cumulativeGPA = (cumulativeGPA * totalCredits + currentQuarterGPA * credits) / (totalCredits + credits);
+	
+	        // Store quarter GPA
+	        String quarterKey = year + "_" + quarter;
+	        quarterGPA.put(quarterKey, currentQuarterGPA);
+	    }
+	}
+	%>
+	
+	<br>
+	<table style="border-collapse: collapse;">
+	    <tr>
+	        <th style="border: 1px solid black;">Quarter</th>
+	        <th style="border: 1px solid black;">Year</th>
+	        <th style="border: 1px solid black;">GPA</th>
+	    </tr>
+	<%
+	for (Map.Entry<String, Double> entry : quarterGPA.entrySet()) {
+	    String quarter = entry.getKey().split("_")[0];
+	    String year = entry.getKey().split("_")[1];
+	    Double quarterGpa = entry.getValue();
+	%>
+	    <tr>
+	        <td style="border: 1px solid black;"><%= quarter %></td>
+	        <td style="border: 1px solid black;"><%= year %></td>
+	        <td style="border: 1px solid black;">
+	        <% if (quarterGpa == null) { %>
+	            N/A
+	        <% } else { %>
+	            <%= quarterGpa %>
+	        <% } %>
+	        </td>
+	    </tr>
+	<%
+	}
+	%>
+	</table>
+	<br>
+	<table style="border-collapse: collapse;">
+	    <tr>
+	        <th style="border: 1px solid black;">Cumulative GPA</th>
+	    </tr>
+	    <tr>
+	        <td style="border: 1px solid black;"><%= cumulativeGPA %></td>
+	    </tr>
+	</table> --%>
 	
 	
+	<%
+	String GET_GPA_QUERY = 
+	    "SELECT subquery.cl_year, subquery.cl_quarter, subquery.grade, \n" +
+	    "       CASE \n" +
+	    "           WHEN subquery.grade = 'IN' THEN NULL \n" +
+	    "           ELSE g.number_grade \n" +
+	    "       END AS number_grade, \n" +
+	    "       subquery.units \n" +
+	    "FROM (\n" +
+	    "    SELECT p.cl_year, p.cl_quarter, p.pasttake_grade AS grade, p.pasttake_units AS units \n" +
+	    "    FROM pasttake p \n" +
+	    "    WHERE p.st_id = '" + studentID + "' \n" +
+	    "    UNION \n" +
+	    "    SELECT t.cl_year, t.cl_quarter, 'IN' AS grade, t.take_units AS units \n" +
+	    "    FROM take t \n" +
+	    "    WHERE t.st_id = '" + studentID + "' \n" +
+	    ") AS subquery \n" +
+	    "LEFT JOIN grade_conversion g ON subquery.grade = g.letter_grade";
+	
+	rs = stmt.executeQuery(GET_GPA_QUERY);
+	
+	Map<String, Double> quarterGPA = new HashMap<>();  // Map to store quarter GPA
+	double cumulativeGPA = 0.0;
+	double totalCredits = 0.0;
+	boolean currentlyEnrolled = false;
+	
+	while (rs.next()) {
+	    String year = rs.getString("cl_year");
+	    String quarter = rs.getString("cl_quarter");
+	    String grade = rs.getString("grade"); // Retrieve the "grade" column from the ResultSet
+	    Double numberGrade = rs.getDouble("number_grade");
+	    Double credits = rs.getDouble("units");
+	    
+	    if (year.equals("2018") && quarter.equals("SPRING")) {
+	        currentlyEnrolled = true;
+        }
+	
+	    if (!rs.wasNull() && !grade.equals("IN")) {
+	        // Calculate quarter GPA
+	        double quarterGradePoints = numberGrade * credits;
+	        totalCredits += credits;
+	
+	        if (year.equals("2018") && quarter.equals("SPRING")) {
+	            quarterGPA.put(year + "_" + quarter, null);
+	            continue;
+	        }
+	
+	        double currentQuarterGPA = quarterGradePoints / totalCredits;
+	
+	        // Update cumulative GPA
+	        cumulativeGPA = (cumulativeGPA * (totalCredits - credits) + currentQuarterGPA * credits) / totalCredits;
+	
+	        // Store quarter GPA
+	        String quarterKey = year + "_" + quarter;
+	        quarterGPA.put(quarterKey, currentQuarterGPA);
+	    }
+	}
+	%>
+	
+	<br>
+	<table style="border-collapse: collapse;">
+	    <tr>
+	        <th style="border: 1px solid black;">Quarter</th>
+	        <th style="border: 1px solid black;">Year</th>
+	        <th style="border: 1px solid black;">GPA</th>
+	    </tr>
+	<%
+	for (Map.Entry<String, Double> entry : quarterGPA.entrySet()) {
+	    String quarter = entry.getKey().split("_")[0];
+	    String year = entry.getKey().split("_")[1];
+	    Double quarterGpa = entry.getValue();
+	%>
+	    <tr>
+	        <td style="border: 1px solid black;"><%= quarter %></td>
+	        <td style="border: 1px solid black;"><%= year %></td>
+	        <td style="border: 1px solid black;">
+	        <% if (quarterGpa == null) { %>
+	            N/A
+	        <% } else { %>
+	            <%= quarterGpa %>
+	        <% } %>
+	        </td>
+	    </tr>
+	<%
+	if (currentlyEnrolled) {
+	%>
+		<tr>
+			<td style="border: 1px solid black;">SPRING</td>
+	        <td style="border: 1px solid black;">2018</td>
+	        <td style="border: 1px solid black;">N/A</td>
+		</tr>
+	<%
+	}
+	%>
+	    
+	<%
+	}
+	%>
+	</table>
+	<br>
+	<table style="border-collapse: collapse;">
+	    <tr>
+	        <th style="border: 1px solid black;">Cumulative GPA</th>
+	    </tr>
+	    <tr>
+	        <td style="border: 1px solid black;"><%= cumulativeGPA %></td>
+	    </tr>
+	</table>
+
 	
 	
+
 	<%
 	rs.close();
 	%>
