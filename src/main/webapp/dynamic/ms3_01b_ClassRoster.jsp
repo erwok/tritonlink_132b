@@ -43,16 +43,26 @@ String s_sectionID = everything[4];
 	        	"SELECT s.st_id, s.st_ssn, s.st_enrollmentstatus, s.st_residential, s.st_firstName, s.st_middleName, s.st_lastName, \n" +
 		    	"t.take_units AS units, t.take_gradingoption AS gradingoption \n" +
 	        	"FROM Student s, take t \n" + 
-		    	"WHERE s.st_id = t.st_id";
+		    	"WHERE s.st_id = t.st_id AND \n" +
+	        	"t.cr_courseNumber = '" + courseNumber + "' AND \n" +
+		    	"t.cl_title = '" + classTitle + "' AND \n" +
+	        	"t.cl_year = '" + classYear + "' AND \n" + 
+		    	"t.cl_quarter = '" + classQuarter + "' AND \n" +
+	        	"t.s_sectionID = '" + s_sectionID + "'";
 		    rs = stmt.executeQuery(GET_section_roster_QUERY);
 		}
 		// the class was offered in the past so only look in pasttake
 		else {
 		    GET_section_roster_QUERY = 
 	        	"SELECT s.st_id, s.st_ssn, s.st_enrollmentstatus, s.st_residential, s.st_firstName, s.st_middleName, s.st_lastName, \n" +
-		    	"p.pasttake_units AS units, t.pasttake_gradingoption AS gradingoption \n" +
+		    	"p.pasttake_units AS units, p.pasttake_gradingoption AS gradingoption \n" +
 	        	"FROM Student s, pasttake p \n" + 
-		    	"WHERE s.st_id = p.st_id";
+		    	"WHERE s.st_id = p.st_id AND \n" + 
+			    "p.cr_courseNumber = '" + courseNumber + "' AND \n" +
+		    	"p.cl_title = '" + classTitle + "' AND \n" +
+	        	"p.cl_year = '" + classYear + "' AND \n" + 
+		    	"p.cl_quarter = '" + classQuarter + "' AND \n" +
+	        	"p.s_sectionID = '" + s_sectionID + "'";
 		    rs = stmt.executeQuery(GET_section_roster_QUERY);
 		}
 	%>
@@ -76,7 +86,7 @@ String s_sectionID = everything[4];
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_id") %></td>
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_ssn") %></td>
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_enrollmentstatus") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getInt("st_residential") %></td>
+	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_residential") %></td>
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_firstname") %></td>
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_middlename") %></td>
 	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("st_lastname") %></td>

@@ -236,6 +236,19 @@ String quarter = request.getParameter("classQuarter");
 				classYear INT NOT NULL, 
 				classQuarter VARCHAR(255) NOT NULL,
 			    CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber),
+			    CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
+			);
+			
+			// HOW I EVENTUALLY WANT TO HAVE IT IMPLEMENTED
+			CREATE TABLE Section2 (
+			    s_sectionID VARCHAR(255),
+			    s_capacity INT NOT NULL,
+			    courseNumber VARCHAR(255) NOT NULL,
+			    classTitle VARCHAR(255) NOT NULL,
+			    classYear INT NOT NULL,
+			    classQuarter VARCHAR(255) NOT NULL,
+			    CONSTRAINT pk_section PRIMARY KEY (s_sectionID, courseNumber, classTitle, classYear, classQuarter),
+			    CONSTRAINT fk_cr FOREIGN KEY (courseNumber) REFERENCES Course(cr_courseNumber),
 			    CONSTRAINT fk_cl FOREIGN KEY (classTitle, classYear, classQuarter) REFERENCES Class(cl_title, cl_year, cl_quarter)
 			);
 			

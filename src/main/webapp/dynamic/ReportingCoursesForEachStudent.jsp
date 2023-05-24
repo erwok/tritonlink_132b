@@ -22,6 +22,8 @@ String studentID = request.getParameter("studentID");
 					<th>Class Year</th>
 					<th>Class Quarter</th>
 					<th>Section ID</th>
+					<th>Grading Option</th>
+					<th>Units</th>
 					<th>Grade</th>
 				</tr>
 				<%
@@ -51,7 +53,7 @@ String studentID = request.getParameter("studentID");
 					    "AND s_sectionID = ? AND st_id = ?")); */
 
 					    PreparedStatement pstmt = connection.prepareStatement(
-					    "INSERT INTO pastTake VALUES(?, ?, ?, ?, ?, ?, ?)");
+					    "INSERT INTO pastTake VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					    
 					    pstmt.setString(1, request.getParameter("st_ID"));
 					    pstmt.setString(2, request.getParameter("cr_courseNumber"));
@@ -59,7 +61,9 @@ String studentID = request.getParameter("studentID");
 					    pstmt.setInt(4, Integer.parseInt(request.getParameter("cl_year")));
 					    pstmt.setString(5, request.getParameter("cl_quarter"));
 					    pstmt.setString(6, request.getParameter("s_sectionID"));
-					    pstmt.setString(7, request.getParameter("pastTake_grade"));
+					    pstmt.setString(7, request.getParameter("pastTake_gradingOption"));
+					    pstmt.setString(8, request.getParameter("pastTake_units"));
+					    pstmt.setString(9, request.getParameter("pastTake_grade"));
 					    
 					    pstmt.executeUpdate();
 					    
@@ -109,6 +113,8 @@ String studentID = request.getParameter("studentID");
 						<td><input value="" name="cl_year" size="10"></td>
 						<td><input value="" name="cl_quarter" size="10"></td>
 						<td><input value="" name="s_sectionID" size="10"></td>
+						<td><input value="" name="pastTake_gradingOption" size="10"></td>
+						<td><input value="" name="pastTake_units" size="10"></td>
 						<td><input value="" name="pastTake_grade" size="10"></td>
 						<input type="hidden" name="st_ID" value="<%= studentID %>">
 						<input type="hidden" name="studentID" value="<%= studentID %>">
@@ -141,6 +147,8 @@ String studentID = request.getParameter("studentID");
 						<td><%= rs.getInt("cl_year") %></td>
 						<td><%= rs.getString("cl_quarter") %></td>
 						<td><%= rs.getString("s_sectionID") %></td>
+						<td><%= rs.getString("pastTake_gradingOption") %></td>
+						<td><%= rs.getString("pastTake_units") %></td>
 						<td><%= rs.getString("pastTake_grade") %></td>
 						<form action="ReportingCoursesForEachStudent.jsp" method="get">
 							<input type="hidden" value="delete" name="action">
@@ -150,6 +158,8 @@ String studentID = request.getParameter("studentID");
 							<input type="hidden" value="<%= rs.getString("cl_year") %>" name="cl_year">
 							<input type="hidden" value="<%= rs.getString("cl_quarter") %>" name="cl_quarter">
 							<input type="hidden" value="<%= rs.getString("s_sectionID") %>" name="s_sectionID">
+							<input type="hidden" value="<%= rs.getString("pastTake_grade") %>" name="pastTake_gradingOption">
+							<input type="hidden" value="<%= rs.getString("pastTake_grade") %>" name="pastTake_units">
 							<input type="hidden" value="<%= rs.getString("pastTake_grade") %>" name="pastTake_grade">
 							<td><input type="submit" value="Delete"></td>
 						</form>
@@ -203,17 +213,20 @@ String studentID = request.getParameter("studentID");
 			);	
 					
 			CREATE TABLE pastTake (
-				st_ID VARCHAR(255) NOT NULL, 
-				cr_courseNumber VARCHAR(255) NOT NULL,
-				cl_title VARCHAR(255) NOT NULL,
-				cl_year INT NOT NULL,cl_quarter VARCHAR(255) NOT NULL,
-				s_sectionID VARCHAR(255) NOT NULL,
-				pastTake_grade VARCHAR(255) NOT NULL,
-				CONSTRAINT FK_past_take_from_Student FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID),
-				CONSTRAINT fk_t_cr FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
-				CONSTRAINT fk_t_cl FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
-				CONSTRAINT FK_take_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
-			);
+                st_ID VARCHAR(255) NOT NULL, 
+                cr_courseNumber VARCHAR(255) NOT NULL,
+                cl_title VARCHAR(255) NOT NULL,
+    			cl_year INT NOT NULL,
+    			cl_quarter VARCHAR(255) NOT NULL,
+    			s_sectionID VARCHAR(255) NOT NULL,
+                pastTake_gradingOption VARCHAR(255) NOT NULL,
+                pastTake_units VARCHAR(255) NOT NULL,
+                pastTake_grade VARCHAR(255) NOT NULL,
+                CONSTRAINT FK_pastTake_from_pastTaker FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID),
+                CONSTRAINT FK_pastTake_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber),
+    			CONSTRAINT FK_pastTake_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter),
+                CONSTRAINT FK_pastTake_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID)
+            );
 
 			*/
 			%>
