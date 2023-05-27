@@ -119,7 +119,11 @@
 						<td><input value="" name="elective"></td>
 						<td><input value="" name="technical"></td>
 						<td><input value="" name="min_gpa"></td>
-						<td><input value="" name="type"></td>
+						<td><select name="type">
+                          <option value="BSC" selected>BSC</option>
+                          <option value="MS">MS</option>
+                          <option value="PhD">PhD</option>
+                        </select></td>
 						<td><input type="submit" value="Insert"></td>
 					</form>
 				</tr>
@@ -143,7 +147,12 @@
 						<td><input value="<%= rs.getInt("elective") %>" name="elective"></td>
 						<td><input value="<%= rs.getInt("technical") %>" name="technical"></td>
 						<td><input value="<%= rs.getDouble("min_gpa") %>" name="min_gpa"></td>
-						<td><input value="<%= rs.getString("type") %>" name="type"></td>
+						<td><select name="type">
+                          <% String type = rs.getString("type"); %>
+                          <option value="BSC" <%= (type.equals("BSC")) ? "selected":""%>>BSC</option>
+                          <option value="MS" <%= (type.equals("MS")) ? "selected":""%>>MS</option>
+                          <option value="PhD" <%= (type.equals("PhD")) ? "selected":""%>>PhD</option>
+                        </select></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
 					<form action="10_DegreeRequirementsEntry.jsp" method="get">
@@ -151,6 +160,13 @@
 						<input type="hidden" value="<%= rs.getString("majorCode") %>" name="majorCode">
 						<td><input type="submit" value="Delete"></td>
 					</form>
+					<%
+					if (type.equals("MS")) {
+					%>    
+					  <td><button onclick="window.location.href='./22_DegreeConcentrationSelection.jsp?majorCode=<%= rs.getString("majorCode") %>'">Select Concentration(s)</button></td>
+					<%    
+					}
+					%>
 				</tr>
 				<%
 				}
@@ -190,6 +206,25 @@
 			    type VARCHAR(255)
 			);
 			
+			CREATE TABLE Concentration (
+		        name VARCHAR(255) PRIMARY KEY,
+		        min_units INT NOT NULL,
+		        min_gpa DECIMAL(2,1)
+	        );
+			
+			CREATE TABLE ConcentrationCourses (
+		        name VARCHAR(255) NOT NULL,
+		        cr_courseNumber VARCHAR(255) NOT NULL,
+		        CONSTRAINT fk_conCou_con FOREIGN KEY (name) REFERENCES Concentration(name) ON DELETE CASCADE,
+		        CONSTRAINT fk_conCou_c FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE
+	        );
+			
+			CREATE TABLE DegreeConcentrations (
+		        majorCode VARCHAR(255) NOT NULL,
+		        concentrationName VARCHAR(255) NOT NULL,
+		        CONSTRAINT fk_dc_d FOREIGN KEY (majorCode) REFERENCES Degree(majorCode) ON DELETE CASCADE,
+		        CONSTRAINT fk_dc_con FOREIGN KEY (concentrationName) REFERENCES Concentration(name) ON DELETE CASCADE
+        	);
 			
 			
 			*/

@@ -235,3 +235,23 @@ CREATE TABLE QuarterDates (
 	CONSTRAINT Pk_qd PRIMARY KEY (quarter, year)
 );
 
+CREATE TABLE Concentration (
+    name VARCHAR(255) PRIMARY KEY,
+    min_units INT NOT NULL,
+    min_gpa DECIMAL(2,1)
+);
+
+CREATE TABLE ConcentrationCourses (
+    name VARCHAR(255) NOT NULL,
+    cr_courseNumber VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_conCou_con FOREIGN KEY (name) REFERENCES Concentration(name) ON DELETE CASCADE,
+    CONSTRAINT fk_conCou_c FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE
+);
+
+CREATE TABLE DegreeConcentrations (
+    majorCode VARCHAR(255) NOT NULL,
+    concentrationName VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_dc_d FOREIGN KEY (majorCode) REFERENCES Degree(majorCode) ON DELETE CASCADE,
+    CONSTRAINT fk_dc_con FOREIGN KEY (concentrationName) REFERENCES Concentration(name) ON DELETE CASCADE
+);
+
