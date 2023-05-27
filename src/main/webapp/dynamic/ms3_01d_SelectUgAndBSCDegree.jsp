@@ -26,49 +26,53 @@
 	
 	<%
 	String GET_undergrads_currently_enrolled_QUERY =
-	"SELECT s.st_id AS st_id, s.st_ssn AS st_ssn, s.st_firstname AS st_firstname, s.st_middlename AS st_middlename, s.st_lastname as st_lastname \n" +
+	"SELECT DISTINCT s.st_id AS st_id, s.st_ssn AS st_ssn, s.st_firstname AS st_firstname, s.st_middlename AS st_middlename, s.st_lastname as st_lastname \n" +
 	"FROM Student s, Undergraduate u, take t \n" + 
 	"WHERE s.st_id = u.st_id AND s.st_id = t.st_id";
 	ResultSet rs1 = stmt.executeQuery(GET_undergrads_currently_enrolled_QUERY);
-	
-	
-	String GET_degrees_QUERY = "SELECT * FROM Degree";
-	ResultSet rs2 = stmt.executeQuery(GET_degrees_QUERY);
 	%>
 	
 	
 	<h4>Select Currently Enrolled Undergrad and Degree</h4>
-	<form action="ms3_01d_UndergraduateRemainingDegreeRequirements.jsp" method="get">
-	    <input type="hidden" value="select" name="action">
-        <select name="st_id">
-            <option value="" selected disabled>Select student</option>
-            <% while (rs1.next()) {
-                String st_ssn = rs1.getString("st_ssn");
-                String f = rs1.getString("st_firstname");
-                String m = rs1.getString("st_middlename");
-                String l = rs1.getString("st_lastname");
-                String fullName = f + " " + m + " " + l;
-            %>
-                <option value="<%= rs1.getString("st_id") + "," + fullName %>"><%= "SSN: " + st_ssn + ", Name: " + fullName %></option>
-            <% } %>
-        </select>
-        <br>
-        <br>
-        <select name="majorcode">
-            <option value="" selected disabled>Select Degree</option>
-            <% while (rs2.next()) {
-                String majorCode = rs2.getString("majorcode");
-                String type = rs2.getString("type");
-            %>
-                <option value="<%= majorCode %>"><%= majorCode + ", " + type %></option>
-            <% } %>
-        </select>
-	    <input type="submit" value="Select">
-	</form>
+	<table>
+		<tr>
+			<form action="ms3_01d_UndergraduateRemainingDegreeRequirements.jsp" method="get">
+		        <td><select name="st_id">
+		            <option value="" selected disabled>Select student</option>
+		            <% while (rs1.next()) {
+		                String st_ssn = rs1.getString("st_ssn");
+		                String f = rs1.getString("st_firstname");
+		                String m = rs1.getString("st_middlename");
+		                String l = rs1.getString("st_lastname");
+		                String fullName = f + " " + m + " " + l;
+		            %>
+		                <option value="<%= rs1.getString("st_id") + "," + fullName %>"><%= "SSN: " + st_ssn + ", Name: " + fullName %></option>
+		            <% } %>
+		        </select></td>
+		        
+		        <%
+		        rs1.close();
+		        
+		        String GET_degrees_QUERY = "SELECT * FROM Degree";
+				ResultSet rs2 = stmt.executeQuery(GET_degrees_QUERY);
+				%>
+				
+		        <td><select name="majorcode">
+		            <option value="" selected disabled>Select Degree</option>
+		            <% while (rs2.next()) {
+		                String majorCode = rs2.getString("majorcode");
+		                String type = rs2.getString("type");
+		            %>
+		                <option value="<%= majorCode %>"><%= majorCode + ", " + type %></option>
+		            <% } %>
+		        </select></td>
+			    <td><input type="submit" value="Select"></td>
+			</form>
+		</tr>
+	</table>
 	
 
 	<%				
-	rs1.close();
 	rs2.close();
 	
 	// Close the Statement

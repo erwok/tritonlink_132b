@@ -123,24 +123,3 @@ String fullName = request.getParameter("st_id").split(",")[1];
 
 </body>
 </html>
-
-<!--
-	Display the classes currently taken by student X:
-
-a. The form is an HTML SELECT control with all students enrolled in the current quarter.   
-Display the SSN, FIRSTNAME, MIDDLENAME and LASTNAME attributes of STUDENTs given their SSN attribute.
-
-b. The report should display the classes taken by X in the current quarter.
-
-c. On the report page display all attributes of the CLASS entity and the UNITS and 
-SECTION attributes of the relationship connecting STUDENTS with the CLASS they take.
-	
-Given ssn of a student = <ssn>
-
-a. SELECT S.* FROM Student S, Taker T WHERE T.st_ssn = '<ssn>' AND S.st_id = T.st_id;
-
-b. SELECT T.* FROM Take T WHERE st_ssn = '<ssn>';
-
-c. SELECT C.* FROM Course C, Take T where C.cr_coursenumber = T.cr_coursenumber;
-
--->
