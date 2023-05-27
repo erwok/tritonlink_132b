@@ -89,7 +89,7 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	    <% } %>
 	</table>
 	
-	<%
+	<%-- <%
 	String GET_GPA_QUERY = 
 	    "SELECT subquery.cl_year, subquery.cl_quarter, subquery.grade, \n" +
 	    "       CASE \n" +
@@ -146,7 +146,73 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	        quarterGPA.put(quarterKey, currentQuarterGPA);
 	    }
 	}
+	%> --%>
+	
+	<%
+	String GET_GPA_QUERY = 
+	    "SELECT subquery.cl_year, subquery.cl_quarter, subquery.grade, \n" +
+	    "       CASE \n" +
+	    "           WHEN subquery.grade = 'IN' THEN NULL \n" +
+	    "           ELSE g.number_grade \n" +
+	    "       END AS number_grade, \n" +
+	    "       subquery.units \n" +
+	    "FROM (\n" +
+	    "    SELECT p.cl_year, p.cl_quarter, p.pasttake_grade AS grade, p.pasttake_units AS units \n" +
+	    "    FROM pasttake p \n" +
+	    "    WHERE p.st_id = '" + studentID + "' \n" +
+	    "    UNION \n" +
+	    "    SELECT t.cl_year, t.cl_quarter, 'IN' AS grade, t.take_units AS units \n" +
+	    "    FROM take t \n" +
+	    "    WHERE t.st_id = '" + studentID + "' \n" +
+	    ") AS subquery \n" +
+	    "LEFT JOIN grade_conversion g ON subquery.grade = g.letter_grade";
+	
+	rs = stmt.executeQuery(GET_GPA_QUERY);
+	
+	Map<String, Double> quarterGPA = new HashMap<>();  // Map to store quarter GPA
+	Map<String, Double> quarterTotalUnits = new HashMap<>();  // Map to store total units for each quarter
+	double cumulativeGPA = 0.0;
+	double totalCredits = 0.0;
+	boolean currentlyEnrolled = false;
+	
+	while (rs.next()) {
+	    String year = rs.getString("cl_year");
+	    String quarter = rs.getString("cl_quarter");
+	    String grade = rs.getString("grade"); // Retrieve the "grade" column from the ResultSet
+	    Double numberGrade = rs.getDouble("number_grade");
+	    Double credits = rs.getDouble("units");
+	
+	    if (year.equals("2018") && quarter.equals("SPRING")) {
+	        currentlyEnrolled = true;
+	    }
+	
+	    if (!rs.wasNull() && !grade.equals("IN")) {
+	        // Calculate quarter GPA
+	        double quarterGradePoints = numberGrade * credits;
+	        double quarterTotalCredits = quarterTotalUnits.getOrDefault(year + "_" + quarter, 0.0);
+	        quarterTotalCredits += credits;
+	        quarterTotalUnits.put(year + "_" + quarter, quarterTotalCredits);
+	        double currentQuarterGPA = quarterGradePoints / quarterTotalCredits;
+	        currentQuarterGPA *= 100;
+	        currentQuarterGPA = (double)((int) currentQuarterGPA);
+	        currentQuarterGPA /= 100;
+	
+	        // Update cumulative GPA
+	        cumulativeGPA = (cumulativeGPA * totalCredits + currentQuarterGPA * credits) / (totalCredits + credits);
+	        cumulativeGPA *= 100;
+	        cumulativeGPA = (double)((int) cumulativeGPA);
+	        cumulativeGPA /= 100;
+	
+	        // Store quarter GPA
+	        String quarterKey = year + "_" + quarter;
+	        quarterGPA.put(quarterKey, currentQuarterGPA);
+	
+	        // Update total credits
+	        totalCredits += credits;
+	    }
+	}
 	%>
+	
 	
 	<br>
 	<table style="border-collapse: collapse;">

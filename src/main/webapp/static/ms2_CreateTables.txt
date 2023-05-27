@@ -42,7 +42,8 @@ CREATE TABLE Student (
     st_residential VARCHAR(255) NOT NULL,
     st_firstName VARCHAR(255) NOT NULL,
     st_middleName VARCHAR(255),
-    st_lastName VARCHAR(255) NOT NULL
+    st_lastName VARCHAR(255) NOT NULL,
+    academic_status VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Section (
@@ -139,46 +140,27 @@ CREATE TABLE Degree (
 );
 
 CREATE TABLE Undergraduate (
-    st_ID VARCHAR(255) PRIMARY KEY,
-    st_SSN VARCHAR(255) UNIQUE NOT NULL,
-    st_enrollmentStatus VARCHAR(255) NOT NULL,
-    st_residential VARCHAR(255) NOT NULL,
-    st_firstName VARCHAR(255) NOT NULL,
-    st_middleName VARCHAR(255),
-    st_lastName VARCHAR(255) NOT NULL,
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
     major VARCHAR(255) NOT NULL,
-    minor VARCHAR(255) NOT NULL
+    minor VARCHAR(255),
+    CONSTRAINT fk_u_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Master (
-    st_ID VARCHAR(255) PRIMARY KEY,
-    st_SSN VARCHAR(255) UNIQUE NOT NULL,
-    st_enrollmentStatus VARCHAR(255) NOT NULL,
-    st_residential VARCHAR(255) NOT NULL,
-    st_firstName VARCHAR(255) NOT NULL,
-    st_middleName VARCHAR(255),
-    st_lastName VARCHAR(255) NOT NULL
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    department VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_m_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Precandidate (
-    st_ID VARCHAR(255) PRIMARY KEY,
-    st_SSN VARCHAR(255) UNIQUE NOT NULL,
-    st_enrollmentStatus VARCHAR(255) NOT NULL,
-    st_residential VARCHAR(255) NOT NULL,
-    st_firstName VARCHAR(255) NOT NULL,
-    st_middleName VARCHAR(255),
-    st_lastName VARCHAR(255) NOT NULL
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    CONSTRAINT fk_pc_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Candidate (
-    st_ID VARCHAR(255) PRIMARY KEY,
-    st_SSN VARCHAR(255) UNIQUE NOT NULL,
-    st_enrollmentStatus VARCHAR(255) NOT NULL,
-    st_residential VARCHAR(255) NOT NULL,
-    st_firstName VARCHAR(255) NOT NULL,
-    st_middleName VARCHAR(255),
-    st_lastName VARCHAR(255) NOT NULL,
-    advisor VARCHAR(255) NOT NULL
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    advisor VARCHAR(255) NOT NULL, 
+    CONSTRAINT fk_c_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE ThesisCommittee (
