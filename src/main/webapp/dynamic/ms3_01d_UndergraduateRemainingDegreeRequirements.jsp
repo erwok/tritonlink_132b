@@ -34,16 +34,7 @@ String majorCode = request.getParameter("majorcode");
 		String GET_total_units_taken_by_undergraduate_QUERY = 
 	        "SELECT SUM(CAST(p.pasttake_units AS INTEGER)) AS totalUnitsTaken \n" +
 	        "FROM Undergraduate u, pasttake p \n" +
-	        "WHERE u.st_id = p.st_id \n" +
-	        "AND (p.pasttake_grade = 'A+' \n" +
-            "OR p.pasttake_grade = 'A' \n" +
-            "OR p.pasttake_grade = 'A-' \n" +
-            "OR p.pasttake_grade = 'B+' \n" +
-            "OR p.pasttake_grade = 'B' \n" +
-            "OR p.pasttake_grade = 'B-' \n" +
-            "OR p.pasttake_grade = 'C+' \n" +
-            "OR p.pasttake_grade = 'C' \n" +
-            "OR p.pasttake_grade = 'C-')";
+	        "WHERE u.st_id = p.st_id";
 		ResultSet rs = stmt.executeQuery(GET_total_units_taken_by_undergraduate_QUERY);
 		
 		rs.next();
