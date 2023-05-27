@@ -80,10 +80,10 @@ String majorCode = request.getParameter("majorcode");
 	    <%
 	    String GET_lower_div_courses_units_total_QUERY = 
 		    "SELECT SUM(CAST(p.pasttake_units AS INTEGER)) AS lowerDivUnitsTaken \n" +
-		    "FROM Undergraduate u, pasttake p \n" +
+		    "FROM Undergraduate u, pasttake p \n" + 
 		    "WHERE u.st_id = p.st_id \n" +
-		    "AND (p.cr_courseNumber LIKE '%[1-9][0-9]%' \n" +
-		    "OR p.cr_courseNumber LIKE '%[1-9]%')";
+		    "AND (p.cr_courseNumber SIMILAR TO '%[1-9][0-9]%' \n" +
+		    "OR p.cr_courseNumber SIMILAR TO '%[1-9]%')";
 		rs = stmt.executeQuery(GET_lower_div_courses_units_total_QUERY);
 		
 		rs.next();
@@ -97,8 +97,7 @@ String majorCode = request.getParameter("majorcode");
 	    	"SELECT SUM(CAST(p.pasttake_units AS INTEGER)) AS upperDivUnitsTaken \n" +
 	    	"FROM Undergraduate u, pasttake p \n" +
 	    	"WHERE u.st_id = p.st_id \n" +
-   	        "AND (p.cr_courseNumber LIKE '%[1-9][0-9][0-9]%' \n" +
-   	        "OR p.cr_courseNumber LIKE '%[1-9][0-9]%')";
+   	        "AND p.cr_courseNumber SIMILAR TO '%[1-9][0-9][0-9]%'";
 	    rs = stmt.executeQuery(GET_upper_div_courses_units_total_QUERY);
 	    
 	    rs.next();
