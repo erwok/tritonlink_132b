@@ -20,7 +20,7 @@
 	<li>
 		<a href="./03_StudentEntry.jsp">Student Entry Form</a>
 	</li>
-	<li>
+	<!-- <li>
 		<a href="./14_UndergraduateEntry.jsp">Undergraduate Entry Form</a>
 	</li>
 	<li>
@@ -31,7 +31,7 @@
 	</li>
 	<li>
 		<a href="./17_CandidateEntry.jsp">Candidate Entry Form</a>
-	</li>
+	</li> -->
 	<li>
 		<a href="./04_FacultyEntry.jsp">Faculty Entry Form</a>
 	</li>
