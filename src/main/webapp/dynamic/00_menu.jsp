@@ -39,7 +39,7 @@
 		<a href="./05_CourseEnrollmentEntry.jsp">Course Enrollment</a>
 	</li>
 	<li>
-		<a href="./06_ClassTakenInPastEntry.jsp">Classes taken in the Past</a>
+		<a href="./06_ClassTakenInPastEntry.jsp">Report Past Classes</a>
 	</li>
 	<!-- <li>
 		<a href="./07_ThesisCommitteeEntry.jsp">Thesis Committee Submission</a>
@@ -49,6 +49,9 @@
 	</li>
 	<li>
 		<a href="./10_DegreeRequirementsEntry.jsp">Degree Requirements’ Info Submission</a>
+	</li>
+	<li>
+		<a href="./19_QuarterDatesEntry.jsp">Quarter Dates Entry Form</a>
 	</li>
 	
 	<p>milestone 3</p>
@@ -60,7 +63,7 @@
 		<a href="./ms3_01b_ClassSelectionForRoster.jsp">Get Class Section's Roster</a>
 	</li>
 	<li>
-		<a href="./ms3_01c_StudentSelectionForGradeReport.jsp">Get Stuent's Grade Report</a>
+		<a href="./ms3_01c_StudentSelectionForGradeReport.jsp">Get Student's Grade Report</a>
 	</li>
 	<li>
 		<a href="./ms3_01d_DegreeRequirementForUndergraduate.jsp">Assist Undergraduate Student's Degree</a>

@@ -266,6 +266,15 @@ String cn = request.getParameter("courseName");
 			/* 
 			CREATE TABLE Class (cl_title VARCHAR(255) NOT NULL, cl_year INT NOT NULL, cl_quarter VARCHAR(255) NOT NULL, CONSTRAINT pk_Class PRIMARY KEY(cl_title, cl_year, cl_quarter));
 
+			
+			CREATE TABLE QuarterDates (
+	        	quarter VARCHAR(255) NOT NULL,
+	        	year INT NOT NULL,
+	        	start_date VARCHAR(255) NOT NULL,
+	        	end_date VARCHAR(255) NOT NULL,
+	        	CONSTRAINT Pk_qd PRIMARY KEY (quarter, year)
+	        );
+			
 			*/
 			%>
 			

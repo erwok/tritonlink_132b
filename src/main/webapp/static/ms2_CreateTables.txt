@@ -222,3 +222,12 @@ CREATE TABLE PastCourseNums (
     CONSTRAINT FK_pcn FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE
 );
 
+
+CREATE TABLE QuarterDates (
+	quarter VARCHAR(255) NOT NULL,
+	year INT NOT NULL,
+	start_date VARCHAR(255) NOT NULL,
+	end_date VARCHAR(255) NOT NULL,
+	CONSTRAINT Pk_qd PRIMARY KEY (quarter, year)
+);
+

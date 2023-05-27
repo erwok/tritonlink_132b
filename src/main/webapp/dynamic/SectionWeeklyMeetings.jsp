@@ -106,12 +106,15 @@ String section = request.getParameter("sectionID");
 				<%
 					Statement stmt = connection.createStatement();
 					ResultSet rs;
+					ResultSet rs2;
 				%>
 				<tr>
 					<th>Location</th>
 					<th>Time</th>
 					<th>Start Time</th>
 					<th>End Time</th>
+					<th>Start Date</th>
+					<th>End Date</th>
 					<th>Days Of Week</th>
 					<th>Meeting Type</th>
 					<th>Attendance Type</th>
@@ -124,6 +127,19 @@ String section = request.getParameter("sectionID");
 						<td><input value="" name="time"></td>
 						<td><input value="" name="startTime"></td>
 						<td><input value="" name="endTime"></td>
+						<%
+						rs2 = stmt.executeQuery(
+					        "SELECT * \n" +
+							"FROM QuarterDates \n" +
+			                "WHERE quarter = '" + quarter + "' \n" +
+							"AND year = '" + Integer.parseInt(year) + "'"
+			        	);
+						rs2.next();
+						String start_date = rs2.getString("start_date");
+						String end_date = rs2.getString("end_date");
+						%>
+						<td><%= start_date %></td>
+						<td><%= end_date %></td>
 						<td><input value="" name="daysOfWeek"></td>
 						<td><input value="" name="meetingType"></td>
 						<td><input value="" name="attendanceType"></td>
@@ -142,7 +158,9 @@ String section = request.getParameter("sectionID");
 				rs = stmt.executeQuery(
 			    	"SELECT * FROM WeeklyMeetings WHERE s_sectionID = '" + section + "'"
 		        );
+				%>
 				
+				<%
 				while (rs.next()) {
 				%>
 				<tr>
@@ -152,6 +170,8 @@ String section = request.getParameter("sectionID");
 						<td><input value="<%= rs.getString("time") %>" name="time"></td>
 						<td><input value="<%= rs.getString("startTime") %>" name="startTime"></td>
 						<td><input value="<%= rs.getString("endTime") %>" name="endTime"></td>
+						<td><%= start_date %></td>
+						<td><%= end_date %></td>
 						<td><input value="<%= rs.getString("daysOfWeek") %>" name="daysOfWeek"></td>
 						<td><input value="<%= rs.getString("meetingType") %>" name="meetingType"></td>
 						<td><input value="<%= rs.getString("attendanceType") %>" name="attendanceType"></td>
@@ -179,6 +199,8 @@ String section = request.getParameter("sectionID");
 				</tr>
 				<%
 				}
+				
+				rs2.close();
 				
 				rs.close();
 				%>
