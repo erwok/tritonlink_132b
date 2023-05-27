@@ -66,19 +66,7 @@
 		<a href="./ms3_01c_StudentSelectionForGradeReport.jsp">Get Student's Grade Report</a>
 	</li>
 	<li>
-		<a href="./ms3_01d_DegreeRequirementForUndergraduate.jsp">Assist Undergraduate Student's Degree</a>
-	</li>
-	<li>
-		<a href="./ms3_01e_DegreeRequirementForMS.jsp">Assist Master Student's Degree</a>
-	</li>
-	<li>
-		<a href="./ms3_02a_AssistStudentSchedule.jsp">Assist Student's Class Schedule</a>
-	</li>
-	<li>
-		<a href="./ms3_02b_AssistProfessorSchedule.jsp">Assist Professor's Review Schedule</a>
-	</li>
-	<li>
-		<a href="./ms3_03a_DecisionSupport.jsp">Decision Supportor</a>
+		<a href="./ms3_01d_SelectUgAndBSCDegree.jsp">Get Undergraduate's Remaining Requirements for Bachelor's Degree</a>
 	</li>
 </ul>
 

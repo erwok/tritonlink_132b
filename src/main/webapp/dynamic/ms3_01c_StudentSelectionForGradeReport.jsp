@@ -60,7 +60,9 @@
 	</table>
 	
 
-	<%				
+	<%		
+	rs.close();
+	
 	// Close the Statement
 	stmt.close();
 	

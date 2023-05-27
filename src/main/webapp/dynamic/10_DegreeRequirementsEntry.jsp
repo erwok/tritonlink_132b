@@ -31,12 +31,16 @@
 					    connection.setAutoCommit(false);
 					   
                         PreparedStatement pstmt = connection.prepareStatement(
-                        	"INSERT INTO Degree VALUES (?, ?, ?, ?)"
+                        	"INSERT INTO Degree VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 						);
                         pstmt.setString(1, request.getParameter("majorCode"));
-                        pstmt.setInt(2, Integer.parseInt(request.getParameter("requiredTotalUnits")));
-                        pstmt.setInt(3, Integer.parseInt(request.getParameter("requiredLowerDivUnits")));
-                        pstmt.setInt(4, Integer.parseInt(request.getParameter("requiredUpperDivUnits")));
+                        pstmt.setInt(2, Integer.parseInt(request.getParameter("total")));
+                        pstmt.setInt(3, Integer.parseInt(request.getParameter("lower")));
+                        pstmt.setInt(4, Integer.parseInt(request.getParameter("upper")));
+                        pstmt.setInt(5, Integer.parseInt(request.getParameter("elective")));
+                        pstmt.setInt(6, Integer.parseInt(request.getParameter("technical")));
+                        pstmt.setDouble(7, Double.parseDouble(request.getParameter("min_gpa")));
+                        pstmt.setString(8, request.getParameter("type"));
                         pstmt.executeUpdate();
                         
                         connection.setAutoCommit(true);
@@ -50,16 +54,21 @@
 				    
 				    connection.setAutoCommit(false);
 				    
-				    PreparedStatement pstatement = connection.prepareStatement(
-				        "UPDATE Degree SET requiredTotalUnits = ?, requiredLowerDivUnits = ?, requiredUpperDivUnits = ?\n"+
+				    PreparedStatement pstmt = connection.prepareStatement(
+				        "UPDATE Degree SET total = ?, lower = ?, upper = ?, elective = ?, technical = ?, min_gpa = ?, type = ? \n"+
 				    	"WHERE majorCode = ?"
 				    );
 				    
-				    pstatement.setInt(1, Integer.parseInt(request.getParameter("requiredTotalUnits")));
-				    pstatement.setInt(2, Integer.parseInt(request.getParameter("requiredLowerDivUnits")));
-				    pstatement.setInt(3, Integer.parseInt(request.getParameter("requiredUpperDivUnits")));
-				    pstatement.setString(4, request.getParameter("majorCode"));
-				    int rowCount = pstatement.executeUpdate();
+				    pstmt.setInt(1, Integer.parseInt(request.getParameter("total")));
+				    pstmt.setInt(2, Integer.parseInt(request.getParameter("lower")));
+                    pstmt.setInt(3, Integer.parseInt(request.getParameter("upper")));
+                    pstmt.setInt(4, Integer.parseInt(request.getParameter("elective")));
+                    pstmt.setInt(5, Integer.parseInt(request.getParameter("technical")));
+                    pstmt.setDouble(6, Double.parseDouble(request.getParameter("min_gpa")));
+                    pstmt.setString(7, request.getParameter("type"));
+				    pstmt.setString(8, request.getParameter("majorCode"));
+				    
+				    pstmt.executeUpdate();
 				    
 				    connection.setAutoCommit(false);
 				    connection.setAutoCommit(true);
@@ -92,17 +101,25 @@
 				%>
 				<tr>
 					<th>Major Code</th>
-					<th>Required Total Units</th>
-					<th>Required Lower Div Units</th>
-					<th>Required Upper Div Units</th>
+					<th>Total Units</th>
+					<th>Lower Div Units</th>
+					<th>Upper Div Units</th>
+					<th>Elective Units</th>
+					<th>Tech. Elective Units</th>
+					<th>Minimum GPA</th>
+					<th>Type</th>
 				</tr>
 				<tr>
 					<form action="10_DegreeRequirementsEntry.jsp" method="get">
 						<input type="hidden" value="insert" name="action">
 						<td><input value="" name="majorCode"></td>
-						<td><input value="" name="requiredTotalUnits"></td>
-						<td><input value="" name="requiredLowerDivUnits"></td>
-						<td><input value="" name="requiredUpperDivUnits"></td>
+						<td><input value="" name="total"></td>
+						<td><input value="" name="lower"></td>
+						<td><input value="" name="upper"></td>
+						<td><input value="" name="elective"></td>
+						<td><input value="" name="technical"></td>
+						<td><input value="" name="min_gpa"></td>
+						<td><input value="" name="type"></td>
 						<td><input type="submit" value="Insert"></td>
 					</form>
 				</tr>
@@ -120,17 +137,18 @@
 					<form action="10_DegreeRequirementsEntry.jsp" method="get">
 						<input type="hidden" value="update" name="action">
 						<td><input value="<%= rs.getString("majorCode") %>" name="majorCode"></td>
-						<td><input value="<%= rs.getInt("requiredTotalUnits") %>" name="requiredTotalUnits"></td>
-						<td><input value="<%= rs.getInt("requiredLowerDivUnits") %>" name="requiredLowerDivUnits"></td>
-						<td><input value="<%= rs.getInt("requiredUpperDivUnits") %>" name="requiredUpperDivUnits"></td>
+						<td><input value="<%= rs.getInt("total") %>" name="total"></td>
+						<td><input value="<%= rs.getInt("lower") %>" name="lower"></td>
+						<td><input value="<%= rs.getInt("upper") %>" name="upper"></td>
+						<td><input value="<%= rs.getInt("elective") %>" name="elective"></td>
+						<td><input value="<%= rs.getInt("technical") %>" name="technical"></td>
+						<td><input value="<%= rs.getDouble("min_gpa") %>" name="min_gpa"></td>
+						<td><input value="<%= rs.getString("type") %>" name="type"></td>
 						<td><input type="submit" value="Update"></td>
 					</form>
 					<form action="10_DegreeRequirementsEntry.jsp" method="get">
 						<input type="hidden" value="delete" name="action">
 						<input type="hidden" value="<%= rs.getString("majorCode") %>" name="majorCode">
-						<input type="hidden" value="<%= rs.getInt("requiredTotalUnits") %>" name="requiredTotalUnits">
-						<input type="hidden" value="<%= rs.getInt("requiredLowerDivUnits") %>" name="requiredLowerDivUnits">
-						<input type="hidden" value="<%= rs.getInt("requiredUpperDivUnits") %>" name="requiredUpperDivUnits">
 						<td><input type="submit" value="Delete"></td>
 					</form>
 				</tr>
@@ -159,12 +177,18 @@
 			/* Experiment queries */
 			
 			/*
+			
+			
 			CREATE TABLE Degree (
-		        majorCode VARCHAR(255) PRIMARY KEY,
-		        requiredTotalUnits INT NOT NULL,
-		        requiredLowerDivUnits INT,
-		        requiredUpperDivUnits INT
-	        );
+			    majorCode VARCHAR(255) PRIMARY KEY,
+			    total INT NOT NULL,
+			    lower INT,
+			    upper INT,
+			    elective INT,
+			    technical INT,
+			    min_gpa DECIMAL(2,1),
+			    type VARCHAR(255)
+			);
 			
 			
 			

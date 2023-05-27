@@ -134,9 +134,13 @@ CREATE TABLE ReviewSessions (
 
 CREATE TABLE Degree (
     majorCode VARCHAR(255) PRIMARY KEY,
-    requiredTotalUnits INT NOT NULL,
-    requiredLowerDivUnits INT,
-    requiredUpperDivUnits INT
+    total INT NOT NULL,
+    lower INT,
+    upper INT,
+    elective INT,
+    technical INT,
+    min_gpa DECIMAL(2,1),
+    type VARCHAR(255)
 );
 
 CREATE TABLE Undergraduate (
