@@ -45,7 +45,16 @@ String section = request.getParameter("sectionID");
                         pstmt.setString(3, request.getParameter("startTime"));
                         pstmt.setString(4, request.getParameter("endTime"));
                         pstmt.setString(5, request.getParameter("meetingType"));
-                        pstmt.setString(6, request.getParameter("daysOfWeek"));
+                        // pstmt.setString(6, request.getParameter("daysOfWeek"));
+						String[] dow = request.getParameterValues("daysOfWeek_id");
+						String days = "";
+                        if (dow != null) {
+	                        for (String d : dow) {
+	                            days += "," + d;
+	                        }
+	                        days = days.substring(1);
+                        }
+                        pstmt.setString(6, days);
                         pstmt.setString(7, request.getParameter("attendanceType"));
                         pstmt.setString(8, request.getParameter("s_sectionID"));
                         pstmt.executeUpdate();
@@ -140,7 +149,14 @@ String section = request.getParameter("sectionID");
 						%>
 						<td><%= start_date %></td>
 						<td><%= end_date %></td>
-						<td><input value="" name="daysOfWeek"></td>
+						<td><select multiple name="daysOfWeek_id">
+                            <option disabled>Select day(s)</option>
+                            <option value="Monday">Monday</option>
+	                        <option value="Tuesday">Tuesday</option>
+	                        <option value="Wednesday">Wednesday</option>
+	                        <option value="Thursday">Thursday</option>
+	                        <option value="Friday">Friday</option>
+                       	</select></td>
 						<td><input value="" name="meetingType"></td>
 						<td><input value="" name="attendanceType"></td>
                        	<input type="hidden" name="courseName" value="<%= cn %>">
