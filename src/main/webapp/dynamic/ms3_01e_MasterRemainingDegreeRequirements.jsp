@@ -60,60 +60,168 @@ String majorCode = request.getParameter("majorcode");
 		
 		/*
 		
-		TODO:
-		    
+		TODO: 
 		    NEED TO TAKE INTO ACCOUNT grading option, grade received, and units the class was taken for
 		    
 		    IDEA: use multiple hashmaps to store each of those data points
-		    
-		
 		*/
 		
 		// concentrations and what courses the masters student has completed under them
-		Map<String, List<String>> conmap = new HashMap<>();
+		Map<String, List<String>> conTakenMap = new HashMap<>();
+		// concentrations and grades achieved in completed courses
+		Map<String, List<String>> conGradeMap = new HashMap<>();
+		// concentrations and units taken in completed courses
+		Map<String, Integer> conUnitsMap = new HashMap<>();
+		// concentrations and their min_units requirement
+		Map<String, Integer> conMinUnitsMap = new HashMap<>();
+		// concentrations and their min_gpa requirement
+		Map<String, Double> conMinGpaMap = new HashMap<>();
 		String query_completed_courses = null;
 		for (String c : concentrations) {
 		    query_completed_courses = 
             "SELECT p.cr_courseNumber AS courseNum, p.pasttake_gradingOption AS gradingOption, \n" +
-		    "p.pasttake_units AS units, p.pasttake_grade AS grade \n" +
-            "FROM ConcentrationCourses c, pasttake p \n" +
+		    "p.pasttake_units AS units, p.pasttake_grade AS grade, con.min_units AS min_units, con.min_gpa AS min_gpa \n" +
+            "FROM ConcentrationCourses c, pasttake p, Concentration con \n" +
 		    "WHERE p.st_id = '" + studentID + "' \n" +
-            "AND p.cr_courseNumber = c.cr_courseNumber";
+            "AND p.cr_courseNumber = c.cr_courseNumber \n" +
+		    "AND c.name = '" + c + "' \n" +
+		    "AND c.name = con.name";
 		    rs = stmt.executeQuery(query_completed_courses);
 		    
 		    List<String> courses = null;
 		    while (rs.next()) {
-		        if (conmap.get(c) == null) {
+		        if (!conTakenMap.containsKey(c)) {
 		            List<String> l = new ArrayList<>();
-		            conmap.put(c, l);
+		            conTakenMap.put(c, l);
 		        }
-		        courses = conmap.get(c);
-		        courses.add(rs.getString("cr_courseNumber"));
+		        courses = conTakenMap.get(c);
+		        courses.add(rs.getString("courseNum"));
+		        
+		        // only classes taken for a Letter grade get factored for gpa calculation
+		        if (rs.getString("gradingOption").equals("Letter")) {
+		            if (!conGradeMap.containsKey(c)) {
+			            List<String> l = new ArrayList<>();
+			            conGradeMap.put(c, l);
+			        }
+			        courses = conGradeMap.get(c);
+			        courses.add(rs.getString("grade"));
+		        }
+		        
+		        // Courses taken for S/U or letter both get their units recorded
+		        if (!conUnitsMap.containsKey(c)) {
+		            conUnitsMap.put(c, 0);
+		        }
+		        conUnitsMap.put(c, conUnitsMap.get(c) + Integer.parseInt(rs.getString("units")));
+		        
+		        // record the min requirements for concentrations
+		        if (!conMinUnitsMap.containsKey(c)) {
+		            conMinUnitsMap.put(c, rs.getInt("min_units"));
+		        }
+		       	if (!conMinGpaMap.containsKey(c)) {
+		       	    conMinGpaMap.put(c, rs.getDouble("min_gpa"));
+		       	}
 		    }
 		}
 		
+		Map<String, Double> grade_conversion = new HashMap<>();
+		grade_conversion.put("A+", 4.3);
+		grade_conversion.put("A", 4.0);
+		grade_conversion.put("A-", 3.7);
+		grade_conversion.put("B+", 3.4);
+		grade_conversion.put("B", 3.1);
+		grade_conversion.put("B-", 2.8);
+		grade_conversion.put("C+", 2.5);
+		grade_conversion.put("C", 2.2);
+		grade_conversion.put("C-", 1.9);
+		grade_conversion.put("D", 1.6);
+		
+		// concentrations and gpas students earned in them
+		Map<String, Double> conGpaMap = new HashMap<>();
+		for (Map.Entry<String, List<String>> entry : conGradeMap.entrySet()) {
+		    String concentration = entry.getKey();
+		    List<String> grades = entry.getValue();
+		    
+		    int totalPoints = 0;
+		    int numGrades = grades.size();
+		    for (String g : grades) {
+		        totalPoints += grade_conversion.get(g);
+		    }
+		    
+		    double gpa = (double)((int)(totalPoints / numGrades) * 100);
+			conGpaMap.put(concentration, gpa);
+		}
+		
+		// Obtain the list of concentrations that the selected Master student has achieved for the selected Degree
+		List<String> completedConcentrations = new ArrayList<>();
+        // Obtain the courses from each concentration that the master student has not yet taken
+  		Map<String, List<String>> conNotTakenCourses = new HashMap<>();
+		for (String c : concentrations) {
+		    // if the MS student has taken enough units and has a high enough gpa for 
+		    // a concentration, they have completed the concentration
+		    if (conUnitsMap.get(c) >= conMinUnitsMap.get(c) && conGpaMap.get(c) >= conMinGpaMap.get(c)) {
+		        completedConcentrations.add(c);
+		    }
+		    concentrationCourses.get(c).removeAll(conTakenMap.get(c));
+		    conNotTakenCourses.put(c, concentrationCourses.get(c));
+		}
+		
+		// Now, can just use completedConcentrations and conNotTakenCourses to display everything I need!
 	%>
-
-
-
-
-
-<%-- 	
+	
+	<style>
+	    .completed-heading {
+	        margin-bottom: 5px;
+	    }
+	
+	    .completed-table {
+	        margin-top: 0;
+	    }
+	</style>
+	
+	<h4 class="completed-heading" style="font-size: 18px; font-weight: bold;">Completed Concentrations</h4>
+	<table class="completed-table" style="border-collapse: collapse; width: 20%;">
+	    <tr style="background-color: lightgray;">
+	        <th style="padding: 8px; border: 1px solid black;">Concentration</th>
+	    </tr>
+	    <% for (String c : completedConcentrations) { %>
+	    <tr style="border: 1px solid black;">
+	        <td style="padding: 8px; border: 1px solid black;"><%= c %></td>
+	    </tr>
+	    <% } %>
+	</table>
+	<br>
+	
+	
+	<style>
+	    .not-taken-heading {
+	        margin-bottom: 5px;
+	    }
+	
+	    .not-taken-table {
+	        margin-top: 0;
+	    }
+	</style>
+	
 	<%
-	for (Map.Entry<String, List<String>> entry : concentrationCourses.entrySet()) {
-        String key = entry.getKey();
-       	List<String> value = entry.getValue();
-        
-       	for (String t : value) {
-       	%> 
-       		<b><%= t %></b>
-       	<%  
-       	}
-       	
-    }
-	
-	
-	%> --%>
+	for (Map.Entry<String, List<String>> entry : conNotTakenCourses.entrySet()) {
+	    String concentration = entry.getKey();
+	    List<String> notTakenCourses = entry.getValue();
+	%>
+	    <h4 class="not-taken-heading" style="font-size: 18px; font-weight: bold;">Courses not taken yet for concentration <u><%= concentration %></u></h4>
+	    <table class="not-taken-table" style="border-collapse: collapse; width: 20%;">
+	        <tr style="background-color: lightgray;">
+	            <th style="padding: 8px; border: 1px solid black;">Courses</th>
+	        </tr>
+	        <% for (String c : notTakenCourses) { %>
+	        <tr style="border: 1px solid black;">
+	            <td style="padding: 8px; border: 1px solid black;"><%= c %></td>
+	        </tr>
+	        <% } %>
+	    </table>
+	    <br>
+	<%
+	}
+	%>
 	
 	<%
 	rs.close();
@@ -157,13 +265,13 @@ String majorCode = request.getParameter("majorcode");
            "OR   p.pasttake_grade = 'C-')";
 	}
 	
+	// random test code
 	
+	SELECT p.cr_courseNumber AS courseNum, p.pasttake_gradingOption AS gradingOption,p.pasttake_units AS units, p.pasttake_grade AS grade FROM ConcentrationCourses c, pasttake p WHERE p.st_id = 'A12345678' AND p.cr_courseNumber = c.cr_courseNumber;
 	
 	*/
 	
-	
 	%>
-	
 	
 	<br>
 	<a href="./ms3_01e_SelectMasterAndMSDegree.jsp">Back to selection page</a>
