@@ -1,3 +1,5 @@
+[DROP all]
+DROP TABLE GRADE_CONVERSION, STUDENT_SECTION, STUDENT_ENROLLMENT, DegreeConcentrations, ConcentrationCourses, Concentration, CourseOffering, CurrentCourses, TCProfs, ThesisCommittee, Degree, ReviewSessions, WeeklyMeetings, probation, probator, take, taker, pastTake, pastTaker, Booklist, Teaches, Section, Candidate, Precandidate, Master, Undergraduate, Student, Faculty, CourseOffering, QuarterDates, Class, Prerequisite, PastCourseNums, Course;
 
 CREATE TABLE Course (
     cr_courseNumber VARCHAR(255) PRIMARY KEY,
