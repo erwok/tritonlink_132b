@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Select Undergraduate and BSC Degree</title>
+<title>Select Masters Student and MS Degree</title>
 </head>
 <body>
 <%-- Set the scripting language Java and --%>
 <%@ page language="java" import="java.sql.*" %>
-	<h2>Select Undergraduate and BSC Degree for Remaining Degree Requirements</h2>
+	<h2>Select Masters Student and MS Degree for Remaining Degree Requirements</h2>
 	<%
 	try {
 	    // Load driver
@@ -25,18 +25,19 @@
 	%>
 	
 	<%
-	String GET_undergrads_currently_enrolled_QUERY =
-	"SELECT DISTINCT s.st_id AS st_id, s.st_ssn AS st_ssn, s.st_firstname AS st_firstname, s.st_middlename AS st_middlename, s.st_lastname as st_lastname \n" +
-	"FROM Student s, Undergraduate u, take t \n" + 
-	"WHERE s.st_id = u.st_id AND s.st_id = t.st_id";
-	ResultSet rs1 = stmt.executeQuery(GET_undergrads_currently_enrolled_QUERY);
+	String GET_masters_currently_enrolled_QUERY =
+   	"SELECT DISTINCT s.st_id AS st_id, s.st_ssn AS st_ssn, s.st_firstname AS st_firstname, s.st_middlename AS st_middlename, s.st_lastname as st_lastname \n" +
+   	"FROM Student s, Master m, take t \n" + 
+   	"WHERE s.st_id = m.st_id AND s.st_id = t.st_id";
+   	ResultSet rs1 = stmt.executeQuery(GET_masters_currently_enrolled_QUERY);
 	%>
 	
 	
-	<h4>Select Currently Enrolled Undergrad and Degree</h4>
+	
+	<h4>Select Currently Enrolled Masters Student and MS Degree</h4>
 	<table>
 		<tr>
-			<form action="ms3_01d_UndergraduateRemainingDegreeRequirements.jsp" method="get">
+			<form action="ms3_01e_MasterRemainingDegreeRequirements.jsp" method="get">
 		        <td><select name="st_id">
 		            <option value="" selected disabled>Select student</option>
 		            <% while (rs1.next()) {
@@ -53,8 +54,8 @@
 		        <%
 		        rs1.close();
 		        
-		        String GET_degrees_QUERY = "SELECT * FROM Degree WHERE type = 'BSC'";
-				ResultSet rs2 = stmt.executeQuery(GET_degrees_QUERY);
+		        String GET_ms_degrees_QUERY = "SELECT * FROM Degree WHERE type = 'MS'";
+				ResultSet rs2 = stmt.executeQuery(GET_ms_degrees_QUERY);
 				%>
 				
 		        <td><select name="majorcode">

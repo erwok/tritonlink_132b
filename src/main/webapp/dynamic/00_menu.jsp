@@ -71,6 +71,9 @@
 	<li>
 		<a href="./ms3_01d_SelectUgAndBSCDegree.jsp">Get Undergraduate's Remaining Requirements for Bachelor's Degree</a>
 	</li>
+	<li>
+		<a href="./ms3_01e_SelectMasterAndMSDegree.jsp">Get Master's Remaining Requirements for MS Degree</a>
+	</li>
 </ul>
 
 
