@@ -1,3 +1,4 @@
+
 CREATE TABLE Course (
     cr_courseNumber VARCHAR(255) PRIMARY KEY,
     cr_minUnits INT NOT NULL,
@@ -5,6 +6,12 @@ CREATE TABLE Course (
     cr_gradeOption VARCHAR(255) NOT NULL,
     cr_lab VARCHAR(255),
     cr_consent VARCHAR(255)
+);
+
+CREATE TABLE PastCourseNums (
+    cr_courseNumber VARCHAR(255) NOT NULL,
+    oldCourseNumber VARCHAR(255),
+    CONSTRAINT FK_pcn FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE
 );
 
 CREATE TABLE Prerequisite (
@@ -20,6 +27,14 @@ CREATE TABLE Class (
     cl_year INT NOT NULL,
     cl_quarter VARCHAR(255) NOT NULL,
     CONSTRAINT PK_Class_group PRIMARY KEY(cl_title, cl_year, cl_quarter)
+);
+
+CREATE TABLE QuarterDates (
+	quarter VARCHAR(255) NOT NULL,
+	year INT NOT NULL,
+	start_date VARCHAR(255) NOT NULL,
+	end_date VARCHAR(255) NOT NULL,
+	CONSTRAINT Pk_qd PRIMARY KEY (quarter, year)
 );
 
 CREATE TABLE CourseOffering (
@@ -46,6 +61,30 @@ CREATE TABLE Student (
     academic_status VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE Undergraduate (
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    major VARCHAR(255) NOT NULL,
+    minor VARCHAR(255),
+    CONSTRAINT fk_u_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Master (
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    department VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_m_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Precandidate (
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    CONSTRAINT fk_pc_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Candidate (
+    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
+    advisor VARCHAR(255) NOT NULL, 
+    CONSTRAINT fk_c_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
+);
+
 CREATE TABLE Section (
     s_sectionID VARCHAR(255) PRIMARY KEY,
     s_capacity INT NOT NULL,
@@ -65,7 +104,7 @@ CREATE TABLE Teaches (
 );
 
 CREATE TABLE Booklist (
-    ISBN INT UNIQUE NOT NULL,
+    ISBN INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     edition INT,
     publisher VARCHAR(255),
@@ -73,6 +112,27 @@ CREATE TABLE Booklist (
     author_lname VARCHAR(255),
     s_sectionID VARCHAR(255) NOT NULL,
     CONSTRAINT FK_Booklist_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID) ON DELETE CASCADE
+);
+
+CREATE TABLE pastTaker (
+    st_ID VARCHAR(255) PRIMARY KEY,
+    CONSTRAINT FK_pastTaker_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE pastTake (
+    st_ID VARCHAR(255) NOT NULL,
+    cr_courseNumber VARCHAR(255) NOT NULL,
+    cl_title VARCHAR(255) NOT NULL,
+    cl_year INT NOT NULL,
+    cl_quarter VARCHAR(255) NOT NULL,
+    s_sectionID VARCHAR(255) NOT NULL,
+    pastTake_gradingOption VARCHAR(255) NOT NULL,
+    pastTake_units VARCHAR(255) NOT NULL,
+    pastTake_grade VARCHAR(255) NOT NULL,
+    CONSTRAINT FK_pastTake_from_pastTaker FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID) ON DELETE CASCADE,
+    CONSTRAINT FK_pastTake_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE,
+    CONSTRAINT FK_pastTake_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter) ON DELETE CASCADE,
+    CONSTRAINT FK_pastTake_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID) ON DELETE CASCADE
 );
 
 CREATE TABLE taker (
@@ -143,30 +203,6 @@ CREATE TABLE Degree (
     type VARCHAR(255)
 );
 
-CREATE TABLE Undergraduate (
-    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
-    major VARCHAR(255) NOT NULL,
-    minor VARCHAR(255),
-    CONSTRAINT fk_u_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
-);
-
-CREATE TABLE Master (
-    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
-    department VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_m_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
-);
-
-CREATE TABLE Precandidate (
-    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
-    CONSTRAINT fk_pc_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
-);
-
-CREATE TABLE Candidate (
-    st_ID VARCHAR(255) PRIMARY KEY NOT NULL,
-    advisor VARCHAR(255) NOT NULL, 
-    CONSTRAINT fk_c_st FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
-);
-
 CREATE TABLE ThesisCommittee (
     tc_ID VARCHAR(255) PRIMARY KEY,
     st_id VARCHAR(255) NOT NULL,
@@ -190,27 +226,6 @@ CREATE TABLE CurrentCourses (
     CONSTRAINT FK_CurrentCourses_from__Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID) ON DELETE CASCADE
 );
 
-CREATE TABLE pastTaker (
-    st_ID VARCHAR(255) PRIMARY KEY,
-    CONSTRAINT FK_pastTaker_from_Student FOREIGN KEY (st_ID) REFERENCES Student(st_ID) ON DELETE CASCADE
-);
-
-CREATE TABLE pastTake (
-    st_ID VARCHAR(255) NOT NULL,
-    cr_courseNumber VARCHAR(255) NOT NULL,
-    cl_title VARCHAR(255) NOT NULL,
-    cl_year INT NOT NULL,
-    cl_quarter VARCHAR(255) NOT NULL,
-    s_sectionID VARCHAR(255) NOT NULL,
-    pastTake_gradingOption VARCHAR(255) NOT NULL,
-    pastTake_units VARCHAR(255) NOT NULL,
-    pastTake_grade VARCHAR(255) NOT NULL,
-    CONSTRAINT FK_pastTake_from_pastTaker FOREIGN KEY (st_ID) REFERENCES pastTaker(st_ID) ON DELETE CASCADE,
-    CONSTRAINT FK_pastTake_from_Course FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE,
-    CONSTRAINT FK_pastTake_from_Class FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter) ON DELETE CASCADE,
-    CONSTRAINT FK_pastTake_from_Section FOREIGN KEY (s_sectionID) REFERENCES Section(s_sectionID) ON DELETE CASCADE
-);
-
 CREATE TABLE CourseOffering (
     cr_courseNumber VARCHAR(255) NOT NULL,
     cl_title VARCHAR(255) NOT NULL,
@@ -218,21 +233,6 @@ CREATE TABLE CourseOffering (
     cl_quarter VARCHAR(255) NOT NULL,
     CONSTRAINT FK_cr1 FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE,
     CONSTRAINT FK_cl1 FOREIGN KEY (cl_title, cl_year, cl_quarter) REFERENCES Class(cl_title, cl_year, cl_quarter) ON DELETE CASCADE
-);
-
-CREATE TABLE PastCourseNums (
-    cr_courseNumber VARCHAR(255) NOT NULL,
-    oldCourseNumber VARCHAR(255),
-    CONSTRAINT FK_pcn FOREIGN KEY (cr_courseNumber) REFERENCES Course(cr_courseNumber) ON DELETE CASCADE
-);
-
-
-CREATE TABLE QuarterDates (
-	quarter VARCHAR(255) NOT NULL,
-	year INT NOT NULL,
-	start_date VARCHAR(255) NOT NULL,
-	end_date VARCHAR(255) NOT NULL,
-	CONSTRAINT Pk_qd PRIMARY KEY (quarter, year)
 );
 
 CREATE TABLE Concentration (

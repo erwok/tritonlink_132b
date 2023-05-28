@@ -14,7 +14,6 @@
 				<jsp:include page="00_menu.jsp" />
 			</td>
 		</tr>
-
 	</table>
 </body>
 </html>
