@@ -214,6 +214,7 @@ CREATE TABLE ThesisCommittee (
 CREATE TABLE TCProfs (
     tc_ID VARCHAR(255) NOT NULL,
     fc_name VARCHAR(255) NOT NULL,
+    CONSTRAINT FK_tcp_tc FOREIGN KEY (tc_ID) REFERENCES ThesisCommittee(tc_ID) ON DELETE CASCADE,
     CONSTRAINT FK_TCProfs_from_Faculty FOREIGN KEY (fc_name) REFERENCES Faculty(fc_name) ON DELETE CASCADE
 );
 

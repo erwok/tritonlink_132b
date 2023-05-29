@@ -73,8 +73,11 @@ String majorCode = request.getParameter("majorcode");
 		    "SELECT SUM(CAST(p.pasttake_units AS INTEGER)) AS lowerDivUnitsTaken \n" +
 		    "FROM Undergraduate u, pasttake p \n" + 
 		    "WHERE u.st_id = p.st_id \n" +
-		    "AND (p.cr_courseNumber SIMILAR TO '%[1-9][0-9]%' \n" +
-		    "OR p.cr_courseNumber SIMILAR TO '%[1-9]%')";
+            "AND u.st_id = '" + studentID + "' \n" +
+            "AND ((p.cr_courseNumber SIMILAR TO '%[A-z][1-9][0-9]') \n" +
+			"OR (p.cr_courseNumber SIMILAR TO '%[A-z][1-9][0-9][a-z]') \n" +
+		    "OR (p.cr_courseNumber SIMILAR TO '%[A-z][1-9]') \n" +
+		    "OR (p.cr_courseNumber SIMILAR TO '%[A-z][1-9][a-z]'))";
 		rs = stmt.executeQuery(GET_lower_div_courses_units_total_QUERY);
 		
 		rs.next();
@@ -88,6 +91,7 @@ String majorCode = request.getParameter("majorcode");
 	    	"SELECT SUM(CAST(p.pasttake_units AS INTEGER)) AS upperDivUnitsTaken \n" +
 	    	"FROM Undergraduate u, pasttake p \n" +
 	    	"WHERE u.st_id = p.st_id \n" +
+	    	"AND u.st_id = '" + studentID + "' \n" +
    	        "AND p.cr_courseNumber SIMILAR TO '%[1-9][0-9][0-9]%'";
 	    rs = stmt.executeQuery(GET_upper_div_courses_units_total_QUERY);
 	    
