@@ -207,44 +207,43 @@ String fullName = request.getParameter("st_id").split(",")[1];
 		}
 		    
 		// Now we have a list of overlapping sections
-
 	%>
 	
+	<h4>Current classes with conflicting weekly meeting(s)</h4>
+	<table style="border-collapse: collapse;">
+    <tr style="border-bottom: 1px solid black;">
+        <th style="border: 1px solid black; padding: 5px;">Course Number</th>
+        <th style="border: 1px solid black; padding: 5px;">Title</th>
+        <th style="border: 1px solid black; padding: 5px;">Section</th>
+    </tr>
+    
+	<%
+	for (String[] sec : overlappingSections) {
+	    String secID = sec[0];
+		String day = sec[1];
+		String time = sec[2];
+		
+		String get_class_key = "SELECT * FROM Section WHERE s_sectionID = '" + secID + "'";
+		rs = stmt.executeQuery(get_class_key);
+		rs.next();
+		
+		String num = rs.getString("coursenumber");
+		String title = rs.getString("classtitle");
+	%>
+        <tr style="border-bottom: 1px solid black;">
+            <td style="border: 1px solid black; padding: 5px;"><%= num %></td>
+            <td style="border: 1px solid black; padding: 5px;"><%= title %></td>
+            <td style="border: 1px solid black; padding: 5px;"><%= secID %></td>
+        </tr>
+	<%
+	}
+	%>
 	
-	<%-- <table style="border-collapse: collapse;">
-	    <tr style="border-bottom: 1px solid black;">
-	        <th style="border: 1px solid black; padding: 5px;">Course Number</th>
-	        <th style="border: 1px solid black; padding: 5px;">Title</th>
-	        <th style="border: 1px solid black; padding: 5px;">Quarter</th>
-	        <th style="border: 1px solid black; padding: 5px;">Year</th>
-	        <th style="border: 1px solid black; padding: 5px;">Section</th>
-	        <th style="border: 1px solid black; padding: 5px;">Grading Option</th>
-	        <th style="border: 1px solid black; padding: 5px;">Units Option</th>
-	    </tr>
-	    <% 
-	    String getTake = "SELECT * FROM take WHERE st_id = '" + studentID + "';";
-		rs = stmt.executeQuery(getTake);
-	    
-	    while (rs.next()) { 
-	    %>
-	        <tr style="border-bottom: 1px solid black;">
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cr_courseNumber") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cl_title") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("cl_quarter") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getInt("cl_year") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("s_sectionID") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("take_gradingOption") %></td>
-	            <td style="border: 1px solid black; padding: 5px;"><%= rs.getString("take_units") %></td>
-	        </tr>
-	    <% } %>
-	</table> --%>
+	</table>
 	
-	
-	
-	
-	<%-- <%
+	<%
 	rs.close();
-	%> --%>
+	%>
 
 	<%				
 	// Close the Statement
@@ -267,7 +266,8 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	<a href="./00_index.jsp">Back to Home Page</a>
 	
 	<%
-	/* 		 // Function to check if two time slots overlap
+	/* 		 
+	// Function to check if two time slots overlap
 	private boolean isTimeOverlap(String startTime1, String endTime1, String startTime2, String endTime2) {
 	    // Implement your logic to compare the start and end times for overlap
 	    // Convert the time strings to appropriate format (e.g., using SimpleDateFormat) for comparison

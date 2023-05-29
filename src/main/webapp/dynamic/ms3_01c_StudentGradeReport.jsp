@@ -169,9 +169,11 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	
 	rs = stmt.executeQuery(GET_GPA_QUERY);
 	
+	Map<String, Double> quarterTotalPoints = new HashMap<>();
 	Map<String, Double> quarterGPA = new HashMap<>();  // Map to store quarter GPA
 	Map<String, Double> quarterTotalUnits = new HashMap<>();  // Map to store total units for each quarter
 	double cumulativeGPA = 0.0;
+    double totalPoints = 0.0;
 	double totalCredits = 0.0;
 	boolean currentlyEnrolled = false;
 	
@@ -188,29 +190,37 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	
 	    if (!rs.wasNull() && !grade.equals("IN")) {
 	        // Calculate quarter GPA
-	        double quarterGradePoints = numberGrade * credits;
+	        
+	        // double quarterGradePoints = numberGrade * credits;
+	        double quarterGradePoints = quarterTotalPoints.getOrDefault(year + "_" + quarter, 0.0);
+	        quarterGradePoints += numberGrade * credits;
+	        quarterTotalPoints.put(year + "_" + quarter, quarterGradePoints);
+	        
 	        double quarterTotalCredits = quarterTotalUnits.getOrDefault(year + "_" + quarter, 0.0);
 	        quarterTotalCredits += credits;
 	        quarterTotalUnits.put(year + "_" + quarter, quarterTotalCredits);
+	        
 	        double currentQuarterGPA = quarterGradePoints / quarterTotalCredits;
 	        currentQuarterGPA *= 100;
 	        currentQuarterGPA = (double)((int) currentQuarterGPA);
 	        currentQuarterGPA /= 100;
-	
-	        // Update cumulative GPA
-	        cumulativeGPA = (cumulativeGPA * totalCredits + currentQuarterGPA * credits) / (totalCredits + credits);
-	        cumulativeGPA *= 100;
-	        cumulativeGPA = (double)((int) cumulativeGPA);
-	        cumulativeGPA /= 100;
-	
+	        
+	        // Update total points
+	        totalPoints += numberGrade * credits;
+	     	// Update total credits
+	        totalCredits += credits;
+	        
 	        // Store quarter GPA
 	        String quarterKey = year + "_" + quarter;
 	        quarterGPA.put(quarterKey, currentQuarterGPA);
-	
-	        // Update total credits
-	        totalCredits += credits;
 	    }
 	}
+	
+	// Set cumulative GPA
+	cumulativeGPA = totalPoints / totalCredits;
+	cumulativeGPA *= 100;
+	cumulativeGPA = (double)((int) cumulativeGPA);
+	cumulativeGPA /= 100;
 	%>
 	
 	
