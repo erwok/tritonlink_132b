@@ -1,0 +1,70 @@
+
+
+%>
+<%
+for (String[] sec : offeredClasses) {
+%>
+    <h5><%= sec[0] + " " + sec[1] + " " + sec[2] %></h5>
+<%
+}
+%>
+<%
+
+
+
+
+// Iterate over s_dat entries and print the information
+for (Map.Entry<String, Map<String, List<String>>> entry : s_dat.entrySet()) {
+    String sectionID = entry.getKey();
+    Map<String, List<String>> occupiedTimes = entry.getValue();
+%>
+
+    <h5>Section ID: <%= sectionID %></h5>
+    <h5>Occupied Times:</h5>
+
+    <% // Iterate over days and times
+    for (Map.Entry<String, List<String>> dayEntry : occupiedTimes.entrySet()) {
+        String dayOfWeek = dayEntry.getKey();
+        List<String> times = dayEntry.getValue();
+    %>
+
+        <h5>Day: <%= dayOfWeek %></h5>
+        <h5>Times: <%= times %></h5>
+
+    <% } %>
+
+    <br> <!-- Add a line break between sections -->
+<% }
+
+
+// Iterate over s_not_dat entries and print the information
+for (Map.Entry<String, Map<String, List<String>>> entry : s_not_dat.entrySet()) {
+    String sectionID = entry.getKey();
+    Map<String, List<String>> occupiedTimes = entry.getValue();
+%>
+
+    <h5>Section ID: <%= sectionID %></h5>
+    <h5>Occupied Times:</h5>
+
+    <% // Iterate over days and times
+    for (Map.Entry<String, List<String>> dayEntry : occupiedTimes.entrySet()) {
+        String dayOfWeek = dayEntry.getKey();
+        List<String> times = dayEntry.getValue();
+    %>
+
+        <h5>Day: <%= dayOfWeek %></h5>
+        <h5>Times: <%= times %></h5>
+
+    <% } %>
+
+    <br> <!-- Add a line break between sections -->
+<% }
+
+
+
+
+
+
+%>
+<h2>start 1: <%= occupiedStartTime %> | end 1: <%= occupiedEndTime %> | start 2: <%= notTakenStartTime %> | end 2: <%= notTakenEndTime %></h2>
+<%

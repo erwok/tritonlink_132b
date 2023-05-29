@@ -60,6 +60,7 @@ String fullName = request.getParameter("st_id").split(",")[1];
 		    sec[0] = rs.getString("cr_courseNumber");
 		    sec[1] = rs.getString("cl_title");
 		    sec[2] = rs.getString("s_sectionid");
+		    schedule.add(sec);
 		}
 		
 		// Get weekly meetings associated with each section, their days of the week and their times
@@ -120,6 +121,7 @@ String fullName = request.getParameter("st_id").split(",")[1];
          	}
      	}
 	    
+	    
 	 	// Get occupied times of classes not taken by the student
         // class section to dates and days and times for that section
         Map<String, Map<String, List<String>>> s_not_dat = new HashMap<>();
@@ -147,55 +149,97 @@ String fullName = request.getParameter("st_id").split(",")[1];
                 }
             }
         }
-        
-        
-        List<String[]> overlappingSections = new ArrayList<>();
-		// Iterate over the entries in s_dat (student's occupied times)
-		for (Map.Entry<String, Map<String, List<String>>> occupiedEntry : s_dat.entrySet()) {
-		    String sectionID = occupiedEntry.getKey();
-		    Map<String, List<String>> occupiedTimes = occupiedEntry.getValue();
 		
-		    // Check if the section has corresponding occupied times in s_not_dat (classes not taken by the student)
-		    if (s_not_dat.containsKey(sectionID)) {
-		        Map<String, List<String>> notTakenTimes = s_not_dat.get(sectionID);
 		
+		List<String[]> overlappingSections = new ArrayList<>();
+
+		// Iterate over the entries in s_not_dat (classes not taken by the student)
+		for (Map.Entry<String, Map<String, List<String>>> notTakenEntry : s_not_dat.entrySet()) {
+		    String notTakenSectionID = notTakenEntry.getKey();
+		    Map<String, List<String>> notTakenTimes = notTakenEntry.getValue();
+
+		    // Iterate over the entries in s_dat (student's occupied times)
+		    for (Map.Entry<String, Map<String, List<String>>> occupiedEntry : s_dat.entrySet()) {
+		        String occupiedSectionID = occupiedEntry.getKey();
+		        Map<String, List<String>> occupiedTimes = occupiedEntry.getValue();
+
 		        // Iterate over the days of the week
 		        for (Map.Entry<String, List<String>> occupiedDayEntry : occupiedTimes.entrySet()) {
 		            String occupiedDay = occupiedDayEntry.getKey();
 		            List<String> occupiedTimeSlots = occupiedDayEntry.getValue();
-		
+
 		            // Check if the day exists in notTakenTimes
 		            if (notTakenTimes.containsKey(occupiedDay)) {
 		                List<String> notTakenTimeSlots = notTakenTimes.get(occupiedDay);
-		
+
 		                // Iterate over the occupied time slots
 		                for (String occupiedTimeSlot : occupiedTimeSlots) {
 		                    String[] occupiedTimesplit = occupiedTimeSlot.split(",");
 		                    String occupiedStartTime = occupiedTimesplit[0];
 		                    String occupiedEndTime = occupiedTimesplit[1];
-		
+
 		                    // Iterate over the not taken time slots
 		                    for (String notTakenTimeSlot : notTakenTimeSlots) {
 		                        String[] notTakenTimesplit = notTakenTimeSlot.split(",");
 		                        String notTakenStartTime = notTakenTimesplit[0];
-		                        String notTakenEndTime = notTakenTimesplit[1];
-		                 
+		                        String notTakenEndTime = notTakenTimesplit[1];             
 		                        
-		                        // Code to figure out if the times are overlapping
-		                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma");
-		                        LocalTime start1 = LocalTime.parse(occupiedStartTime.toLowerCase(), formatter);
-	                            LocalTime end1 = LocalTime.parse(occupiedEndTime.toLowerCase(), formatter);
-	                            LocalTime start2 = LocalTime.parse(notTakenStartTime.toLowerCase(), formatter);
-	                            LocalTime end2 = LocalTime.parse(notTakenEndTime.toLowerCase(), formatter);
-		
-		                        // Compare the start and end times for overlap
-		                        if (!(end1.isBefore(start2) || start1.isAfter(end2))) {
-		                        // if (isTimeOverlap(occupiedStartTime, occupiedEndTime, notTakenStartTime, notTakenEndTime)) {
-		                            // Overlapping time slots found, add the section to the list of overlappingSections
-		                            String[] overlappingSection = new String[3];
-		                            overlappingSection[0] = sectionID;
-		                            overlappingSection[1] = occupiedDay;
-		                            overlappingSection[2] = occupiedStartTime + "-" + occupiedEndTime;
+		                        String[] parts;
+		                        String ampm;
+		                        int hours, minutes;
+		                                    
+		                        parts = occupiedStartTime.split(":");
+		                        hours = Integer.parseInt(parts[0]);
+		                        minutes = Integer.parseInt(parts[1].substring(0, 2));
+		                        ampm = parts[1].substring(2);
+		                        if (ampm.equalsIgnoreCase("pm") && hours != 12) {
+		                            hours += 12;
+		                        } else if (ampm.equalsIgnoreCase("am") && hours == 12) {
+		                            hours = 0;
+		                        }
+		                        int start1 = (hours * 60) + minutes;
+		                        
+		                        parts = occupiedEndTime.split(":");
+		                        hours = Integer.parseInt(parts[0]);
+		                        minutes = Integer.parseInt(parts[1].substring(0, 2));
+		                        ampm = parts[1].substring(2);
+		                        if (ampm.equalsIgnoreCase("pm") && hours != 12) {
+		                            hours += 12;
+		                        } else if (ampm.equalsIgnoreCase("am") && hours == 12) {
+		                            hours = 0;
+		                        }
+		                        int end1 = (hours * 60) + minutes;
+		                        
+		                        parts = notTakenStartTime.split(":");
+		                        hours = Integer.parseInt(parts[0]);
+		                        minutes = Integer.parseInt(parts[1].substring(0, 2));
+		                        ampm = parts[1].substring(2);
+		                        if (ampm.equalsIgnoreCase("pm") && hours != 12) {
+		                            hours += 12;
+		                        } else if (ampm.equalsIgnoreCase("am") && hours == 12) {
+		                            hours = 0;
+		                        }
+		                        int start2 = (hours * 60) + minutes;
+		                        
+		                        parts = notTakenEndTime.split(":");
+		                        hours = Integer.parseInt(parts[0]);
+		                        minutes = Integer.parseInt(parts[1].substring(0, 2));
+		                        ampm = parts[1].substring(2);
+		                        if (ampm.equalsIgnoreCase("pm") && hours != 12) {
+		                            hours += 12;
+		                        } else if (ampm.equalsIgnoreCase("am") && hours == 12) {
+		                            hours = 0;
+		                        }
+		                        int end2 = (hours * 60) + minutes;
+		                        
+		                    	// Compare the start and end times for overlap
+		                    	if (!(end1 < start2) || start1 > end2) {
+		                            // Overlapping time slots found, add the sections to the list of overlappingSections
+		                            String[] overlappingSection = new String[4];
+		                            overlappingSection[0] = occupiedSectionID;
+		                            overlappingSection[1] = notTakenSectionID;
+		                            overlappingSection[2] = occupiedDay;
+		                            overlappingSection[3] = occupiedStartTime + "-" + occupiedEndTime;
 		                            overlappingSections.add(overlappingSection);
 		                            break; // No need to check further for this occupied time slot
 		                        }
@@ -205,9 +249,17 @@ String fullName = request.getParameter("st_id").split(",")[1];
 		        }
 		    }
 		}
-		    
+		
+		Set<String> uniqueOverlappingSections = new HashSet<>();
+        for (String[] sec : overlappingSections) {
+    	    String s = sec[1]; // not taken class
+    	    uniqueOverlappingSections.add(s);
+        }
+		
 		// Now we have a list of overlapping sections
 	%>
+	
+	<h1><%= uniqueOverlappingSections.size() %></h1>
 	
 	<h4>Current classes with conflicting weekly meeting(s)</h4>
 	<table style="border-collapse: collapse;">
@@ -218,12 +270,9 @@ String fullName = request.getParameter("st_id").split(",")[1];
     </tr>
     
 	<%
-	for (String[] sec : overlappingSections) {
-	    String secID = sec[0];
-		String day = sec[1];
-		String time = sec[2];
+	for (String notTakingSecID : uniqueOverlappingSections) {
 		
-		String get_class_key = "SELECT * FROM Section WHERE s_sectionID = '" + secID + "'";
+		String get_class_key = "SELECT * FROM Section WHERE s_sectionID = '" + notTakingSecID + "'";
 		rs = stmt.executeQuery(get_class_key);
 		rs.next();
 		
@@ -233,13 +282,14 @@ String fullName = request.getParameter("st_id").split(",")[1];
         <tr style="border-bottom: 1px solid black;">
             <td style="border: 1px solid black; padding: 5px;"><%= num %></td>
             <td style="border: 1px solid black; padding: 5px;"><%= title %></td>
-            <td style="border: 1px solid black; padding: 5px;"><%= secID %></td>
+            <td style="border: 1px solid black; padding: 5px;"><%= notTakingSecID %></td>
         </tr>
 	<%
 	}
 	%>
 	
 	</table>
+	
 	
 	<%
 	rs.close();
@@ -264,30 +314,6 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	<a href="./ms3_02a_StudentSelectionClassSchedulingHelp.jsp">Back to student selection page</a>
 	<br>
 	<a href="./00_index.jsp">Back to Home Page</a>
-	
-	<%
-	/* 		 
-	// Function to check if two time slots overlap
-	private boolean isTimeOverlap(String startTime1, String endTime1, String startTime2, String endTime2) {
-	    // Implement your logic to compare the start and end times for overlap
-	    // Convert the time strings to appropriate format (e.g., using SimpleDateFormat) for comparison
-	    // Compare the times and return true if there is an overlap, false otherwise
-	    // You can use Java's Date/Time API or external libraries for time comparison if needed
-	
-	    // Example implementation assuming startTime and endTime are in "hh:mma" format (e.g., "6:30pm")
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma");
-	
-	    LocalTime start1 = LocalTime.parse(startTime1.toLowerCase(), formatter);
-	    LocalTime end1 = LocalTime.parse(endTime1.toLowerCase(), formatter);
-	    LocalTime start2 = LocalTime.parse(startTime2.toLowerCase(), formatter);
-	    LocalTime end2 = LocalTime.parse(endTime2.toLowerCase(), formatter);
-	
-	    // Check for overlap
-	    return !(end1.isBefore(start2) || start1.isAfter(end2));
-	} */
-	
-	
-	%>
 
 </body>
 </html>
