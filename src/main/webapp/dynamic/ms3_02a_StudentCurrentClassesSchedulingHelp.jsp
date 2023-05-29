@@ -259,8 +259,6 @@ String fullName = request.getParameter("st_id").split(",")[1];
 		// Now we have a list of overlapping sections
 	%>
 	
-	<h1><%= uniqueOverlappingSections.size() %></h1>
-	
 	<h4>Current classes with conflicting weekly meeting(s)</h4>
 	<table style="border-collapse: collapse;">
     <tr style="border-bottom: 1px solid black;">
