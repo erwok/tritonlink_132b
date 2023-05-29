@@ -10,7 +10,7 @@
 
 <b>Menu</b>
 <ul>
-	<p>milestone 2</p>
+	<h2>milestone 2</h2>
 	<li>
 		<a href="./01_CourseEntry.jsp">Course Entry Form + Prereqs per Course + Course Offerings (Class Entry)</a>
 	</li>
@@ -57,8 +57,9 @@
 		<a href="./20_ConcentrationEntry.jsp">Concentration Entry Form</a>
 	</li>
 	
-	<p>milestone 3</p>
+	<h2>milestone 3</h2>
 	
+	<h4>Report 1</h4>
 	<li>
 		<a href="./ms3_01a_StudentSelectionForCurrentClasses.jsp">Get Student's Current Classes</a>
 	</li>
@@ -73,6 +74,11 @@
 	</li>
 	<li>
 		<a href="./ms3_01e_SelectMasterAndMSDegree.jsp">Get Master's Remaining Requirements for MS Degree</a>
+	</li>
+	
+	<h4>Report 2</h4>
+	<li>
+		<a href="./ms3_02a_StudentSelectionClassSchedulingHelp.jsp">Help Student Make Current Schedule</a>
 	</li>
 </ul>
 

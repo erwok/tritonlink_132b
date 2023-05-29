@@ -241,6 +241,23 @@ String section = request.getParameter("sectionID");
 			<a href="./SectionsForClass.jsp?courseName=<%= cn %>&classTitle=<%= title %>&classYear=<%= year %>&classQuarter=<%= quarter %>">Back</a>
 			<br>
 			<a href="./00_index.jsp">Back to Home Page</a>
+			
+			
+			<%
+			/* 
+			CREATE TABLE WeeklyMeetings (
+        		location VARCHAR(255) NOT NULL,
+        		time VARCHAR(255) NOT NULL,
+        		startTime VARCHAR(255),
+        		endTime VARCHAR(255),
+        		meetingType VARCHAR(255) NOT NULL,
+        		daysOfWeek VARCHAR(255) NOT NULL,
+        		attendanceType VARCHAR(255) NOT NULL,
+        		s_sectionID VARCHAR(255) NOT NULL,
+        		CONSTRAINT fk_wkm_s FOREIGN KEY (s_sectionID) REFERENCES SECTION(s_sectionID)
+	        );
+			*/
+			%>
 
 </body>
 </html>
