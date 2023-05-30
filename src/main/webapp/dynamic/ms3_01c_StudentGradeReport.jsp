@@ -12,7 +12,7 @@ String fullName = request.getParameter("st_id").split(",")[1];
 </head>
 <body>
 <%-- Set the scripting language Java and --%>
-<%@ page language="java" import="java.sql.*" %>
+<%@ page language="java" import="java.sql.*, java.util.*" %>
 <%@ page import="java.util.Map, java.util.HashMap" %>
 
 <h2><%= fullName %>'s Grade Report</h2>
@@ -231,26 +231,48 @@ String fullName = request.getParameter("st_id").split(",")[1];
 	        <th style="border: 1px solid black;">Year</th>
 	        <th style="border: 1px solid black;">GPA</th>
 	    </tr>
+	
 	<%
-	for (Map.Entry<String, Double> entry : quarterGPA.entrySet()) {
-	    String quarter = entry.getKey().split("_")[1];
-	    String year = entry.getKey().split("_")[0];
-	    Double quarterGpa = entry.getValue();
+	    List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(quarterGPA.entrySet());
+	    Collections.sort(sortedEntries, new Comparator<Map.Entry<String, Double>>() {
+	        @Override
+	        public int compare(Map.Entry<String, Double> entry1, Map.Entry<String, Double> entry2) {
+	            String year1 = entry1.getKey().split("_")[0];
+	            String year2 = entry2.getKey().split("_")[0];
+	            int yearComparison = Integer.compare(Integer.parseInt(year1), Integer.parseInt(year2));
+	            
+	            if (yearComparison != 0) {
+	                return yearComparison;
+	            } else {
+	                String quarter1 = entry1.getKey().split("_")[1];
+	                String quarter2 = entry2.getKey().split("_")[1];
+	                List<String> quarterOrder = Arrays.asList("WINTER", "SPRING", "FALL");
+	                return Integer.compare(quarterOrder.indexOf(quarter1), quarterOrder.indexOf(quarter2));
+	            }
+	        }
+	    });
+	
+	    for (Map.Entry<String, Double> entry : sortedEntries) {
+	        String quarter = entry.getKey().split("_")[1];
+	        String year = entry.getKey().split("_")[0];
+	        Double quarterGpa = entry.getValue();
+	    %>
+	        <tr>
+	            <td style="border: 1px solid black;"><%= quarter %></td>
+	            <td style="border: 1px solid black;"><%= year %></td>
+	            <td style="border: 1px solid black;">
+	            <% if (quarterGpa == null) { %>
+	                N/A
+	            <% } else { %>
+	                <%= quarterGpa %>
+	            <% } %>
+	            </td>
+	        </tr>
+	    <%
+	    }
 	%>
-	    <tr>
-	        <td style="border: 1px solid black;"><%= quarter %></td>
-	        <td style="border: 1px solid black;"><%= year %></td>
-	        <td style="border: 1px solid black;">
-	        <% if (quarterGpa == null) { %>
-	            N/A
-	        <% } else { %>
-	            <%= quarterGpa %>
-	        <% } %>
-	        </td>
-	    </tr>
-	<%
-	}
-	%>
+
+	
 	<%
 	if (currentlyEnrolled) {
 	%>
