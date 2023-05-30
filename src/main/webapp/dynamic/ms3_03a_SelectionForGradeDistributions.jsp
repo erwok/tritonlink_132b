@@ -52,7 +52,7 @@
 	    <tr>
 	        <form action="ms3_03a_query1.jsp" method="get">
 	            <%
-	            String get_courses = "SELECT cr_coursenumber AS courseNum FROM course";
+	            String get_courses = "SELECT cr_coursenumber AS courseNum FROM course ORDER BY cr_courseNumber";
 	            rs = stmt.executeQuery(get_courses);
 	            %>
 	            <td><select name="courseNum">
@@ -63,7 +63,7 @@
 	            </select></td>
 	
 	            <%
-	            String get_professors = "SELECT fc_name AS professor FROM faculty";
+	            String get_professors = "SELECT fc_name AS professor FROM faculty ORDER BY fc_name";
 	            rs = stmt.executeQuery(get_professors);
 	            %>
 	
