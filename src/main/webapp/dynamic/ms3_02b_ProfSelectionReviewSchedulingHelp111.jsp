@@ -34,8 +34,15 @@
 	%>
 	
 	
-	<h4>Professor Based on fc_name</h4>
+	<h4>Professor Based on s_sectionid</h4>
 	<table>
+		<tr>
+			<th>Section w/ Professor</th>
+			<th>Start Month</th>			
+			<th>Start Date</th>
+			<th>End Month</th>
+			<th>End Date</th>
+		</tr>
 		<tr>
 			<form action="ms3_02b_ProfReviewSchedulingHelp.jsp" method="get">
 			    <input type="hidden" value="select" name="action">
@@ -47,7 +54,11 @@
 			                String fc_name = rs.getString("fc_name");
 			            %>
 			                <option value="<%= rs.getString("fc_name") + "," + rs.getString("s_sectionid") %>"><%= "Name: " + fc_name  + ", section: " + s_sectionid%></option>
-			            <% } %>
+			            <% } %>				
+						<td><input value="" name="startMonth" size="10"></td>
+						<td><input value="" name="startDate" size="10"></td>
+						<td><input value="" name="endMonth" size="10"></td>	
+						<td><input value="" name="endDate" size="10"></td>						
 			        </select>
 			    </td>
 			    <th><input type="submit" value="Select"></th>
