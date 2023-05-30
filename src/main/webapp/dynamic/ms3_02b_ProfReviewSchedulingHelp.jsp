@@ -73,45 +73,32 @@ int endDate = Integer.parseInt(request.getParameter("endDate"));
 		}
 	}
 
-	// Exclude the AvailableReviewSession depends on the all of Taker's schedule
-	// Get the Taker for the session
-	String GET_section_roster_QUERY = 
-		"SELECT s.st_id \n" +
-		"FROM student s, take t \n" + 
-		"WHERE t.s_sectionID = '" + s_sectionid + "' AND s.st_id = t.st_id ";
+	String GET_schedule_QUERY = 
+	"SELECT w.* FROM take t, weeklymeetings w \n" + 
+	"WHERE w.s_sectionid IN (SELECT t.s_sectionid FROM take t \n" + 
+							"WHERE t.st_id IN (SELECT s.st_id FROM student s, take t \n" + 
+												"WHERE t.s_sectionID = '" + s_sectionid + "' AND s.st_id = t.st_id))";
 	
-	ResultSet rs_taker = stmt.executeQuery(GET_section_roster_QUERY);
-
+	ResultSet rs1 = stmt.executeQuery(GET_schedule_QUERY);
+	
 	// Iterate through the Taker's schedule and exclude the AvailableReviewSession
-	while(rs_taker.next()){
-		String st_id = rs_taker.getString("st_id");
+	while(rs1.next()){
+		String[] daysOfWeek = (rs1.getString("daysOfWeek").toUpperCase()).split(",");
+		String startTimeString = rs1.getString("startTime");
+		LocalTime startTimeWM = LocalTime.parse(startTimeString, DateTimeFormatter.ofPattern("k:mm"));
+		String endTimeString = rs1.getString("endTime");
+		LocalTime endTimeWM = LocalTime.parse(endTimeString, DateTimeFormatter.ofPattern("k:mm"));
 
-		// Get the Taker's section schedule
-		String GET_Taker_schedule_QUERY = 
-			"SELECT w.* FROM take t, weeklymeetings w \n" + 
-			"WHERE t.st_id = '" + st_id + "' AND \n" +
-			"t.s_sectionID = w.s_sectionID";
-		
-		ResultSet rs_weeklyMeeting = stmt.executeQuery(GET_Taker_schedule_QUERY);
-
-		// Iterate through the Taker's schedule and exclude the AvailableReviewSession
-		while(rs_weeklyMeeting.next()){
-			String daysOfWeek = rs_weeklyMeeting.getString("daysOfWeek");
-			LocalTime startTimeWM = LocalTime.parse(rs_weeklyMeeting.getString("startTime"));
-			LocalTime endTimeWM = LocalTime.parse(rs_weeklyMeeting.getString("endTime"));
-
-			// Iterate through the AvailableReviewSession and exclude the AvailableReviewSession
-			String delete_AvailableReviewSession_QUERY = 
+		// Iterate through the AvailableReviewSession and exclude the AvailableReviewSession
+		for(int i = 0; i < daysOfWeek.length; i++){
+			String DELETE_AvailableReviewSession_QUERY = 
 				"DELETE FROM AvailableReviewSession \n" +
-				"WHERE daysOfWeek = '" + daysOfWeek + "' AND \n" +
-				"startTime <= '" + endTimeWM + "' AND \n" +
-				"endTime > '" + startTimeWM + "'";
+				"WHERE dayOfWeek = '" + daysOfWeek[i] + "' AND \n" +
+				"startTime <= '" + endTimeWM + "' AND endTime > '" + startTimeWM + "'";
+			stmt.executeUpdate(DELETE_AvailableReviewSession_QUERY);
 		}
-
-		rs_weeklyMeeting.close();
 	}
-
-	rs_taker.close();
+	rs1.close();
 
 	ResultSet rs = null;
 	String get_AvailableReviewSession = "SELECT * FROM AvailableReviewSession";
@@ -137,6 +124,7 @@ int endDate = Integer.parseInt(request.getParameter("endDate"));
 	%>
 
 	<%
+	
 	rs.close();
 	%>
 
