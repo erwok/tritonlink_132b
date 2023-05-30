@@ -49,7 +49,8 @@ String professor = request.getParameter("professor");
 			"SELECT p.pasttake_units AS units, p.pasttake_grade AS grade \n" + 
 			"FROM pasttake p, teaches t \n" +
 			"WHERE p.cr_courseNumber = '" + courseNum + "' \n" +
-			"AND t.fc_name = '" + professor + "'";
+			"AND t.fc_name = '" + professor + "' \n" +
+			"AND p.s_sectionid = t.s_sectionID";
 		rs = stmt.executeQuery(get_grades_and_units_for_course_taught_by_prof);
 		
 		double totalPoints = 0.0;
