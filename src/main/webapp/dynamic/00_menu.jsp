@@ -62,9 +62,9 @@
 	<li>
 		<a href="./ms3_02a_StudentSelectionClassSchedulingHelp.jsp">Help Student Make Current Schedule</a>
 	</li>
-	<li>
+	<!-- <li>
 		<a href="./ms3_02b_ProfSelectionReviewSchedulingHelp.jsp">Help Professor Make Review Session Schedule</a>
-	</li>
+	</li> -->
 	<li>
 		<a href="./ms3_02b_selection.jsp">Review Sessions Scheduling</a>
 	</li>
