@@ -65,6 +65,9 @@
 	<li>
 		<a href="./ms3_02b_ProfSelectionReviewSchedulingHelp.jsp">Help Professor Make Review Session Schedule</a>
 	</li>
+	<li>
+		<a href="./ms3_02b_selection.jsp">Review Sessions Scheduling</a>
+	</li>
 	
 	<h4>Report 3: Decision Support</h4>
 	<li>

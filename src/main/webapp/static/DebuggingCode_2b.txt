@@ -1,0 +1,66 @@
+	<%
+	for (Map.Entry<String, List<Integer[]>> entry : condensedOccupiedTimes.entrySet()) {
+        String day = entry.getKey();
+        List<Integer[]> periods = entry.getValue();
+        
+        for (Integer[] period : periods) {
+        %>
+        
+        <p>Day: <%= day %>, Period: <%= "" + period[0] + " - " + period[1] %></p>
+            
+        <%
+        }
+	}
+	%>
+	
+	
+	
+	<%
+	// Iterate over each day and its available periods
+	for (Map.Entry<String, List<Integer[]>> entry : availableTimes.entrySet()) {
+	    String day = entry.getKey();
+	    List<Integer[]> availablePeriods = entry.getValue();
+	%>
+	    <h2>Available Times for <%= day %></h2>
+	    <% if (availablePeriods.isEmpty()) { %>
+	        <p>No available times for <%= day %></p>
+	    <% } else { %>
+	        <ul>
+	        <% for (Integer[] period : availablePeriods) { 
+	            
+	            int hours = period[0] / 60;
+	    	    int mins = period[0] % 60;
+	    	    String ampm = (hours < 12) ? "AM" : "PM";
+	    	    if (hours > 12) {
+	    	        hours -= 12;
+	    	    } else if (hours == 0) {
+	    	        hours = 12;
+	    	    }
+	    	    String s = String.format("%02d:%02d %s", hours, mins, ampm);
+	    	    
+	    	    hours = period[1] / 60;
+	    	    mins = period[1] % 60;
+	    	    ampm = (hours < 12) ? "AM" : "PM";
+	    	    if (hours > 12) {
+	    	        hours -= 12;
+	    	    } else if (hours == 0) {
+	    	        hours = 12;
+	    	    }
+	    	    String e = String.format("%02d:%02d %s", hours, mins, ampm);
+	        
+	        %>
+	        	
+	            <li><%= s %> - <%= e %></li>
+	        <% } %>
+	        </ul>
+	    <% } %>
+	<%
+	}
+	%>
+	
+	
+	
+	
+	%>
+    <p><%= month + " " + day + " " + dayOfWeek %></p>
+    <%
