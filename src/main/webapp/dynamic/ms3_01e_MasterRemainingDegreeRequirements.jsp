@@ -71,7 +71,8 @@ String majorCode = request.getParameter("majorcode");
 		// concentrations and grades achieved in completed courses
 		Map<String, List<String>> conGradeMap = new HashMap<>();
 		// concentrations and units taken in completed courses
-		Map<String, Integer> conUnitsMap = new HashMap<>();
+		Map<String, List<Integer>> conUnitsMap = new HashMap<>();
+		Map<String, Integer> conTotalUnitsMap = new HashMap<>();
 		// concentrations and their min_units requirement
 		Map<String, Integer> conMinUnitsMap = new HashMap<>();
 		// concentrations and their min_gpa requirement
@@ -103,15 +104,24 @@ String majorCode = request.getParameter("majorcode");
 			            List<String> l = new ArrayList<>();
 			            conGradeMap.put(c, l);
 			        }
-			        courses = conGradeMap.get(c);
-			        courses.add(rs.getString("grade"));
+			        List<String> grades = conGradeMap.get(c);
+			        grades.add(rs.getString("grade"));
 		        }
 		        
 		        // Courses taken for S/U or letter both get their units recorded
 		        if (!conUnitsMap.containsKey(c)) {
-		            conUnitsMap.put(c, 0);
+		            List<Integer> l = new ArrayList<>();
+		            conUnitsMap.put(c, l);
 		        }
-		        conUnitsMap.put(c, conUnitsMap.get(c) + Integer.parseInt(rs.getString("units")));
+		        // conUnitsMap.put(c, conUnitsMap.get(c) + Integer.parseInt(rs.getString("units")));
+		        List<Integer> units = conUnitsMap.get(c);
+		        units.add(Integer.parseInt(rs.getString("units")));
+		        
+		        // save total units taken for a concentration as well
+		        if (!conTotalUnitsMap.containsKey(c)) {
+		            conTotalUnitsMap.put(c, 0);
+		        }
+		        conTotalUnitsMap.put(c, conTotalUnitsMap.get(c) + Integer.parseInt(rs.getString("units")));
 		        
 		        // record the min requirements for concentrations
 		        if (!conMinUnitsMap.containsKey(c)) {
@@ -140,26 +150,38 @@ String majorCode = request.getParameter("majorcode");
 		for (Map.Entry<String, List<String>> entry : conGradeMap.entrySet()) {
 		    String concentration = entry.getKey();
 		    List<String> grades = entry.getValue();
+		    List<Integer> units = conUnitsMap.get(concentration);
 		    
-		    int totalPoints = 0;
-		    int numGrades = grades.size();
-		    for (String g : grades) {
-		        totalPoints += grade_conversion.get(g);
+		    double totalPoints = 0;
+		    for (int i = 0; i < grades.size(); i++) {
+		        totalPoints += grade_conversion.get(grades.get(i)) * units.get(i);
 		    }
-		    
-		    double gpa = (double)((int)(totalPoints / numGrades) * 100);
+		   	
+		    double gpa = ((double)(int)(totalPoints * 100 / conTotalUnitsMap.get(concentration))) / 100 ;
 			conGpaMap.put(concentration, gpa);
 		}
 		
 		// Obtain the list of concentrations that the selected Master student has achieved for the selected Degree
-		List<String> completedConcentrations = new ArrayList<>();
+		List<String[]> completedConcentrations = new ArrayList<>();
+        List<String[]> incompleteConcentrations = new ArrayList<>();
         // Obtain the courses from each concentration that the master student has not yet taken
   		Map<String, List<String>> conNotTakenCourses = new HashMap<>();
 		for (String c : concentrations) {
 		    // if the MS student has taken enough units and has a high enough gpa for 
 		    // a concentration, they have completed the concentration
-		    if (conUnitsMap.get(c) >= conMinUnitsMap.get(c) && conGpaMap.get(c) >= conMinGpaMap.get(c)) {
-		        completedConcentrations.add(c);
+		    if (conTotalUnitsMap.get(c) >= conMinUnitsMap.get(c) && conGpaMap.get(c) >= conMinGpaMap.get(c)) {
+		        String[] conInfo = new String[3];
+		        conInfo[0] = c;
+		        conInfo[1] = "" + conTotalUnitsMap.get(c);
+		        conInfo[2] = "" + conGpaMap.get(c);
+		        completedConcentrations.add(conInfo);
+		    }
+		    else {
+		        String[] inConInfo = new String[3];
+		        inConInfo[0] = c;
+		        inConInfo[1] = "" + conTotalUnitsMap.get(c);
+		        inConInfo[2] = "" + conGpaMap.get(c);
+		        incompleteConcentrations.add(inConInfo);
 		    }
 		    concentrationCourses.get(c).removeAll(conTakenMap.get(c));
 		    conNotTakenCourses.put(c, concentrationCourses.get(c));
@@ -182,10 +204,31 @@ String majorCode = request.getParameter("majorcode");
 	<table class="completed-table" style="border-collapse: collapse; width: 20%;">
 	    <tr style="background-color: lightgray;">
 	        <th style="padding: 8px; border: 1px solid black;">Concentration</th>
+	        <th style="padding: 8px; border: 1px solid black;">Completed Units</th>
+	        <th style="padding: 8px; border: 1px solid black;">Acquired GPA</th>
 	    </tr>
-	    <% for (String c : completedConcentrations) { %>
+	    <% for (String[] conInfo : completedConcentrations) { %>
 	    <tr style="border: 1px solid black;">
-	        <td style="padding: 8px; border: 1px solid black;"><%= c %></td>
+	        <td style="padding: 8px; border: 1px solid black;"><%= conInfo[0] %></td>
+	        <td style="padding: 8px; border: 1px solid black;"><%= conInfo[1] %></td>
+	        <td style="padding: 8px; border: 1px solid black;"><%= conInfo[2] %></td>
+	    </tr>
+	    <% } %>
+	</table>
+	<br>
+	
+	<h4 class="completed-heading" style="font-size: 18px; font-weight: bold;">Incomplete Concentrations</h4>
+	<table class="completed-table" style="border-collapse: collapse; width: 20%;">
+	    <tr style="background-color: lightgray;">
+	        <th style="padding: 8px; border: 1px solid black;">Concentration</th>
+	        <th style="padding: 8px; border: 1px solid black;">Completed Units</th>
+	        <th style="padding: 8px; border: 1px solid black;">Acquired GPA</th>
+	    </tr>
+	    <% for (String[] inConInfo : incompleteConcentrations) { %>
+	    <tr style="border: 1px solid black;">
+	        <td style="padding: 8px; border: 1px solid black;"><%= inConInfo[0] %></td>
+	        <td style="padding: 8px; border: 1px solid black;"><%= inConInfo[1] %></td>
+	        <td style="padding: 8px; border: 1px solid black;"><%= inConInfo[2] %></td>
 	    </tr>
 	    <% } %>
 	</table>
@@ -211,10 +254,54 @@ String majorCode = request.getParameter("majorcode");
 	    <table class="not-taken-table" style="border-collapse: collapse; width: 20%;">
 	        <tr style="background-color: lightgray;">
 	            <th style="padding: 8px; border: 1px solid black;">Courses</th>
+	            <th style="padding: 8px; border: 1px solid black;">Next Quarter Offered</th>
 	        </tr>
 	        <% for (String c : notTakenCourses) { %>
+		        <%
+		        String get_next_offered_quarters = 
+		        "SELECT * FROM section \n" + 
+		        "WHERE coursenumber = '" + c + "' \n" +
+		        "AND ((classyear = 2018 AND classquarter = 'FALL') OR classyear > 2018)";
+		        rs = stmt.executeQuery(get_next_offered_quarters);
+		        
+		        String nextQuarter = null;
+		        String nextYear = null;
+		        while (rs.next()) {
+		            String year = rs.getString("classYear");
+		            String quarter = rs.getString("classQuarter");
+		            if (nextYear == null || nextQuarter == null) {
+		                nextYear = year;
+		                nextQuarter = quarter;
+		            }
+		            if (year.equals("2018") && quarter.equals("FALL")) {
+		                nextYear = "2018";
+		                nextQuarter = "FALL";
+		                break;
+		            }
+		            else if (Integer.parseInt(year) < Integer.parseInt(nextYear)) {
+		                nextYear = year;
+		                nextQuarter = quarter;
+		            }
+		            else if (Integer.parseInt(year) == Integer.parseInt(nextYear)) {
+		                if (quarter.equals("WINTER") && (nextQuarter.equals("SPRING") || nextQuarter.equals("FALL"))) {
+		                    nextYear = year;
+			                nextQuarter = quarter;
+		                }
+		                else if (quarter.equals("SPRING") && nextQuarter.equals("FALL")) {
+		                    nextYear = year;
+			                nextQuarter = quarter;
+		                }
+		            }
+		        }
+		        if (nextQuarter == null || nextYear == null) {
+		            nextQuarter = "Not planned to be";
+		            nextYear = "offered yet";
+		        }
+		        %>
+	        
 	        <tr style="border: 1px solid black;">
 	            <td style="padding: 8px; border: 1px solid black;"><%= c %></td>
+	            <td style="padding: 8px; border: 1px solid black;"><%= nextQuarter + " " + nextYear %></td>
 	        </tr>
 	        <% } %>
 	    </table>

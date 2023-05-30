@@ -14,24 +14,9 @@
 	<li>
 		<a href="./01_CourseEntry.jsp">Course Entry Form + Prereqs per Course + Course Offerings (Class Entry)</a>
 	</li>
-	<!-- <li>
-		<a href="./02_ClassEntry.jsp">Class Entry Form</a>
-	</li> -->
 	<li>
 		<a href="./03_StudentEntry.jsp">Student Entry Form</a>
 	</li>
-	<!-- <li>
-		<a href="./14_UndergraduateEntry.jsp">Undergraduate Entry Form</a>
-	</li>
-	<li>
-		<a href="./15_MastersEntry.jsp">Masters Entry Form</a>
-	</li>
-	<li>
-		<a href="./16_PrecandidateEntry.jsp">Precandidate Entry Form</a>
-	</li>
-	<li>
-		<a href="./17_CandidateEntry.jsp">Candidate Entry Form</a>
-	</li> -->
 	<li>
 		<a href="./04_FacultyEntry.jsp">Faculty Entry Form</a>
 	</li>
@@ -41,9 +26,6 @@
 	<li>
 		<a href="./06_ClassTakenInPastEntry.jsp">Report Past Classes</a>
 	</li>
-	<!-- <li>
-		<a href="./07_ThesisCommitteeEntry.jsp">Thesis Committee Submission</a>
-	</li> -->
 	<li>
 		<a href="./08_ProbationEntry.jsp">Probation Info Submission</a>
 	</li>
@@ -82,6 +64,11 @@
 	</li>
 	<li>
 		<a href="./ms3_02b_ProfSelectionReviewSchedulingHelp.jsp">Help Professor Make Review Session Schedule</a>
+	</li>
+	
+	<h4>Report 3: Decision Support</h4>
+	<li>
+		<a href="./ms3_03a_SelectionForGradeDistributions.jsp">Get report on course and professor grade distributions </a>
 	</li>
 </ul>
 
