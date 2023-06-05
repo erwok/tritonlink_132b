@@ -32,4 +32,28 @@ FOR EACH ROW
 EXECUTE FUNCTION check_for_overlapping_meetings();
 
 
+-- PART 2: the enrollment limit then additional should be rejected.
+
+CREATE OR REPLACE FUNCTION limit_instances()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- if the count is greater than the limit, then raise an exception
+    IF ( SELECT COUNT(*) FROM take
+         WHERE cr_courseNumber = NEW.cr_courseNumber
+           AND cl_title = NEW.cl_title
+           AND cl_year = NEW.cl_year
+           AND cl_quarter = NEW.cl_quarter
+           AND s_sectionID = NEW.s_sectionID
+        ) >= ( SELECT s_capacity FROM section WHERE s_sectionID = NEW.s_sectionID ) THEN
+        RAISE EXCEPTION 'Error: Cannot update. Maximum capacity exceeded';
+    END IF;
+  
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_limit_instances
+BEFORE INSERT ON take
+FOR EACH ROW
+EXECUTE FUNCTION limit_instances();
 
