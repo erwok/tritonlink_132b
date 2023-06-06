@@ -62,9 +62,6 @@
 	<li>
 		<a href="./ms3_02a_StudentSelectionClassSchedulingHelp.jsp">Help Student Make Current Schedule</a>
 	</li>
-	<!-- <li>
-		<a href="./ms3_02b_ProfSelectionReviewSchedulingHelp.jsp">Help Professor Make Review Session Schedule</a>
-	</li> -->
 	<li>
 		<a href="./ms3_02b_selection.jsp">Review Sessions Scheduling</a>
 	</li>
@@ -73,6 +70,12 @@
 	<li>
 		<a href="./ms3_03a_SelectionForGradeDistributions.jsp">Get report on course and professor grade distributions </a>
 	</li>
+	
+	<h2>milestone 5</h2>
+	<li>
+		<a href="./ms5_SelectionGradeDistributions.jsp">Get report on course and professor grade distributions</a>
+	</li>
+	
 </ul>
 
 
