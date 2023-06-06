@@ -57,3 +57,46 @@ BEFORE INSERT ON take
 FOR EACH ROW
 EXECUTE FUNCTION limit_instances();
 
+
+
+-- PART 3: A professor should not have multiple sections at the same time.
+
+CREATE OR REPLACE FUNCTION check_meeting_overlap_for_professor()
+  RETURNS TRIGGER AS $$
+DECLARE
+    new_daysOfWeek text[];
+    existing_daysOfWeek text[];
+    professor VARCHAR(255);
+BEGIN
+    -- Convert the daysofweek strings to arrays for comparison
+    new_daysOfWeek := string_to_array(NEW.daysofweek, ',');
+    
+    -- Bring in the professor's name
+    SELECT fc_name INTO professor
+    FROM teaches t, weeklymeetings w
+    WHERE t.s_sectionID = w.s_sectionID;
+
+    -- Check for overlapping meetings with the same section (s_sectionID)
+  IF EXISTS (
+    SELECT 1
+    FROM weeklymeetings w
+    JOIN teaches t ON w.s_sectionID = t.s_sectionID
+    WHERE t.fc_name = professor
+      AND (string_to_array(daysofweek, ',') && new_daysOfWeek)
+      AND ((starttime :: time, endtime :: time) OVERLAPS (NEW.starttime :: time, NEW.endtime :: time))
+  ) THEN
+    RAISE EXCEPTION 'Error: Overlapping meeting time for instructor %', professor;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_meeting_overlap
+BEFORE INSERT ON weeklymeetings
+FOR EACH ROW
+EXECUTE FUNCTION check_meeting_overlap_for_professor();
+
+
+
+
